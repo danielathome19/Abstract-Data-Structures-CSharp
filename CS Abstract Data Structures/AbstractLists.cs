@@ -8,6 +8,27 @@
  * Current implemented:
  *  -Linked List
  *  -Doubly Linked List
+ *  -Stack (Linked List)
+ *
+ * To do:  
+ *  -Stack
+ *	-Queue (Linked List)
+ *	-Queue
+ *	-Set
+ *	-Multiset (Bag)
+ *	-Binary (Search) Tree
+ *	-Priority Queue
+ *	-ArrayList
+ *	-Double Ended Queue (Deque)
+ *	-Circular Queue
+ *	-Circular Linked List
+ *	-Map
+ *	-HashMap (Dictionary)
+ *	-Heap
+ *	-Skip List
+ *	-Bitset
+ *	-Undirected Graph
+ *	-Directed Graph
  * 
  **************************************************************************/
 
@@ -35,7 +56,7 @@ namespace Adscol
         private void addLast(T t)
         {
             myLast = myList;
-            while (myList.myNext != null)
+            while (myLast.myNext != null)
             {
                 myLast = myLast.myNext;
             }
@@ -309,6 +330,19 @@ namespace Adscol
             return default(T);
         }
 
+        public void print()
+        {
+            Node<T> temp = myList;
+            Console.WriteLine(myList.myObj);
+            temp = temp.myNext;
+
+            while (temp != myList)
+            {
+                Console.WriteLine(temp.myObj);
+                temp = temp.myNext;
+            }
+        }
+
         public System.Collections.Generic.List<T> getList()
         {
             var items = new System.Collections.Generic.List<T>();
@@ -358,5 +392,118 @@ namespace Adscol
         {
             return this.size() == 0;
         }
+    }
+
+    class LinkedListStack<T>
+    {
+        private Node<T> myList;
+        private Node<T> myLast;
+
+        private void addFirst(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            temp.myNext = myList;
+            myList = temp;
+        }
+       
+        public LinkedListStack()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public LinkedListStack(T t)
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+        public void push(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+            } else
+            {
+                this.addFirst(t);
+            }
+        }
+
+        public T pop()
+        {
+            T obj = myList.myObj;
+            myLast = myList;
+            Node<T> temp = myLast.myNext;
+            myList = temp;
+            myLast = myList;
+            return obj;
+        }
+
+        public T peek()
+        {
+            return myList.myObj;
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            myLast = myList;
+            while (myLast != null)
+            {
+                items.Add(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+
+            return false;
+        }
+
+        public void clear()
+        {
+            myLast = null;
+            myList = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return this.size() == 0;
+        }
+
     }
 }

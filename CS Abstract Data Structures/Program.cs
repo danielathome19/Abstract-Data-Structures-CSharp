@@ -7,7 +7,104 @@ namespace CS_Abstract_Data_Structures
     {
         static void Main(string[] args)
         {
-            Node<int> temp = new Node<int>(5);
+            // Call method to test data structure methods
+            // LinkedListTest();
+            Console.WriteLine("Hello world!");
+            LinkedListStackTest();
+            
+            Console.ReadKey();
+        }
+
+        static void LinkedListTest()
+        {
+            LinkedList<char> list = new LinkedList<char>();
+            list.add('x');
+            list.add('y');
+            list.add('d');
+            list.add('q');
+            list.add('u');
+            list.add('i');
+            list.print();
+
+            Console.WriteLine(list.size());
+            list.clear();
+            list.print();
+
+            string st = "abcdefghijklmnopqrstuvwxyz";
+            list.add(st[0]);
+            
+            Console.WriteLine();
+            for (int i = 0; i < st.Length; i++)
+            {
+                list.add(st[i]);
+            }
+
+            list.print();
+            list.clear();
+
+            LinkedList<int> nums = new LinkedList<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                nums.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine(nums.get(i));
+            }
+        }
+
+        static void DoublyLinkedListTest()
+        {
+            DoublyLinkedList<int> nums = new DoublyLinkedList<int>();
+
+            nums.add(5);
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.add(i);
+            }
+
+            nums.print();
+
+            Console.WriteLine();
+            nums.print();
+
+            Console.WriteLine();
+            Console.WriteLine("Is Empty: ");
+            Console.WriteLine(nums.isEmpty());
+
+            Console.WriteLine("Size: ");
+            Console.WriteLine(nums.size());
+
+            nums.clear();
+            Console.WriteLine("Is Empty: ");
+            Console.WriteLine(nums.isEmpty());
+
+            Console.WriteLine("Size: ");
+            Console.WriteLine(nums.size());
+        }
+
+        static void LinkedListStackTest()
+        {
+            LinkedListStack<int> nums = new LinkedListStack<int>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.push(i);
+            }
+
+            Console.WriteLine(nums.peek());
+
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.size());
+            Console.WriteLine(nums.isEmpty());
+
+            Console.WriteLine();
+            nums.print();
         }
     }
 }
