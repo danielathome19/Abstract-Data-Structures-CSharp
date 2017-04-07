@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Author:  Daniel Szelogowski (C) 2017
  * Created: 4/7/17
  * Purpose: A collection of data structures written in C# using generics.
@@ -31,6 +29,8 @@
  *	-Directed Graph
  * 
  **************************************************************************/
+
+using System;
 
 namespace Adscol
 {
