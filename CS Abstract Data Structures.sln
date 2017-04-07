@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS Abstract Data Structures", "CS Abstract Data Structures\CS Abstract Data Structures.csproj", "{3110C643-114B-46DD-9B79-0EFC5B8E5FFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstract Data Structures", "CS Abstract Data Structures\Abstract Data Structures.csproj", "{3110C643-114B-46DD-9B79-0EFC5B8E5FFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
