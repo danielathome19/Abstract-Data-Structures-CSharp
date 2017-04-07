@@ -10,23 +10,23 @@
  *
  * To do:  
  *  -Stack
- *	-Queue (Linked List)
- *	-Queue
- *	-Set
- *	-Multiset (Bag)
- *	-Binary (Search) Tree
- *	-Priority Queue
- *	-ArrayList
- *	-Double Ended Queue (Deque)
- *	-Circular Queue
- *	-Circular Linked List
- *	-Map
- *	-HashMap (Dictionary)
- *	-Heap
- *	-Skip List
- *	-Bitset
- *	-Undirected Graph
- *	-Directed Graph
+ *  -Queue (Linked List)
+ *  -Queue
+ *  -Set
+ *  -Multiset (Bag)
+ *  -Binary (Search) Tree
+ *  -Priority Queue
+ *  -ArrayList
+ *  -Double Ended Queue (Deque)
+ *  -Circular Queue
+ *  -Circular Linked List
+ *  -Map
+ *  -HashMap (Dictionary)
+ *  -Heap
+ *  -Skip List
+ *  -Bitset
+ *  -Undirected Graph
+ *  -Directed Graph
  * 
  **************************************************************************/
 
