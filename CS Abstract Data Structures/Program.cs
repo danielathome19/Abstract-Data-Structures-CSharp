@@ -10,7 +10,7 @@ namespace CS_Abstract_Data_Structures
             // Call method to test data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            QueueTest();            
+            SetTest(); 
             Console.ReadKey();
         }
 
@@ -185,6 +185,68 @@ namespace CS_Abstract_Data_Structures
             }
 
             nums.print();
+        }
+
+        static void LinkedListSetTest()
+        {
+            LinkedListSet<int> numsList = new LinkedListSet<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            numsList.print();
+            Console.WriteLine("Finished first list");
+
+            LinkedListSet<int> nums2 = new LinkedListSet<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums2.add(x);
+            }
+
+            nums2.print();
+
+            Console.WriteLine(nums2.size());
+        }
+
+        static void SetTest()
+        {
+            Set<int> numsList = new Set<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            numsList.print();
+            Console.WriteLine("Finished first list");
+
+            Set<int> nums2 = new Set<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums2.add(x);
+            }
+
+            nums2.print();
+
+            Console.WriteLine(nums2.size());
         }
     }
 }
