@@ -10,7 +10,7 @@ namespace CS_Abstract_Data_Structures
             // Call method to test data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            LinkedListStackTest();
+            StackTest();
             
             Console.ReadKey();
         }
@@ -89,6 +89,27 @@ namespace CS_Abstract_Data_Structures
         static void LinkedListStackTest()
         {
             LinkedListStack<int> nums = new LinkedListStack<int>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.push(i);
+            }
+
+            Console.WriteLine(nums.peek());
+
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.pop());
+            Console.WriteLine(nums.size());
+            Console.WriteLine(nums.isEmpty());
+
+            Console.WriteLine();
+            nums.print();
+        }
+
+        static void StackTest()
+        {
+            Stack<int> nums = new Stack<int>();
 
             for (int i = 1; i <= 10; i++)
             {

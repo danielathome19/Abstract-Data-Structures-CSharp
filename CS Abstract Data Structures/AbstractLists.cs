@@ -7,9 +7,9 @@
  *  -Linked List
  *  -Doubly Linked List
  *  -Stack (Linked List)
+ *  -Stack
  *
  * To do:  
- *  -Stack
  *  -Queue (Linked List)
  *  -Queue
  *  -Set
@@ -507,4 +507,73 @@ namespace Adscol
 
     }
 
+    class Stack<T>
+    {
+        private System.Collections.Generic.List<T> myList;
+
+        public Stack()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public Stack(T t) : this()
+        {
+            myList.Add(t);
+        }
+
+        public void push(T t)
+        {
+            myList.Add(t);
+        }
+
+        public T pop()
+        {
+            if (myList.Count == 0) return default(T);
+            T temp = myList[myList.Count - 1];
+            myList.RemoveAt(myList.Count - 1);
+            return temp;
+        }
+
+        public T peek()
+        {
+            return myList[myList.Count - 1];
+        }
+
+        public void print()
+        {
+            for (int i = myList.Count - 1; i >= 0; i--)
+            {
+                Console.WriteLine(myList[i]);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public bool contains(T t)
+        {
+            for (int i = 0; i < myList.Count; i++)
+            {
+                if (myList[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList.Clear();
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return myList.Count == 0;
+        }
+    }
 }
