@@ -17,9 +17,8 @@
  *  -Sorted Set
  *  -Set (Linked List)
  *  -Set
- *  
- *  -Multiset (Linked List)
- *  -Multiset
+ *  -Multiset (Linked List) (Sorted List)
+ *  -Multiset (Sorted List)
  *  -Bag (LInked List)
  *  -Bag
  *
@@ -30,6 +29,7 @@
  *  -Double Ended Queue (Deque)
  *  -Circular Queue
  *  -Circular Linked List
+ *  -SortedMap
  *  -Map
  *  -HashMap (Dictionary)
  *  -Heap
@@ -44,6 +44,16 @@ using System;
 
 namespace Adscol
 {
+    interface AdsClass<T>
+    {
+        void print();
+        System.Collections.Generic.List<T> getList();
+        bool contains(T t);
+        void clear();
+        int size();
+        bool isEmpty();
+    }
+
     class Node<T>
     {
         public T myObj;
@@ -58,7 +68,7 @@ namespace Adscol
         }
     }
 
-    class LinkedList<T>
+    class LinkedList<T> : AdsClass<T>
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -268,7 +278,7 @@ namespace Adscol
         }
     }
 
-    class DoublyLinkedList<T>
+    class DoublyLinkedList<T> : AdsClass<T>
     {
         //TODO: add remove(index, add(index), set(index)
         private Node<T> myList;
@@ -404,7 +414,7 @@ namespace Adscol
         }
     }
 
-    class LinkedListStack<T>
+    class LinkedListStack<T> : AdsClass<T>
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -517,7 +527,7 @@ namespace Adscol
 
     }
 
-    class Stack<T>
+    class Stack<T> : AdsClass<T>
     {
         private System.Collections.Generic.List<T> myList;
 
@@ -583,7 +593,7 @@ namespace Adscol
         }
     }
 
-    class LinkedListQueue<T>
+    class LinkedListQueue<T> : AdsClass<T>
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -690,7 +700,7 @@ namespace Adscol
         }
     }
 
-    class Queue<T>
+    class Queue<T> : AdsClass<T>
     {
         private System.Collections.Generic.List<T> myList;
 
@@ -757,7 +767,7 @@ namespace Adscol
         }
     }
 
-    class LinkedListSortedSet<T> where T : IComparable
+    class LinkedListSortedSet<T> : AdsClass<T> where T : IComparable
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -915,13 +925,13 @@ namespace Adscol
             return cnt;
         }
 
-        bool isEmpty()
+        public bool isEmpty()
         {
             return (this.size() == 0);
         }
     }
 
-    class SortedSet<T> where T : IComparable
+    class SortedSet<T> : AdsClass<T> where T : IComparable
     {
         private System.Collections.Generic.List<T> myList;
         
@@ -981,6 +991,11 @@ namespace Adscol
             return myList.Contains(t);
         }
 
+        public void clear()
+        {
+            myList.Clear();
+        }
+
         public int size()
         {
             return myList.Count;
@@ -993,7 +1008,7 @@ namespace Adscol
 
     }
 
-    class LinkedListSet<T>
+    class LinkedListSet<T> : AdsClass<T>
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -1138,13 +1153,13 @@ namespace Adscol
             return cnt;
         }
 
-        bool isEmpty()
+        public bool isEmpty()
         {
             return (this.size() == 0);
         }
     }
 
-    class Set<T>
+    class Set<T> : AdsClass<T>
     {
         private System.Collections.Generic.List<T> myList;
 
@@ -1185,10 +1200,15 @@ namespace Adscol
         {
             return myList;
         }
-
+        
         public bool contains(T t)
         {
             return myList.Contains(t);
+        }
+
+        public void clear()
+        {
+            myList.Clear();
         }
 
         public int size()
@@ -1203,7 +1223,7 @@ namespace Adscol
 
     }
 
-    class LinkedListMultiset<T> where T : IComparable
+    class LinkedListMultiset<T> : AdsClass<T> where T : IComparable
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -1377,7 +1397,7 @@ namespace Adscol
         }
     }
 
-    class Multiset<T> where T : IComparable
+    class Multiset<T> : AdsClass<T> where T : IComparable 
     {
         private System.Collections.Generic.List<T> myList;
 
@@ -1466,13 +1486,173 @@ namespace Adscol
 
     }
 
-    class LinkedListBag<T>
+    class LinkedListBag<T> : AdsClass<T>
     {
+        private Node<T> myList;
+        private Node<T> myLast;
 
+        private void addLast(T t)
+        {
+            myLast = myList;
+            while (myLast.myNext != null)
+            {
+                myLast = myLast.myNext;
+            }
+            Node<T> temp = new Node<T>(t);
+            myLast.myNext = temp;
+        }
+
+        public LinkedListBag()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public LinkedListBag(T t)
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+        public void add(T t)
+        {
+            if (myList == null)
+            {
+                Node<T> temp = new Node<T>(t);
+                myList = temp;
+                myLast = temp;
+            }
+            else
+            {
+                this.addLast(t);
+            }
+        }
+
+        public T get(int index)
+        {
+            int cnt = 0;
+            myLast = myList;
+            while ((myLast.myNext != null) && (cnt <= index))
+            {
+                if (cnt == index) return myLast.myObj;
+                myLast = myLast.myNext;
+                cnt++;
+            }
+            if (cnt == index) return myLast.myObj;
+            return default(T);
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                items.Add(this.get(i));
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
     }
 
-    class Bag<T>
+    class Bag<T> : AdsClass<T>
     {
+        private System.Collections.Generic.List<T> myList;
 
+        public Bag()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public Bag(T t) : this()
+        {
+            myList.Add(t);
+        }
+
+        public void add(T t)
+        {
+            myList.Add(t);
+        }
+
+        public T get(int index)
+        {
+            return myList[index];
+        }
+
+        public void print()
+        {
+            foreach (var item in myList)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public bool contains(T t)
+        {
+            return myList.Contains(t);
+        }
+
+        public void clear()
+        {
+            myList.Clear();
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
     }
 }
