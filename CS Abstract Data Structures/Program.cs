@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            MultisetTest();
+            BagTest();
 
             Console.ReadKey();
         }
@@ -357,5 +357,36 @@ namespace CS_Abstract_Data_Structures
             list.print();
         }
 
+        static void LinkedListBagTest()
+        {
+            LinkedListBag<char> items = new LinkedListBag<char>();
+
+            string happy = "Happy Birthday";
+
+            foreach (char x in happy)
+            {
+                items.add(x);
+            }
+
+            items.print();
+
+            Console.WriteLine("Size: " + items.size());
+        }
+
+        static void BagTest()
+        {
+            Bag<char> items = new Bag<char>();
+
+            string happy = "Happy Birthday";
+
+            foreach (char x in happy)
+            {
+                items.add(x);
+            }
+
+            items.print();
+
+            Console.WriteLine("Size: " + items.size());
+        }
     }
 }
