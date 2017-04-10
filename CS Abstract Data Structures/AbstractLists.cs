@@ -1232,13 +1232,13 @@ namespace Adscol
             myLast.myNext = temp;
         }
 
-        public LinkedListSortedMultiset()
+        public LinkedListMultiset()
         {
             myList = null;
             myLast = null;
         }
 
-        public LinkedListSortedMultiset(T t) : this()
+        public LinkedListMultiset(T t) : this()
         {
             myList = new Node<T>(t);
             myLast = myList;
