@@ -8,10 +8,10 @@
  *  -Doubly Linked List
  *  -Stack (Linked List)
  *  -Stack
- *
- * To do:  
  *  -Queue (Linked List)
  *  -Queue
+ *
+ * To do:  
  *  -Set
  *  -Multiset (Bag)
  *  -Binary (Search) Tree
@@ -542,6 +542,184 @@ namespace Adscol
         public void print()
         {
             for (int i = myList.Count - 1; i >= 0; i--)
+            {
+                Console.WriteLine(myList[i]);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public bool contains(T t)
+        {
+            for (int i = 0; i < myList.Count; i++)
+            {
+                if (myList[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList.Clear();
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return myList.Count == 0;
+        }
+    }
+
+    class LinkedListQueue<T>
+    {
+        private Node<T> myList;
+        private Node<T> myLast;
+
+        public LinkedListQueue()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public LinkedListQueue(T t)
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+        public void enqueue(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+            } else
+            {
+                myLast = myList;
+                while (myLast.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = temp;
+            }
+        }
+
+        public T dequeue()
+        {
+            T obj = myList.myObj;
+            myLast = myList;
+            Node<T> temp = myLast.myNext;
+            myList = temp;
+            myLast = myList;
+            return obj;
+        }
+
+        public T peek()
+        {
+            return myList.myObj;
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+            myLast = myList;
+            while (myLast != null)
+            {
+                items.Add(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return this.size() == 0;
+        }
+    }
+
+    class Queue<T>
+    {
+        private System.Collections.Generic.List<T> myList;
+
+        public Queue()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public Queue(T t) : this()
+        {
+            myList.Add(t);
+        }
+
+        public void enqueue(T t)
+        {
+            myList.Add(t);
+        }
+
+        public T dequeue()
+        {
+            if (myList.Count == 0) return default(T);
+            T temp = myList[0];
+            myList.RemoveAt(0);
+            return temp;
+        }
+
+        public T peek()
+        {
+            if (myList.Count == 0) return default(T);
+            return myList[0];
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < myList.Count; i++)
             {
                 Console.WriteLine(myList[i]);
             }

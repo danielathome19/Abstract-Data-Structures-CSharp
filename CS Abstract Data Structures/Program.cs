@@ -10,8 +10,7 @@ namespace CS_Abstract_Data_Structures
             // Call method to test data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            StackTest();
-            
+            QueueTest();            
             Console.ReadKey();
         }
 
@@ -125,6 +124,66 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(nums.isEmpty());
 
             Console.WriteLine();
+            nums.print();
+        }
+
+        static void LinkedListQueueTest()
+        {
+            LinkedListQueue<int> nums = new LinkedListQueue<int>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.enqueue(i);
+            }
+
+            Console.WriteLine(nums.peek());
+
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.size());
+
+            Console.WriteLine("Is empty: " + nums.isEmpty() + "\n");
+
+            nums.print();
+            nums.clear();
+            Console.WriteLine();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.enqueue(i);
+            }
+
+            nums.print();
+        }
+
+        static void QueueTest()
+        {
+            Queue<int> nums = new Queue<int>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.enqueue(i);
+            }
+
+            Console.WriteLine(nums.peek());
+
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.dequeue());
+            Console.WriteLine(nums.size());
+
+            Console.WriteLine("Is empty: " + nums.isEmpty() + "\n");
+
+            nums.print();
+            nums.clear();
+            Console.WriteLine();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                nums.enqueue(i);
+            }
+
             nums.print();
         }
     }
