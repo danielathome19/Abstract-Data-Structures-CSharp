@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            BagTest();
+            PriorityQueueTest();
 
             Console.ReadKey();
         }
@@ -387,6 +387,82 @@ namespace CS_Abstract_Data_Structures
             items.print();
 
             Console.WriteLine("Size: " + items.size());
+        }
+
+        static void BinaryTreeTest()
+        {
+            BinaryTree<int> nums = new BinaryTree<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums.add(x);
+            }
+
+            nums.printInOrder();
+
+            Console.WriteLine();
+            Console.WriteLine("Size: " + nums.size());
+            Console.WriteLine("Height: " + nums.height());
+            Console.WriteLine("Width: " + nums.width());
+            Console.WriteLine();
+
+            nums.remove(9);
+            nums.invert();
+
+            nums.printInOrder();
+
+            Console.WriteLine();
+            Console.WriteLine("Size: " + nums.size());
+            Console.WriteLine();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            BinaryTree<char> tree = new BinaryTree<char>();
+
+            tree.add('2');
+            tree.add('+');
+            tree.add('3');
+            tree.add('*');
+            tree.add('6');
+
+            tree.printPreOrder();
+            Console.WriteLine();
+            tree.printInOrder();
+            Console.WriteLine();
+            tree.printPostOrder();
+            Console.WriteLine();
+        }
+
+        static void PriorityQueueTest()
+        {
+            PriorityQueue<char> queue = new PriorityQueue<char>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 50; i++)
+            {
+                int pr = rand.Next(0, 10);
+                char let = (char)rand.Next(65, 126);
+
+                queue.enqueue(let, pr);
+            }
+
+            Console.WriteLine("Size: " + queue.size());
+            queue.print();
+
+            Console.WriteLine(queue.peek());
+            Console.WriteLine(queue.dequeue());
+            Console.WriteLine(queue.dequeue());
+            Console.WriteLine(queue.dequeue());
+            Console.WriteLine(queue.dequeue());
+            Console.WriteLine(queue.peek());
+
+            queue.print();
         }
     }
 }
