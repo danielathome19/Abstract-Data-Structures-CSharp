@@ -10,7 +10,7 @@ namespace CS_Abstract_Data_Structures
             // Call method to test data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            SetTest(); 
+            SetTest();
             Console.ReadKey();
         }
 
@@ -186,6 +186,68 @@ namespace CS_Abstract_Data_Structures
 
             nums.print();
         }
+        
+        static void LinkedListSortedSetTest()
+        {
+            LinkedListSortedSet<int> numsList = new LinkedListSortedSet<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            numsList.print();
+            Console.WriteLine("Finished first list");
+
+            LinkedListSortedSet<int> nums2 = new LinkedListSortedSet<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums2.add(x);
+            }
+
+            nums2.print();
+
+            Console.WriteLine(nums2.size());
+        }
+
+        static void SortedSetTest()
+        {
+            SortedSet<int> numsList = new SortedSet<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            numsList.print();
+            Console.WriteLine("Finished first list");
+
+            SortedSet<int> nums2 = new SortedSet<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums2.add(x);
+            }
+
+            nums2.print();
+
+            Console.WriteLine(nums2.size());
+        }
 
         static void LinkedListSetTest()
         {
@@ -248,5 +310,6 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine(nums2.size());
         }
+
     }
 }

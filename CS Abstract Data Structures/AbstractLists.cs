@@ -3,6 +3,9 @@
  * Created: 4/7/17
  * Purpose: A collection of data structures written in C# using generics.
  * 
+ * Future methods to implement:
+ *  -RemoveAll(item)
+ * 
  * Current implemented:
  *  -Linked List
  *  -Doubly Linked List
@@ -10,11 +13,17 @@
  *  -Stack
  *  -Queue (Linked List)
  *  -Queue
+ *  -Sorted Set (Linked List)
+ *  -Sorted Set
  *  -Set (Linked List)
  *  -Set
+ *  
+ *  -Multiset (Linked List)
+ *  -Multiset
+ *  -Bag (LInked List)
+ *  -Bag
  *
  * To do:
- *  -Multiset (Bag)
  *  -Binary (Search) Tree
  *  -Priority Queue
  *  -ArrayList
@@ -748,7 +757,7 @@ namespace Adscol
         }
     }
 
-    class LinkedListSet<T> where T : IComparable
+    class LinkedListSortedSet<T> where T : IComparable
     {
         private Node<T> myList;
         private Node<T> myLast;
@@ -778,13 +787,13 @@ namespace Adscol
             myLast.myNext = temp;
         }
 
-        public LinkedListSet()
+        public LinkedListSortedSet()
         {
             myList = null;
             myLast = null;
         }
 
-        public LinkedListSet(T t)
+        public LinkedListSortedSet(T t)
         {
             myList = new Node<T>(t);
             myLast = myList;
@@ -912,7 +921,7 @@ namespace Adscol
         }
     }
 
-    class Set<T> where T : IComparable
+    class SortedSet<T> where T : IComparable
     {
         private System.Collections.Generic.List<T> myList;
         
@@ -929,12 +938,12 @@ namespace Adscol
             myList.Add(t);
         }
 
-        public Set()
+        public SortedSet()
         {
             myList = new System.Collections.Generic.List<T>();
         }
 
-        public Set(T t) : this()
+        public SortedSet(T t) : this()
         {
             myList.Add(t);
         }
@@ -984,12 +993,485 @@ namespace Adscol
 
     }
 
+    class LinkedListSet<T>
+    {
+        private Node<T> myList;
+        private Node<T> myLast;
+
+        private void addLast(T t)
+        {
+            myLast = myList;
+            while (myLast.myNext != null)
+            {
+                myLast = myLast.myNext;
+            }
+            Node<T> temp = new Node<T>(t);
+            myLast.myNext = temp;
+        }
+
+        public LinkedListSet()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public LinkedListSet(T t)
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+        public void add(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+            }
+            else
+            {
+                if (!this.contains(t)) this.addLast(t);
+            }
+        }
+
+        public void remove(int index)
+        {
+            if (index == 0)
+            {
+                myLast = myList;
+                Node<T> temp = myLast.myNext;
+                myList = temp;
+                myLast = myList;
+            }
+            else if (index >= (this.size() - 1))
+            {
+                myLast = myList;
+                while (myLast.myNext.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = null;
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                Node<T> tempx;
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        tempx = myLast;
+                        tempx.myNext = myLast.myNext.myNext;
+                        myLast = tempx;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public T get(int index)
+        {
+            int cnt = 0;
+            myLast = myList;
+            T obj = default(T);
+            while ((myLast.myNext != null) && (cnt <= index))
+            {
+                if (cnt == index) obj = myLast.myObj;
+                myLast = myLast.myNext;
+                cnt++;
+            }
+            if (cnt == index) obj = myLast.myObj;
+            myLast = myList;
+            return obj;
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                items.Add(this.get(i));
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class Set<T>
+    {
+        private System.Collections.Generic.List<T> myList;
+
+        public Set()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public Set(T t) : this()
+        {
+            myList.Add(t);
+        }
+
+        public void add(T t)
+        {
+            if (!this.contains(t)) myList.Add(t);
+        }
+
+        public void remove(int index)
+        {
+            myList.RemoveAt(index);
+        }
+
+        public T get(int index)
+        {
+            return myList[index];
+        }
+
+        public void print()
+        {
+            foreach (var item in myList)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public bool contains(T t)
+        {
+            return myList.Contains(t);
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+    }
+
     class LinkedListMultiset<T> where T : IComparable
+    {
+        private Node<T> myList;
+        private Node<T> myLast;
+
+        private void addSorted(T t)
+        {
+            myLast = myList;
+            Node<T> temp = new Node<T>(t);
+            if (temp.myObj.CompareTo(myLast.myObj) == -1)
+            {
+                temp.myNext = myLast;
+                myList = temp;
+                return;
+            }
+            while (myLast.myNext != null)
+            {
+                if (temp.myObj.CompareTo(myLast.myNext.myObj) == -1)
+                {
+                    temp.myNext = myLast.myNext;
+                    myLast.myNext = temp;
+                    return;
+                }
+                myLast = myLast.myNext;
+            }
+
+            myLast.myNext = temp;
+        }
+
+        public LinkedListSortedMultiset()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public LinkedListSortedMultiset(T t) : this()
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+        public void add(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+            } else
+            {
+                this.addSorted(t);
+            }
+        }
+
+        public void remove(int index)
+        {
+            if (index == 0)
+            {
+                myLast = myList;
+                Node<T> temp = myLast.myNext;
+                myList = temp;
+                myLast = myList;
+            }
+            else if (index == (this.size() - 1))
+            {
+                myLast = myList;
+                while (myLast.myNext.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = null;
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                Node<T> tempx;
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        tempx = myLast;
+                        tempx.myNext = myLast.myNext.myNext;
+                        myLast = tempx;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public T get(int index)
+        {
+            int cnt = 0;
+            myLast = myList;
+            T obj = default(T);
+            while ((myLast.myNext != null) && (cnt <= index))
+            {
+                if (cnt == index) obj = myLast.myObj;
+                myLast = myLast.myNext;
+                cnt++;
+            }
+            if (cnt == index) obj = myLast.myObj;
+            myLast = myList;
+            return obj;
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                items.Add(this.get(i));
+            }
+            return items;
+        }
+
+        public Adscol.Set<T> getSet()
+        {
+            var items = new Adscol.Set<T>();
+
+            for (int i= 0; i < this.size(); i++)
+            {
+                items.add(this.get(i));
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class Multiset<T> where T : IComparable
+    {
+        private System.Collections.Generic.List<T> myList;
+
+        private void addSorted(T t)
+        {
+            for (int i = 0; i < myList.Count; i++)
+            {
+                if (t.CompareTo(myList[i]) == -1)
+                {
+                    myList.Insert(i, t);
+                    return;
+                }
+            }
+            myList.Add(t);
+        }
+
+        public Multiset()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public Multiset(T t) : this()
+        {
+            myList.Add(t);
+        }
+
+        public void add(T t)
+        {
+            this.addSorted(t);
+        }
+
+        public void remove(int index)
+        {
+            myList.RemoveAt(index);
+        }
+
+        public T get(int index)
+        {
+            return myList[index];
+        }
+
+        public void print()
+        {
+            foreach (var item in myList)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public Adscol.Set<T> getSet()
+        {
+            var items = new Adscol.Set<T>();
+
+            foreach (var item in myList)
+            {
+                items.add(item);
+            }
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            return myList.Contains(t);
+        }
+
+        public void clear()
+        {
+            myList.Clear();
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+    }
+
+    class LinkedListBag<T>
     {
 
     }
 
-    class Multiset<T> where T : IComparable
+    class Bag<T>
     {
 
     }
