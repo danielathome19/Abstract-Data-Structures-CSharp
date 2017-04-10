@@ -10,7 +10,9 @@ namespace CS_Abstract_Data_Structures
             // Call method to test data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            SetTest();
+
+            MultisetTest();
+
             Console.ReadKey();
         }
 
@@ -309,6 +311,50 @@ namespace CS_Abstract_Data_Structures
             nums2.print();
 
             Console.WriteLine(nums2.size());
+        }
+
+        static void LinkedListMultisetTest()
+        {
+            LinkedListMultiset<int> nums = new LinkedListMultiset<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+
+                int x = rand.Next(0, 10);
+
+                nums.add(x);
+            }
+
+            nums.print();
+
+            Console.WriteLine("Size: " + nums.size());
+
+            Set<int> list = nums.getSet();
+            list.print();
+        }
+
+        static void MultisetTest()
+        {
+            Multiset<int> nums = new Multiset<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+
+                int x = rand.Next(0, 10);
+
+                nums.add(x);
+            }
+
+            nums.print();
+
+            Console.WriteLine("Size: " + nums.size());
+
+            Set<int> list = nums.getSet();
+            list.print();
         }
 
     }
