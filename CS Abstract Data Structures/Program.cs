@@ -7,7 +7,7 @@ namespace CS_Abstract_Data_Structures
     {
         static void Main(string[] args)
         {
-            // Call method to test data structure methods
+            // Call method to test corresponding data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
