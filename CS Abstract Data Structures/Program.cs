@@ -414,6 +414,7 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine();
 
             nums.remove(9);
+            nums.removeAll(3);
             nums.invert();
 
             nums.printInOrder();

@@ -1899,6 +1899,115 @@ namespace Adscol
             TreeNode<T> prev = root;
             TreeNode<T> spot = root;
             bool passedRoot = false;
+            int oldCount = numCounter(root, t);
+            while (numCounter(root, t) != (oldCount - 1))
+            {
+                if (spot.myObj.Equals(t) && !passedRoot)
+                {
+                    if (root.myRight != null)
+                    {
+                        TreeNode<T> temp = root.myRight.myLeft;
+                        TreeNode<T> tempL = root.myLeft;
+                        root = root.myRight;
+                        root.myLeft = tempL;
+                        this.addNode(temp);
+                    }
+                    else if (root.myLeft != null)
+                    {
+                        TreeNode<T> temp = root.myLeft.myRight;
+                        TreeNode<T> tempR = root.myRight;
+                        root = root.myLeft;
+                        root.myRight = tempR;
+                        this.addNode(temp);
+                    }
+                    else
+                    {
+                        root = null;
+                    }
+                }
+
+                while (!spot.myObj.Equals(t))
+                {
+                    if (t.CompareTo(spot.myObj) == -1)
+                    {
+                        prev = spot;
+                        spot = spot.myLeft;
+                    }
+                    else
+                    {
+                        prev = spot;
+                        spot = spot.myRight;
+                    }
+                }
+
+                if ((spot.myLeft == null) && (spot.myRight == null))
+                {
+                    if (t.CompareTo(prev.myObj) == -1)
+                    {
+                        prev.myLeft = null;
+                    }
+                    else
+                    {
+                        prev.myRight = null;
+                    }
+                }
+                else
+                {
+                    if ((spot.myLeft == null) || (spot.myRight == null))
+                    {
+                        if (t.CompareTo(prev.myObj) == -1)
+                        {
+                            if (spot.myLeft == null)
+                            {
+                                prev.myLeft = spot.myRight;
+                            }
+                            else
+                            {
+                                prev.myLeft = spot.myLeft;
+                            }
+                        }
+                        else
+                        {
+                            if (spot.myRight == null)
+                            {
+                                prev.myRight = spot.myRight;
+                            }
+                            else
+                            {
+                                prev.myRight = spot.myLeft;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        TreeNode<T> pmover = spot.myRight;
+                        TreeNode<T> mover = spot.myRight;
+                        while (mover.myLeft != null)
+                        {
+                            pmover = mover;
+                            mover = mover.myLeft;
+                        }
+                        if (pmover == mover)
+                        {
+                            spot.myObj = mover.myObj;
+                            spot.myRight = mover.myRight;
+                        }
+                        else
+                        {
+                            spot.myObj = mover.myObj;
+                            pmover.myLeft = mover.myRight;
+                        }
+                    }
+                }
+                passedRoot = true;
+            }
+        }
+
+        public void removeAll(T t)
+        {
+            TreeNode<T> prev = root;
+            TreeNode<T> spot = root;
+            bool passedRoot = false;
             while (numCounter(root, t) != 0)
             {
                 if (spot.myObj.Equals(t) && !passedRoot)
