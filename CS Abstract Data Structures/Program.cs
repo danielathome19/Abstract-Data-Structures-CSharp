@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            PriorityQueueTest();
+            ArrayListTest();
 
             Console.ReadKey();
         }
@@ -463,6 +463,32 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(queue.peek());
 
             queue.print();
+        }
+
+        static void ArrayListTest()
+        {
+            ArrayList<int> list = new ArrayList<int>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                list.add(i);
+            }
+
+            Console.WriteLine("Size: " + list.size());
+
+            list = list.subList(0, 50);
+            Console.WriteLine("Size: " + list.size());
+
+            list.print();
+
+            Console.WriteLine(list.isEmpty());
+
+            list.reverse();
+            list[0] = 350;
+            Console.WriteLine(list.get(5));
+            Console.WriteLine(list[5]);
+            Console.WriteLine(list.contains(3));
+            list.print();
         }
     }
 }

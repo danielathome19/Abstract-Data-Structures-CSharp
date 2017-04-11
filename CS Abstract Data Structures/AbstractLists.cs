@@ -2159,4 +2159,336 @@ namespace Adscol
 
     }
 
+    class ArrayList<T> : AdsClass<T>
+    {
+        private T[] array;
+        private int _size;
+        private int memsize;
+        const int basesize = 16;
+
+        private void copy(ArrayList<T> a)
+        {
+            array = new T[a.memsize];
+            if (array == null)
+            {
+                throw memFail();
+            }
+
+            for (int i = 0; i < a._size; i++)
+            {
+                array[i] = a.array[i];
+            }
+
+            memsize = a.memsize;
+            _size = a._size;
+        }
+        
+        private void doubleSize()
+        {
+            T[] temp = null;
+            int new_size;
+            if (memsize == 0)
+            {
+                temp = new T[basesize];
+                new_size = 1;
+            } else
+            {
+                temp = new T[memsize * 2];
+                new_size = memsize * 2;
+            }
+            if (temp == null)
+            {
+                throw memFail();
+            }
+
+            for (int i = 0; i < _size; i++)
+            {
+                temp[i] = array[i];
+            }
+
+            array = temp;
+            memsize = new_size;
+        }
+
+        private void halfsize()
+        {
+            int resize = memsize / 2;
+            if (memsize < (basesize * 2))
+            {
+                resize = basesize;
+            }
+
+            T[] temp = new T[resize];
+
+            if (temp == null)
+            {
+                throw memFail();
+            }
+
+            for (int i = 0; i < _size; i++)
+            {
+                temp[i] = array[i];
+            }
+
+            array = temp;
+            memsize = resize;
+        }
+
+        private Exception memFail()
+        {
+            return new Exception("Memory Allocation Failed");
+        }
+
+        private IndexOutOfRangeException badAccess()
+        {
+            return new IndexOutOfRangeException("Attempting to subscript array element that doesn't exist");
+        }
+
+        public ArrayList()
+        {
+            array = new T[basesize];
+            if (array == null)
+            {
+                throw memFail();
+            }
+
+            _size = 0;
+            memsize = basesize;
+        }
+
+        public ArrayList(int size)
+        {
+            if (size == 0)
+            {
+                array = null;
+            } else
+            {
+                array = new T[size];
+                if (array == null)
+                {
+                    throw memFail();
+                }
+            }
+
+            _size = 0;
+            memsize = size;
+        }
+
+        public ArrayList(ArrayList<T> a)
+        {
+            copy(a);
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
+        }
+
+        public void add(T t)
+        {
+            if ((_size + 1) > memsize)
+            {
+                doubleSize();
+            }
+
+            array[_size] = t;
+            _size++;
+        }
+
+        public void add(int index, T t)
+        {
+            if (index > _size)
+            {
+                throw badAccess();
+            }
+            if ((_size + 1) > memsize)
+            {
+                doubleSize();
+            }
+            for (int i = _size; i > index; i--)
+            {
+                array[i] = array[i - 1];
+            }
+            array[index] = t;
+            _size++;
+        }
+
+        public void appendAll(ArrayList<T> items)
+        {
+            for (int i = 0; i < items._size; i++)
+            {
+                add(items.array[i]);
+            }
+        }
+
+        public void remove(int index)
+        {
+            if (index > (_size - 1))
+            {
+                throw badAccess();
+            }
+            for (int i = index; i < _size - 1; i++)
+            {
+                array[i] = array[i + 1];
+            }
+            _size--;
+            if (_size <= (memsize / 4) && memsize > basesize)
+            {
+                halfsize();
+            }
+        }
+
+        public void set(int index, T t)
+        {
+            if (index > _size)
+            {
+                throw badAccess();
+            }
+            array[index] = t;
+        }
+
+        public T get(int index)
+        {
+            if (index > (_size - 1))
+            {
+                throw badAccess();
+            }
+            return array[index];
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                Console.WriteLine(array[i]);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            for (int i = 0; i < _size; i++)
+            {
+                items.Add(array[i]);
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                if (array[i].Equals(t))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            for (int i = _size - 1; i >= 0; i--)
+            {
+                remove(i);
+            }
+        }
+
+        public int size()
+        {
+            return _size;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public bool equals(ArrayList<T> a)
+        {
+            if (_size != a._size)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < _size; i++)
+            {
+                if (array[i].Equals(a.array[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void reverse()
+        {
+            T[] temp = new T[memsize];
+            if (temp == null)
+            {
+                throw memFail();
+            }
+
+            for (int i = _size - 1; i >= 0; i--)
+            {
+                temp[_size - 1 - i] = array[i];
+            }
+
+            array = temp;
+        }
+
+        public void trimToSize()
+        {
+            if (_size == memsize)
+            {
+                return;
+            }
+            T[] temp = new T[_size];
+            if (temp == null)
+            {
+                memFail();
+            }
+            for (int i = 0; i < _size; i++)
+            {
+                temp[i] = array[i];
+            }
+            
+            array = temp;
+            memsize = _size;
+        }
+
+        public ArrayList<T> subList(int fromIndex, int toIndex)
+        {
+            ArrayList<T> temp = new ArrayList<T>();
+            if (temp == null)
+            {
+                throw memFail();
+            }
+
+            if (toIndex >= _size || fromIndex >= _size)
+            {
+                throw badAccess();
+            }
+
+            if (fromIndex >= toIndex)
+            {
+                return temp;
+            }
+
+            for (int i = fromIndex; i < toIndex; i++)
+            {
+                temp.add(array[i]);
+            }
+            return temp;
+        }
+    }
+
 }
