@@ -11,8 +11,8 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            TreapTest();
-
+            HashSetTest();
+            
             Console.ReadKey();
         }
 
@@ -780,6 +780,33 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine();
             tree.printPostOrder();
             Console.WriteLine();
+        }
+
+        static void HashSetTest()
+        {
+            HashSet<int> evenNumbers = new HashSet<int>();
+            HashSet<int> oddNumbers = new HashSet<int>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                evenNumbers.add(i * 2);
+                
+                oddNumbers.add((i * 2) + 1);
+            }
+
+            Console.WriteLine("Even numbers: " + evenNumbers.size());
+            Console.WriteLine("Odd numbers: " + oddNumbers.size());
+
+            Console.WriteLine("\n\nEvens:");
+            evenNumbers.print();
+            Console.WriteLine("\n\nOdds:");
+            oddNumbers.print();
+
+            oddNumbers.remove(7);
+            oddNumbers.remove(3);
+
+            Console.WriteLine("\n\nOdds:");
+            oddNumbers.print();
         }
     }
 }

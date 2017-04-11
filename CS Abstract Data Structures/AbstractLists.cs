@@ -28,10 +28,10 @@
  *  -Map
  *  -HashMap (Dictionary)
  *  -Treap
+ *  -HashSet
  *
  * To do:
  *  -Multimap
- *  -HashSet
  *  -TreeSet
  *  -MaxHeap (Binary Tree)
  *  -MaxHeap
@@ -3391,7 +3391,7 @@ namespace Adscol
     {
         private int numElements;
         private TreapNode<T> root;
-        private System.Collections.Generic.HashSet<int> hs;
+        private HashSet<int> hs;
 
         private System.Collections.Generic.List<T> items;
 
@@ -3484,7 +3484,7 @@ namespace Adscol
             if (workingNode == null)
             {
                 ++numElements;
-                hs.Add(priority);
+                hs.add(priority);
                 return new TreapNode<T>(data, priority);
             }
             else if (data.CompareTo(workingNode.myObj) < 0)
@@ -3531,7 +3531,7 @@ namespace Adscol
                 if (workingNode.myLeft == null && workingNode.myRight == null)
                 {
                     --numElements;
-                    hs.Remove(workingNode.priority);
+                    hs.remove(workingNode.priority);
                     return null;
                 }
                 else if (workingNode.myRight == null)
@@ -3625,7 +3625,7 @@ namespace Adscol
 
         public Treap()
         {
-            hs = new System.Collections.Generic.HashSet<int>();
+            hs = new HashSet<int>();
             numElements = 0;
             root = null;
             items = new System.Collections.Generic.List<T>();
@@ -3636,7 +3636,7 @@ namespace Adscol
             Random rand = new Random();
             int tempPriority = (int)(rand.Next() * int.MaxValue);
             tempPriority += 1;
-            while (hs.Contains(tempPriority))
+            while (hs.contains(tempPriority))
             {
                 tempPriority = (int)(rand.Next() * int.MaxValue);
                 tempPriority += 1;
@@ -3647,7 +3647,7 @@ namespace Adscol
 
         public void add(T data, int priority)
         {
-            if (hs.Contains(priority)) return;
+            if (hs.contains(priority)) return;
 
             root = insert(root, data, priority);
         }
@@ -3726,7 +3726,7 @@ namespace Adscol
 
         public void clear()
         {
-            hs.Clear();
+            hs.clear();
             numElements = 0;
             root = null;
             items.Clear();
@@ -3740,6 +3740,274 @@ namespace Adscol
         public bool isEmpty()
         {
             return (this.size() == 0);
+        }
+    }
+
+    class HSNode<T> : IComparable<T> where T : IComparable<T>
+    {
+        private enum State
+        {
+            EMPTY,
+            IN_USE,
+            DELETED
+        }
+
+        private T element;
+        private State state = State.EMPTY;
+
+        public HSNode(T o)
+        {
+            setElement(o);
+        }
+
+        public int CompareTo(T other)
+        {
+            int cmpTo = element.CompareTo(other);
+            return state == State.IN_USE ? cmpTo : -1;
+        }
+
+        public bool equals(T other)
+        {
+            if (state != State.IN_USE)
+                return false;
+
+            return this.CompareTo(other) == 0;
+        }
+
+        public bool isEmpty()
+        {
+            return state == State.EMPTY;
+        }
+
+        public bool isInUse()
+        {
+            return state == State.IN_USE;
+        }
+
+        public T getElement()
+        {
+            return element;
+        }
+
+        public void setElement(T element)
+        {
+            state = State.IN_USE;
+            this.element = element;
+        }
+
+        public void remove()
+        {
+            state = State.DELETED;
+        }
+    }
+
+    class HashSet<T> : AdsClass<T> where T : IComparable<T>
+    {
+
+        private bool insert(int index, T element)
+        {
+            if (element == null)
+                return false;
+
+            if (elements[index] == null)
+            {
+                elements[index] = new HSNode<T>(element);
+                return true;
+            }
+
+            if (elements[index].isInUse())
+            {
+                if (elements[index].equals(element))
+                    return false;
+
+                return doubleHash(index, element);
+            }
+
+            elements[index].setElement(element);
+            return true;
+
+        }
+
+        private bool doubleHash(int index, T element)
+        {
+
+            int loopCount = 1;
+            bool spaceFound = false;
+
+            while (!spaceFound)
+            {
+                int newHash = getDoubleHashVal(index, loopCount);
+                if (elements[newHash] == null)
+                {
+                    elements[newHash] = new HSNode<T>(element);
+                    return true;
+                }
+
+                if (elements[newHash].equals(element))
+                    return false;
+
+                if (!elements[index].isInUse())
+                {
+                    elements[index].setElement(element);
+                    return true;
+                }
+
+                loopCount++;
+
+            }
+
+            return false;
+        }
+
+        private int getDoubleHashVal(int hash, int loopCount)
+        {
+            loopCount = loopCount % elements.Length;
+            return Math.Abs((hash + loopCount * secondaryHash(hash) % elements.Length) % elements.Length);
+
+        }
+
+        private int secondaryHash(int hash)
+        {
+            return (7919 - (hash % 7919)) % elements.Length;
+        }
+        
+        private int hashCode(object o)
+        {
+            return Math.Abs(o.GetHashCode()) % elements.Length;
+        }
+
+        private void extendElementsArray()
+        {
+            HSNode<T>[] oldArray = elements;
+            elements = new HSNode<T>[elements.Length * 2 + 1];
+
+
+            for (int i = 0; i < oldArray.Length; i++)
+            {
+                if (oldArray[i] != null && oldArray[i].isInUse())
+                    insert(hashCode(oldArray[i].getElement()), oldArray[i].getElement());
+            }
+        }
+
+        private const int defaultSize = 100;
+        private HSNode<T>[] elements;
+        private int noElements = 0;
+
+        public HashSet()
+        {
+            elements = new HSNode<T>[defaultSize];
+        }
+
+        public HashSet(int initialSize)
+        {
+            elements = new HSNode<T>[initialSize];
+        }
+
+        public void add(T t)
+        {
+            if (noElements >= elements.Length - 1) extendElementsArray();
+
+            bool inserted = insert(hashCode(t), t);
+            if (inserted) noElements++;
+        }
+
+        public void remove(T t)
+        {
+            int hash = hashCode(t);
+
+            if (elements[hash] == null) return;
+            
+            if (elements[hash].equals(t))
+            {
+                elements[hash].remove();
+                noElements--;
+                return;
+            }
+
+            bool stop = false;
+            int loopCount = 1;
+            while (!stop)
+            {
+                int newHash = getDoubleHashVal(hash, loopCount);
+
+                if (elements[newHash] == null || elements[newHash].isEmpty()) return;
+
+                if (elements[newHash].equals(t))
+                {
+                    elements[newHash].remove();
+                    noElements--;
+                    return;
+                }
+                loopCount++;
+            }
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < elements.Length; i++)
+            {
+                if (elements[i] != null && elements[i].isInUse())
+                    Console.WriteLine(elements[i].getElement());
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+            for (int i = 0; i < elements.Length; i++)
+            {
+                if (elements[i] != null && elements[i].isInUse())
+                    items.Add(elements[i].getElement());
+            }
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            int hash = hashCode(t);
+            if (elements[hash] == null)
+                return false;
+
+
+            if (elements[hash].equals(t))
+            {
+                return true;
+            }
+
+            bool stop = false;
+            int loopCount = 1;
+            while (!stop)
+            {
+                int newHash = getDoubleHashVal(hash, loopCount);
+
+                if (elements[newHash] == null || elements[newHash].isEmpty())
+                    return false;
+
+                if (elements[newHash].equals(t))
+                {
+                    return true;
+                }
+                loopCount++;
+            }
+
+            return false;
+
+        }
+
+        public void clear()
+        {
+            elements = new HSNode<T>[defaultSize];
+            noElements = 0;
+        }
+        public int size()
+        {
+            return noElements;
+        }
+        
+        public bool isEmpty()
+        {
+            return noElements == 0;
         }
     }
 }
