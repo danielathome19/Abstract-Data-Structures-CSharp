@@ -67,7 +67,7 @@ namespace Adscol
     {
         //TODO: void removeAll(T t);
         void print();
-        System.Collections.Generic.List<T> getList();
+        System.Collections.Generic.List<T> getList(); //Change to ArrayList<T> soon
         bool contains(T t);
         void clear();
         int size();
