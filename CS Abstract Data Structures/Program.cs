@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            ArrayListTest();
+            DequeTest();
 
             Console.ReadKey();
         }
@@ -489,6 +489,57 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(list[5]);
             Console.WriteLine(list.contains(3));
             list.print();
+        }
+
+        static void DequeTest()
+        {
+            Deque<int> list = new Deque<int>();
+
+            try
+            {
+                if (list.isEmpty())
+                {
+                    Console.WriteLine("Empty queue");
+                }
+
+                list.pushBack(100);
+                list.pushBack(200);
+                list.pushBack(300);
+
+                Console.WriteLine("Size: " + list.size());
+                
+                Console.WriteLine(list.popBack());
+                Console.WriteLine(list.popBack());
+                Console.WriteLine(list.popBack());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            Deque<int> list2 = new Deque<int>();
+
+            try
+            {
+                if (list2.isEmpty())
+                {
+                    Console.WriteLine("Empty queue");
+                }
+                
+                list2.pushBack(100);
+                list2.pushBack(200);
+                list2.pushBack(300);
+
+                Console.WriteLine("Size: " + list2.size());
+                
+                Console.WriteLine(list2.popFront());
+                Console.WriteLine(list2.popFront());
+                Console.WriteLine(list2.popFront());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }

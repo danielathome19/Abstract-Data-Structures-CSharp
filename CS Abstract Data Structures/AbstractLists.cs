@@ -18,12 +18,12 @@
  *  -Multiset (Sorted List)
  *  -Bag (LInked List)
  *  -Bag
- *
- * To do:
  *  -Binary (Search) Tree
  *  -Priority Queue
  *  -ArrayList
- *  -Double Ended Queue (Deque)
+ *  -Deque (Double Ended Queue)
+ *
+ * To do:
  *  -Circular Queue
  *  -Circular Linked List
  *  -SortedMap
@@ -100,6 +100,18 @@ namespace Adscol
         {
             myList = new Node<T>(t);
             myLast = myList;
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
         }
 
         public void add(T t)
@@ -814,6 +826,7 @@ namespace Adscol
             myList = new Node<T>(t);
             myLast = myList;
         }
+
 
         public void add(T t)
         {
@@ -2491,4 +2504,80 @@ namespace Adscol
         }
     }
 
+    class Deque<T> : AdsClass<T>
+    {
+        private System.Collections.Generic.List<T> myList;
+
+        public Deque()
+        {
+            myList = new System.Collections.Generic.List<T>();
+        }
+
+        public void pushFront(T t)
+        {
+            myList.Insert(0, t);
+        }
+
+        public void pushBack(T t)
+        {
+            myList.Add(t);
+        }
+
+        public T popFront()
+        {
+            T obj = myList[0];
+            myList.RemoveAt(0);
+            return obj;
+        }
+
+        public T popBack()
+        {
+            T obj = myList[myList.Count - 1];
+            myList.RemoveAt(myList.Count - 1);
+            return obj;
+        }
+
+        public T peekFront()
+        {
+            return myList[0];
+        }
+
+        public T peekBack()
+        {
+            return myList[myList.Count - 1];
+        }
+
+        public void print()
+        {
+            foreach (var item in myList)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return myList;
+        }
+
+        public bool contains(T t)
+        {
+            return myList.Contains(t);
+        }
+
+        public void clear()
+        {
+            myList.Clear();
+        }
+
+        public int size()
+        {
+            return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
 }
