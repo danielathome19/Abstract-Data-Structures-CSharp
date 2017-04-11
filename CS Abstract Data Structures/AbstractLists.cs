@@ -27,15 +27,35 @@
  *  -SortedMap
  *  -Map
  *  -HashMap (Dictionary)
+ *  -Treap
  *
  * To do:
- *  -Heap
+ *  -Multimap
+ *  -HashSet
+ *  -TreeSet
+ *  -MaxHeap (Binary Tree)
+ *  -MaxHeap
+ *  -MinHeap (Binary Tree)
+ *  -MinHeap
  *  -Skip List
+ *  -Unrolled Linked LIst
  *  -Bitset
+ *  -Bitfield
+ *  -Queap
  *  -Trie
- *  -Treap
+ *  -Splay Tree
+ *  -2 3 Tree
+ *  -2 4 Tree
+ *  -AVL Tree
+ *  -B-Tree
+ *  -B+Tree
+ *  -Ternary Tree
+ *  -Red Black Tree
  *  -Undirected Graph
  *  -Directed Graph
+ *  -Incidence Matrix
+ *  -Adjacency List
+ *  -Adjacency Matrix
  * 
  **************************************************************************/
 
@@ -2005,109 +2025,9 @@ namespace Adscol
 
         public void removeAll(T t)
         {
-            TreeNode<T> prev = root;
-            TreeNode<T> spot = root;
-            bool passedRoot = false;
-            while (numCounter(root, t) != 0)
+            while (this.contains(t))
             {
-                if (spot.myObj.Equals(t) && !passedRoot)
-                {
-                    if (root.myRight != null)
-                    {
-                        TreeNode<T> temp = root.myRight.myLeft;
-                        TreeNode<T> tempL = root.myLeft;
-                        root = root.myRight;
-                        root.myLeft = tempL;
-                        this.addNode(temp);
-                    }
-                    else if (root.myLeft != null)
-                    {
-                        TreeNode<T> temp = root.myLeft.myRight;
-                        TreeNode<T> tempR = root.myRight;
-                        root = root.myLeft;
-                        root.myRight = tempR;
-                        this.addNode(temp);
-                    }
-                    else
-                    {
-                        root = null;
-                    }
-                }
-
-                while (!spot.myObj.Equals(t))
-                {
-                    if (t.CompareTo(spot.myObj) == -1)
-                    {
-                        prev = spot;
-                        spot = spot.myLeft;
-                    }
-                    else
-                    {
-                        prev = spot;
-                        spot = spot.myRight;
-                    }
-                }
-
-                if ((spot.myLeft == null) && (spot.myRight == null))
-                {
-                    if (t.CompareTo(prev.myObj) == -1)
-                    {
-                        prev.myLeft = null;
-                    }
-                    else
-                    {
-                        prev.myRight = null;
-                    }
-                }
-                else
-                {
-                    if ((spot.myLeft == null) || (spot.myRight == null))
-                    {
-                        if (t.CompareTo(prev.myObj) == -1)
-                        {
-                            if (spot.myLeft == null)
-                            {
-                                prev.myLeft = spot.myRight;
-                            }
-                            else
-                            {
-                                prev.myLeft = spot.myLeft;
-                            }
-                        }
-                        else
-                        {
-                            if (spot.myRight == null)
-                            {
-                                prev.myRight = spot.myRight;
-                            }
-                            else
-                            {
-                                prev.myRight = spot.myLeft;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        TreeNode<T> pmover = spot.myRight;
-                        TreeNode<T> mover = spot.myRight;
-                        while (mover.myLeft != null)
-                        {
-                            pmover = mover;
-                            mover = mover.myLeft;
-                        }
-                        if (pmover == mover)
-                        {
-                            spot.myObj = mover.myObj;
-                            spot.myRight = mover.myRight;
-                        }
-                        else
-                        {
-                            spot.myObj = mover.myObj;
-                            pmover.myLeft = mover.myRight;
-                        }
-                    }
-                }
-                passedRoot = true;
+                remove(t);
             }
         }
 
@@ -3448,5 +3368,378 @@ namespace Adscol
             return (this.size() == 0);
         }
 
+    }
+
+    class TreapNode<T> where T : IComparable
+    {
+	    public T myObj;
+        public int priority;
+        public TreapNode<T> myLeft;
+        public TreapNode<T> myRight;
+        
+        public TreapNode(T data, int priority)
+        {
+            this.myObj = data;
+            this.priority = priority;
+
+            myLeft = null;
+            myRight = null;
+        }
+    }
+
+    class Treap<T> : AdsClassMin where T : IComparable
+    {
+        private int numElements;
+        private TreapNode<T> root;
+        private System.Collections.Generic.HashSet<int> hs;
+
+        private System.Collections.Generic.List<T> items;
+
+        private void getListInOrderT(TreapNode<T> r)
+        {
+            if (r == null) return;
+            getListInOrderT(r.myLeft);
+            items.Add(r.myObj);
+            getListInOrderT(r.myRight);
+        }
+
+        private void getListPreOrderT(TreapNode<T> r)
+        {
+            if (r == null) { return; }
+            items.Add(r.myObj);
+            getListPreOrderT(r.myLeft);
+            getListPreOrderT(r.myRight);
+        }
+
+        private void getListPostOrderT(TreapNode<T> r)
+        {
+            if (r == null) { return; }
+            getListPostOrderT(r.myLeft);
+            getListPostOrderT(r.myRight);
+            items.Add(r.myObj);
+        }
+
+        private static void printInOrderT(TreapNode<T> r)
+        {
+            if (r == null) return;
+            printInOrderT(r.myLeft);
+            Console.WriteLine(r.myObj);
+            printInOrderT(r.myRight);
+        }
+
+        private static void printPreOrderT(TreapNode<T> r)
+        {
+            if (r == null) return;
+            Console.WriteLine(r.myObj);
+            printPreOrderT(r.myLeft);
+            printPreOrderT(r.myRight);
+        }
+
+        private static void printPostOrderT(TreapNode<T> r)
+        {
+            if (r == null) return;
+            printPostOrderT(r.myLeft);
+            printPostOrderT(r.myRight);
+            Console.WriteLine(r.myObj);
+        }
+
+        private static void invertTree(TreapNode<T> r)
+        {
+            if (r == null) return;
+            TreapNode<T> temp = r.myLeft;
+            r.myLeft = r.myRight;
+            r.myRight = temp;
+            invertTree(r.myLeft);
+            invertTree(r.myRight);
+        }
+
+        private TreapNode<T> rightRotation(TreapNode<T> workingNode)
+        {
+            TreapNode<T> oldRoot = workingNode;
+            TreapNode<T> rtLChld = workingNode.myLeft;
+            TreapNode<T> rtLChldRChld = rtLChld.myRight;
+
+            workingNode = rtLChld;
+            workingNode.myRight = oldRoot;
+            oldRoot.myLeft = rtLChldRChld;
+
+            return workingNode;
+        }
+
+        private TreapNode<T> leftRotation(TreapNode<T> workingNode)
+        {
+            TreapNode<T> oldRoot = workingNode;
+            TreapNode<T> rtRChld = workingNode.myRight;
+            TreapNode<T> rtRChldLChld = rtRChld.myLeft;
+
+            workingNode = rtRChld;
+            workingNode.myLeft = oldRoot;
+            oldRoot.myRight = rtRChldLChld;
+
+            return workingNode;
+        }
+
+        private TreapNode<T> insert(TreapNode<T> workingNode, T data, int priority)
+        {
+            if (workingNode == null)
+            {
+                ++numElements;
+                hs.Add(priority);
+                return new TreapNode<T>(data, priority);
+            }
+            else if (data.CompareTo(workingNode.myObj) < 0)
+            {
+                workingNode.myLeft = insert(workingNode.myLeft, data, priority);
+
+                if (workingNode.myLeft.priority < workingNode.priority)
+                {
+                    workingNode = rightRotation(workingNode);
+                }
+            }
+            else if (data.CompareTo(workingNode.myObj) > 0)
+            {
+                workingNode.myRight = insert(workingNode.myRight, data, priority);
+                if (workingNode.myRight.priority < workingNode.priority)
+                {
+                    workingNode = leftRotation(workingNode);
+                }
+            }
+            else
+            {
+                ;
+            }
+
+            return workingNode;
+        }
+
+        private TreapNode<T> delete(TreapNode<T> workingNode, T data)
+        {
+            if (workingNode == null)
+            {
+                return null;
+            }
+            else if (data.CompareTo(workingNode.myObj) < 0)
+            {
+                workingNode.myLeft = delete(workingNode.myLeft, data);
+            }
+            else if (data.CompareTo(workingNode.myObj) > 0)
+            {
+                workingNode.myRight = delete(workingNode.myRight, data);
+            }
+            else
+            {
+                if (workingNode.myLeft == null && workingNode.myRight == null)
+                {
+                    --numElements;
+                    hs.Remove(workingNode.priority);
+                    return null;
+                }
+                else if (workingNode.myRight == null)
+                {
+                    workingNode = rightRotation(workingNode);
+                    workingNode.myRight = delete(workingNode.myRight, data);
+                }
+                else if (workingNode.myLeft == null)
+                {
+                    workingNode = leftRotation(workingNode);
+                    workingNode.myLeft = delete(workingNode.myLeft, data);
+                }
+                else
+                {
+                    if (workingNode.myLeft.priority < workingNode.myRight.priority)
+                    {
+                        workingNode = rightRotation(workingNode);
+                        workingNode.myRight = delete(workingNode.myRight, data);
+                    }
+                    else
+                    {
+                        workingNode = leftRotation(workingNode);
+                        workingNode.myLeft = delete(workingNode.myLeft, data);
+                    }
+                }
+            }
+            return workingNode;
+        }
+
+        private bool contains(TreapNode<T> root, T data)
+        {
+            if (root == null)
+            {
+                return false;
+            }
+            else if (data.CompareTo(root.myObj) < 0)
+            {
+                return contains(root.myLeft, data);
+            }
+            else if (data.CompareTo(root.myObj) > 0)
+            {
+                return contains(root.myRight, data);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private int getHeight(TreapNode<T> workingNode, int currHeight)
+        {
+            if (workingNode == null) return currHeight;
+
+            currHeight += 1;
+
+            int leftHeight = getHeight(workingNode.myLeft, currHeight);
+            int rightHeight = getHeight(workingNode.myRight, currHeight);
+
+            return (leftHeight > rightHeight ? leftHeight : rightHeight);
+        }
+
+        private int maxWidth = 0;
+
+        private int getWidth(TreapNode<T> r)
+        {
+            Queue<TreapNode<T>> q = new Queue<TreapNode<T>>();
+            int levelNodes = 0;
+            if (r == null) return 0;
+            q.enqueue(r);
+
+            while (!q.isEmpty())
+            {
+                levelNodes = q.size();
+
+                if (levelNodes > maxWidth)
+                {
+                    maxWidth = levelNodes;
+                }
+
+                while (levelNodes > 0)
+                {
+                    TreapNode<T> n = q.dequeue();
+                    if (n.myLeft != null) q.enqueue(n.myLeft);
+                    if (n.myRight != null) q.enqueue(n.myRight);
+                    levelNodes--;
+                }
+            }
+
+            return maxWidth;
+        }
+
+        public Treap()
+        {
+            hs = new System.Collections.Generic.HashSet<int>();
+            numElements = 0;
+            root = null;
+            items = new System.Collections.Generic.List<T>();
+        }
+
+        public void add(T data)
+        {
+            Random rand = new Random();
+            int tempPriority = (int)(rand.Next() * int.MaxValue);
+            tempPriority += 1;
+            while (hs.Contains(tempPriority))
+            {
+                tempPriority = (int)(rand.Next() * int.MaxValue);
+                tempPriority += 1;
+            }
+
+            root = insert(root, data, tempPriority);
+        }
+
+        public void add(T data, int priority)
+        {
+            if (hs.Contains(priority)) return;
+
+            root = insert(root, data, priority);
+        }
+
+        public void remove(T data)
+        {
+            root = delete(root, data);
+        }
+
+
+        public void removeAll(T t)
+        {
+            while (this.contains(t))
+            {
+                remove(t);
+            }
+        }
+
+        public int width()
+        {
+            int w = getWidth(root);
+            maxWidth = 0;
+            return w;
+        }
+        
+        public int height()
+        {
+            return getHeight(root, -1);
+        }
+
+        public void invert()
+        {
+            invertTree(root);
+        }
+
+        public void printPreOrder()
+        {
+            printPreOrderT(root);
+        }
+
+        public void printInOrder()
+        {
+            printInOrderT(root);
+        }
+
+        public void printPostOrder()
+        {
+            printPreOrderT(root);
+        }
+
+        public System.Collections.Generic.List<T> getListPreOrder()
+        {
+            items.Clear();
+            getListPreOrderT(root);
+            return items;
+        }
+
+        public System.Collections.Generic.List<T> getListInOrder()
+        {
+            items.Clear();
+            getListInOrderT(root);
+            return items;
+        }
+
+        public System.Collections.Generic.List<T> getListPostOrder()
+        {
+            items.Clear();
+            getListPostOrderT(root);
+            return items;
+        }
+
+        public bool contains(T data)
+        {
+            return contains(root, data);
+        }
+
+        public void clear()
+        {
+            hs.Clear();
+            numElements = 0;
+            root = null;
+            items.Clear();
+        }
+
+        public int size()
+        {
+            return numElements;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
     }
 }

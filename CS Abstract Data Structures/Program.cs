@@ -10,12 +10,8 @@ namespace CS_Abstract_Data_Structures
             // Call method to test corresponding data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-            
-            MapTest();
-            Console.WriteLine();
-            Console.WriteLine("Finished Map Test");
-            Console.WriteLine();
-            HashMapTest();
+
+            TreapTest();
 
             Console.ReadKey();
         }
@@ -734,6 +730,56 @@ namespace CS_Abstract_Data_Structures
             table.add("Joe", 14);
 
             Console.WriteLine("\nSize: " + table.size());
+        }
+
+        static void TreapTest()
+        {
+            Treap<int> nums = new Treap<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums.add(x);
+            }
+
+            nums.printInOrder();
+
+            Console.WriteLine();
+            Console.WriteLine("Size: " + nums.size());
+            Console.WriteLine("Height: " + nums.height());
+            Console.WriteLine("Width: " + nums.width());
+            Console.WriteLine();
+
+            nums.remove(9);
+            nums.removeAll(3);
+            nums.invert();
+
+            nums.printInOrder();
+
+            Console.WriteLine();
+            Console.WriteLine("Size: " + nums.size());
+            Console.WriteLine();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Treap<char> tree = new Treap<char>();
+
+            tree.add('2');
+            tree.add('+');
+            tree.add('3');
+            tree.add('*');
+            tree.add('6');
+
+            tree.printPreOrder();
+            Console.WriteLine();
+            tree.printInOrder();
+            Console.WriteLine();
+            tree.printPostOrder();
+            Console.WriteLine();
         }
     }
 }
