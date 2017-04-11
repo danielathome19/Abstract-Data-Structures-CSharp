@@ -10,8 +10,8 @@ namespace CS_Abstract_Data_Structures
             // Call method to test corresponding data structure methods
             // LinkedListTest();
             Console.WriteLine("Hello world!");
-
-            DequeTest();
+            
+            MapTest();
 
             Console.ReadKey();
         }
@@ -540,6 +540,151 @@ namespace CS_Abstract_Data_Structures
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        static void CircularQueueTest()
+        {
+            CircularQueue<int> list = new CircularQueue<int>(5);
+
+            for (int i = 0; i < 5; i++)
+            {
+                list.enqueue(i);
+            }
+
+            list.print();
+
+            Console.WriteLine();
+            Console.WriteLine("Size: " + list.size());
+            list.clear();
+            Console.WriteLine("Size: " + list.size());
+
+            CircularQueue<string> q = new CircularQueue<string>(3);
+
+            q.enqueue("The");
+            q.enqueue("end");
+            q.enqueue("is");
+            q.enqueue("nigh!");
+
+            q.enqueue("Cool");
+
+            q.print();
+        }
+
+        static void CircularLinkedListTest()
+        {
+            CircularLinkedList<int> list = new CircularLinkedList<int>();
+
+            Console.WriteLine("Starting");
+
+            list.addBack(43);
+            list.addBack(83);
+            list.addBack(98);
+            list.addBack(65);
+            list.addBack(4983);
+            list.addBack(9898);
+            list.addFront(5555555);
+
+            Console.WriteLine("Size: " + list.size());
+
+            list.print();
+
+            list.popBack();
+            Console.WriteLine("Size: " + list.size());
+            list.print();
+
+            list.popFront();
+            Console.WriteLine("Size: " + list.size());
+            list.print();
+
+            Console.WriteLine("Finished");
+        }
+
+        static void SortedMapTest()
+        {
+            SortedMap<string, int> table = new SortedMap<string, int>();
+
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+            table.add("Jack", 71);
+            table.add("Jill", 64);
+            table.add("Abe", 33);
+            table.add("Beth", 21);
+            table.add("Chuck", 12);
+            table.add("Dot", 38);
+            table.add("Mike", 75);
+            table.add("Nick", 58);
+            table.add("Otis", 45);
+
+            table.print();
+
+            Console.WriteLine("\nSize: " + table.size());
+            Console.WriteLine(table.get("wow"));
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+            Console.WriteLine(table.get("Jack"));
+            Console.WriteLine(table.get("Jill"));
+
+            table.remove("Jane");
+            table.remove("Joe");
+
+            Console.WriteLine("\nSize: " + table.size());
+
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+
+            Console.WriteLine("\nSize: " + table.size());
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+
+            Console.WriteLine("\nSize: " + table.size());
+        }
+
+        static void MapTest()
+        {
+            Map<string, int> table = new Map<string, int>();
+
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+            table.add("Jack", 71);
+            table.add("Jill", 64);
+            table.add("Abe", 33);
+            table.add("Beth", 21);
+            table.add("Chuck", 12);
+            table.add("Dot", 38);
+            table.add("Mike", 75);
+            table.add("Nick", 58);
+            table.add("Otis", 45);
+
+            table.print();
+
+            Console.WriteLine("\nSize: " + table.size());
+            Console.WriteLine(table.get("wow"));
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+            Console.WriteLine(table.get("Jack"));
+            Console.WriteLine(table.get("Jill"));
+
+            table.remove("Jane");
+            table.remove("Joe");
+
+            Console.WriteLine("\nSize: " + table.size());
+
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+
+            Console.WriteLine("\nSize: " + table.size());
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+
+            Console.WriteLine("\nSize: " + table.size());
         }
     }
 }

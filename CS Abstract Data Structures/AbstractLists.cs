@@ -22,16 +22,18 @@
  *  -Priority Queue
  *  -ArrayList
  *  -Deque (Double Ended Queue)
- *
- * To do:
  *  -Circular Queue
  *  -Circular Linked List
  *  -SortedMap
  *  -Map
+ *
+ * To do:
  *  -HashMap (Dictionary)
  *  -Heap
  *  -Skip List
  *  -Bitset
+ *  -Trie
+ *  -Treap
  *  -Undirected Graph
  *  -Directed Graph
  * 
@@ -52,9 +54,8 @@ namespace Adscol
         bool isEmpty();
     }
 
-    interface AdsClassMin<T>
+    interface AdsClassMin
     {
-        bool contains(T t);
         void clear();
         int size();
         bool isEmpty();
@@ -1689,7 +1690,7 @@ namespace Adscol
         }
     }
 
-    class BinaryTree<T> : AdsClassMin<T> where T : IComparable
+    class BinaryTree<T> : AdsClassMin where T : IComparable
     {
         private TreeNode<T> root;
         private System.Collections.Generic.List<T> items;
@@ -2573,6 +2574,585 @@ namespace Adscol
         public int size()
         {
             return myList.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class CircularQueue<T> : AdsClass<T>
+    {
+        private const int DEFAULT_SIZE = 10;
+        private int myMaxSize;
+        private int myCurrentSize;
+        private int myStart;
+        private int myEnd;
+        private T[] myBuffer;
+
+        public CircularQueue()
+        {
+            myMaxSize = DEFAULT_SIZE;
+            myBuffer = new T[myMaxSize];
+            myStart = 0;
+            myEnd = 0;
+            myCurrentSize = 0;
+        }
+
+        public CircularQueue(int size)
+        {
+            myMaxSize = size;
+            myBuffer = new T[myMaxSize];
+            myStart = 0;
+            myEnd = 0;
+            myCurrentSize = 0;
+        }
+
+        public void enqueue(T t)
+        {
+            myEnd = (myEnd + 1) % myMaxSize;
+            myBuffer[myEnd] = t;
+            if (myCurrentSize == myMaxSize)
+            {
+                myStart = (myStart + 1) % myMaxSize;
+            }
+            else
+            {
+                myCurrentSize++;
+            }
+        }
+
+        public T dequeue()
+        {
+            if (myCurrentSize == 0)
+            {
+                return default(T);
+            }
+            else
+            {
+                myStart = (myStart + 1) % myMaxSize;
+                myCurrentSize--;
+                return myBuffer[myStart];
+            }
+        }
+
+        public T peek()
+        {
+            if (myCurrentSize == 0)
+            {
+                return default(T);
+            }
+            else
+            {
+                myStart = (myStart + 1) % myMaxSize;
+                return myBuffer[myStart];
+            }
+        }
+
+        public void print()
+        {
+            int tempLoc = 0;
+            for (int i = 0; i < myCurrentSize; i++)
+            {
+                tempLoc = (tempLoc + 1) % myMaxSize;
+                Console.WriteLine(myBuffer[tempLoc]);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            int tempLoc = 0;
+            for (int i = 0; i < myCurrentSize; i++)
+            {
+                tempLoc = (tempLoc + 1) % myMaxSize;
+                items.Add(myBuffer[tempLoc]);
+            }
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+
+            return false;
+        }
+
+        public void clear()
+        {
+            myCurrentSize = 0;
+            myStart = 0;
+            myEnd = 0;
+            myBuffer = new T[myMaxSize];
+        }
+
+        public int size()
+        {
+            return myCurrentSize;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public bool isFull()
+        {
+            return (myCurrentSize == myMaxSize);
+        }
+    }
+
+    class CircularLinkedList<T> : AdsClass<T>
+    {
+        private Node<T> myList;
+
+        public CircularLinkedList()
+        {
+            myList = null;
+        }
+
+        public void addFront(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+
+            if (myList == null)
+            {
+                temp.myNext = temp;
+                myList = temp;
+                return;
+            }
+
+            Node<T> myLast = myList;
+
+            while (myLast.myNext != myList)
+            {
+                myLast = myLast.myNext;
+            }
+
+            if (myList != null)
+            {
+                temp.myNext = myList;
+                myLast.myNext = temp;
+                myList = temp;
+            }
+        }
+
+        public void addBack(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+
+            if (myList == null)
+            {
+                temp.myNext = temp;
+                myList = temp;
+                return;
+            }
+
+            Node<T> myLast = myList;
+            while (myLast.myNext != myList)
+            {
+                myLast = myLast.myNext;
+            }
+
+            myLast.myNext = temp;
+            temp.myNext = myList;
+        }
+
+        public T popFront()
+        {
+            Node<T> temp = myList;
+            Node<T> myLast = myList;
+
+            if (myList != null)
+            {
+                while (myLast.myNext != myList)
+                {
+                    myLast = myLast.myNext;
+                }
+                myList = temp.myNext;
+                myLast.myNext = myList;
+                T obj = temp.myObj;
+                temp = null;
+                return obj;
+            }
+            return default(T);
+        }
+
+        public T popBack()
+        {
+            Node<T> temp = myList;
+            Node<T> myLast = myList;
+
+            if (myList != null)
+            {
+                while (myLast.myNext != myList)
+                {
+                    temp = myLast;
+                    myLast = myLast.myNext;
+                }
+                T obj = temp.myObj;
+                temp.myNext = myList;
+                myLast = null;
+                return obj;
+            }
+            return default(T);
+        }
+
+        public void print()
+        {
+            Node<T> myLast = myList;
+
+            if (myList != null)
+            {
+                while (myLast.myNext != myList)
+                {
+                    Console.WriteLine(myLast.myObj);
+                    myLast = myLast.myNext;
+                }
+                Console.WriteLine(myLast.myObj);
+            }
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            var items = new System.Collections.Generic.List<T>();
+
+            Node<T> myLast = myList;
+
+            if (myList != null)
+            {
+                while (myLast.myNext != myList)
+                {
+                    items.Add(myLast.myObj);
+                    myLast = myLast.myNext;
+                }
+                items.Add(myLast.myObj);
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+        }
+
+        public int size()
+        {
+            Node<T> myLast = myList;
+            int cnt = 0;
+            if (myList != null)
+            {
+                cnt++;
+                while (myLast.myNext != myList)
+                {
+                    myLast = myLast.myNext;
+                    cnt++;
+                }
+                return cnt;
+            }
+            return 0;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class Entry<K, V> : IComparable<Entry<K, V>> where K : IComparable
+    {
+        private K key;
+        private V value;
+        private bool cleared;
+
+        public Entry(K key, V value)
+        {
+            this.key = key;
+            this.value = value;
+            this.cleared = false;
+        }
+
+        public K getKey()
+        {
+            return key;
+        }
+
+        public V getValue()
+        {
+            return value;
+        }
+
+        public bool isCleared()
+        {
+            return cleared;
+        }
+
+        public void setKey(K key)
+        {
+            this.key = key;
+        }
+
+        public void setValue(V value)
+        {
+            this.value = value;
+        }
+
+        public void setCleared(bool cleared)
+        {
+            this.cleared = cleared;
+        }
+
+        public int CompareTo(Entry<K, V> o)
+        {
+            return key.CompareTo(o.key);
+        }
+    }
+
+    class SortedMap<K, V> : AdsClassMin where K : IComparable
+    {
+        private System.Collections.Generic.List<Entry<K, V>> myMap;
+
+        private int indexOf(K key)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getKey().Equals(key)) return i;
+            }
+            return -1;
+        }
+
+        public SortedMap()
+        {
+            myMap = new System.Collections.Generic.List<Entry<K, V>>();
+        }
+
+        public V this[K key]
+        {
+            get
+            {
+                return get(key);
+            }
+        }
+
+        public void add(K key, V value)
+        {
+            if (!containsKey(key))
+            {
+                Entry<K, V> temp = new Entry<K, V>(key, value);
+                myMap.Add(temp);
+                myMap.Sort();
+            }
+        }
+
+        public void remove(K key)
+        {
+            if (containsKey(key))
+            {
+                myMap.RemoveAt(this.indexOf(key));
+            }
+        }
+
+        public V get(K key)
+        {
+            if (containsKey(key))
+            {
+                return myMap[this.indexOf(key)].getValue();
+            }
+            return default(V);
+        }
+        
+        public void print()
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                Console.WriteLine("Key: " + myMap[i].getKey() + "\tValue: " + myMap[i].getValue());
+            }
+        }
+
+        public System.Collections.Generic.List<K> getKeyList()
+        {
+            var keys = new System.Collections.Generic.List<K>();
+
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                keys.Add(myMap[i].getKey());
+            }
+            return keys;
+        }
+
+        public System.Collections.Generic.List<V> getValueList()
+        {
+            var values = new System.Collections.Generic.List<V>();
+
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                values.Add(myMap[i].getValue());
+            }
+            return values;
+        }
+
+        public bool containsKey(K key)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getKey().Equals(key)) return true;
+            }
+            return false;
+        }
+
+        public bool containsValue(V value)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getValue().Equals(value)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myMap.Clear();
+        }
+
+        public int size()
+        {
+            return myMap.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+    
+    class Map<K, V> : AdsClassMin where K : IComparable
+    {
+        private System.Collections.Generic.List<Entry<K, V>> myMap;
+
+        private int indexOf(K key)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getKey().Equals(key)) return i;
+            }
+            return -1;
+        }
+
+        public Map()
+        {
+            myMap = new System.Collections.Generic.List<Entry<K, V>>();
+        }
+
+        public V this[K key]
+        {
+            get
+            {
+                return get(key);
+            }
+        }
+
+        public void add(K key, V value)
+        {
+            if (!containsKey(key))
+            {
+                Entry<K, V> temp = new Entry<K, V>(key, value);
+                myMap.Add(temp);
+            }
+        }
+
+        public void remove(K key)
+        {
+            if (containsKey(key))
+            {
+                myMap.RemoveAt(this.indexOf(key));
+            }
+        }
+
+        public V get(K key)
+        {
+            if (containsKey(key))
+            {
+                return myMap[this.indexOf(key)].getValue();
+            }
+            return default(V);
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                Console.WriteLine("Key: " + myMap[i].getKey() + "\tValue: " + myMap[i].getValue());
+            }
+        }
+
+        public System.Collections.Generic.List<K> getKeyList()
+        {
+            var keys = new System.Collections.Generic.List<K>();
+
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                keys.Add(myMap[i].getKey());
+            }
+            return keys;
+        }
+
+        public System.Collections.Generic.List<V> getValueList()
+        {
+            var values = new System.Collections.Generic.List<V>();
+
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                values.Add(myMap[i].getValue());
+            }
+            return values;
+        }
+
+        public bool containsKey(K key)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getKey().Equals(key)) return true;
+            }
+            return false;
+        }
+
+        public bool containsValue(V value)
+        {
+            for (int i = 0; i < myMap.Count; i++)
+            {
+                if (myMap[i].getValue().Equals(value)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myMap.Clear();
+        }
+
+        public int size()
+        {
+            return myMap.Count;
         }
 
         public bool isEmpty()
