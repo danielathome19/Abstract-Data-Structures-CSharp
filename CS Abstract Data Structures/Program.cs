@@ -12,6 +12,10 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine("Hello world!");
             
             MapTest();
+            Console.WriteLine();
+            Console.WriteLine("Finished Map Test");
+            Console.WriteLine();
+            HashMapTest();
 
             Console.ReadKey();
         }
@@ -646,6 +650,50 @@ namespace CS_Abstract_Data_Structures
         static void MapTest()
         {
             Map<string, int> table = new Map<string, int>();
+
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+            table.add("Jack", 71);
+            table.add("Jill", 64);
+            table.add("Abe", 33);
+            table.add("Beth", 21);
+            table.add("Chuck", 12);
+            table.add("Dot", 38);
+            table.add("Mike", 75);
+            table.add("Nick", 58);
+            table.add("Otis", 45);
+
+            table.print();
+
+            Console.WriteLine("\nSize: " + table.size());
+            Console.WriteLine(table.get("wow"));
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+            Console.WriteLine(table.get("Jack"));
+            Console.WriteLine(table.get("Jill"));
+
+            table.remove("Jane");
+            table.remove("Joe");
+
+            Console.WriteLine("\nSize: " + table.size());
+
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+
+            Console.WriteLine("\nSize: " + table.size());
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+
+            Console.WriteLine("\nSize: " + table.size());
+        }
+
+        static void HashMapTest()
+        {
+            HashMap<string, int> table = new HashMap<string, int>();
 
             table.add("Jane", 35);
             table.add("Joe", 14);

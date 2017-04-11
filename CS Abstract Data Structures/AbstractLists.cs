@@ -26,9 +26,9 @@
  *  -Circular Linked List
  *  -SortedMap
  *  -Map
+ *  -HashMap (Dictionary)
  *
  * To do:
- *  -HashMap (Dictionary)
  *  -Heap
  *  -Skip List
  *  -Bitset
@@ -3159,5 +3159,185 @@ namespace Adscol
         {
             return (this.size() == 0);
         }
+    }
+
+    class HashMap<K, V> : AdsClassMin where K : IComparable
+    {
+        private System.Collections.Generic.List<Entry<K, V>> hashTable;
+
+        private int numberOfEntries;
+        private int tableSize;
+        private double loadFactor;
+
+        private void checkForRehashing()
+        {
+            loadFactor = (double)numberOfEntries / tableSize;
+            if (loadFactor >= 0.75) rehash();
+        }
+
+        private void rehash()
+        {
+            var prevHashTable = hashTable;
+
+            numberOfEntries = 0;
+            tableSize *= 2;
+            loadFactor = 0;
+            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
+            for (int i = 0; i < tableSize; i++) hashTable.Add(null);
+
+            for (int i = 0; i < prevHashTable.Count; i++)
+            {
+                if (prevHashTable[i] != null && !prevHashTable[i].isCleared())
+                    add(prevHashTable[i].getKey(), prevHashTable[i].getValue());
+            }
+        }
+
+        public HashMap()
+        {
+            numberOfEntries = 0;
+            tableSize = 16;
+            loadFactor = 0;
+            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
+            for (int i = 0; i < tableSize; i++)
+            {
+                hashTable.Add(null);
+            }
+        }
+        
+        public V this[K key]
+        {
+            get
+            {
+                return get(key);
+            }
+        }
+
+        public int searchForEntry(K key)
+        {
+            int index;
+            int homePosition = key.GetHashCode() % tableSize;
+            for (int i = 0; i < tableSize; i++)
+            {
+                index = (homePosition + i * ((((homePosition / tableSize) % (tableSize / 2)) * 2) + 1)) % tableSize;
+                index = Math.Abs(index);
+                if (hashTable[index] == null) return -1;
+                else if (hashTable[index].isCleared()) continue;
+                else if (key.GetHashCode() == hashTable[index].getKey().GetHashCode()) return index;
+            }
+            return -1;
+        }
+
+        public void add(K key, V value)
+        {
+            int positionInfo = searchForEntry(key);
+            if (positionInfo == -1)
+            {
+                int homePosition = key.GetHashCode() % tableSize;
+                int index;
+                for (int i = 0; i < tableSize; i++)
+                {
+                    index = (homePosition + i * ((((homePosition / tableSize) % (tableSize / 2)) * 2) + 1)) % tableSize;
+                    index = Math.Abs(index);
+                    if (hashTable[index] == null || hashTable[index].isCleared())
+                    {
+                        hashTable[index] = new Entry<K, V>(key, value);
+                        numberOfEntries++;
+                        checkForRehashing();
+                        return;
+                    }
+                }
+                Console.WriteLine("Unable to put entry. Memory Full.");
+            }
+            else
+            {
+                hashTable[positionInfo].setValue(value);
+            }
+        }
+
+        public void remove(K key)
+        {
+            int positionInfo = searchForEntry(key);
+            if (positionInfo != -1)
+            {
+                hashTable[positionInfo].setCleared(true);
+                numberOfEntries--;
+            }
+        }
+
+        public V get(K key)
+        {
+            int positionInfo = searchForEntry(key);
+            if (positionInfo != -1) return hashTable[positionInfo].getValue();
+
+            return default(V);
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < hashTable.Count; i++)
+            {
+                if (hashTable[i] != null && !hashTable[i].isCleared()) Console.WriteLine("Key: " + hashTable[i].getKey() + "\tValue: " + hashTable[i].getValue());
+            }
+        }
+
+        public System.Collections.Generic.List<K> getKeyList()
+        {
+            var keys = new System.Collections.Generic.List<K>();
+
+            for (int i = 0; i < hashTable.Count; i++)
+            {
+                if (hashTable[i] != null && !hashTable[i].isCleared()) keys.Add(hashTable[i].getKey());
+            }
+            return keys;
+        }
+
+        public System.Collections.Generic.List<V> getValueList()
+        {
+            var values = new System.Collections.Generic.List<V>();
+
+            for (int i = 0; i < hashTable.Count; i++)
+            {
+                if (hashTable[i] != null && !hashTable[i].isCleared()) values.Add(hashTable[i].getValue());
+            }
+            return values;
+        }
+
+        public bool containsKey(K key)
+        {
+            return (searchForEntry(key) != -1);
+        }
+
+        public bool containsValue(V value)
+        {
+            for (int i = 0; i < hashTable.Count; i++)
+            {
+                if (hashTable[i] != null && !hashTable[i].isCleared())
+                    if (hashTable[i].getValue().Equals(value)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            numberOfEntries = 0;
+            tableSize = 16;
+            loadFactor = 0;
+            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
+            for (int i = 0; i < tableSize; i++)
+            {
+                hashTable.Add(null);
+            }
+        }
+
+        public int size()
+        {
+            return numberOfEntries;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
     }
 }
