@@ -44,8 +44,8 @@
  *  -Queap
  *  -Trie
  *  -Splay Tree
- *  -2 3 Tree
- *  -2 4 Tree
+ *  -2 3 Tree (2-3)
+ *  -2 4 Tree (2-3-4)
  *  -AVL Tree
  *  -B-Tree
  *  -B+Tree
