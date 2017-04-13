@@ -1,5 +1,5 @@
 ﻿/*
- * Author:  Daniel Szelogowski (C) 2017
+ * Author:  Daniel Szelogowski
  * Created: 4/7/17
  * Purpose: A collection of data structures written in C# using generics.
  * 
