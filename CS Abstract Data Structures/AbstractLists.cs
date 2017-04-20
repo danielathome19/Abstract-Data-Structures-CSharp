@@ -38,7 +38,8 @@
  *  -MinHeap (Binary Tree)
  *  -MinHeap
  *  -Skip List
- *  -Unrolled Linked LIst
+ *  -Sorted List (Linked List)
+ *  -Unrolled Linked List
  *  -Bitset
  *  -Bitfield
  *  -Queap
