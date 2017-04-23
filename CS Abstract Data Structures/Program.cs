@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            HashSetTest();
+            MapTest();
             
             Console.ReadKey();
         }

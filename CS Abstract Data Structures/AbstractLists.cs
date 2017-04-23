@@ -3077,20 +3077,20 @@ namespace Adscol
     
     class Map<K, V> : AdsClassMin where K : IComparable
     {
-        private System.Collections.Generic.List<Entry<K, V>> myMap;
+        private Set<Entry<K, V>> myMap;
 
         private int indexOf(K key)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                if (myMap[i].getKey().Equals(key)) return i;
+                if (myMap.get(i).getKey().Equals(key)) return i;
             }
             return -1;
         }
 
         public Map()
         {
-            myMap = new System.Collections.Generic.List<Entry<K, V>>();
+            myMap = new Set<Entry<K, V>>();
         }
 
         public V this[K key]
@@ -3106,7 +3106,7 @@ namespace Adscol
             if (!containsKey(key))
             {
                 Entry<K, V> temp = new Entry<K, V>(key, value);
-                myMap.Add(temp);
+                myMap.add(temp);
             }
         }
 
@@ -3114,7 +3114,7 @@ namespace Adscol
         {
             if (containsKey(key))
             {
-                myMap.RemoveAt(this.indexOf(key));
+                myMap.remove(this.indexOf(key));
             }
         }
 
@@ -3122,26 +3122,31 @@ namespace Adscol
         {
             if (containsKey(key))
             {
-                return myMap[this.indexOf(key)].getValue();
+                return myMap.get(this.indexOf(key)).getValue();
             }
             return default(V);
         }
 
         public void print()
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                Console.WriteLine("Key: " + myMap[i].getKey() + "\tValue: " + myMap[i].getValue());
+                Console.WriteLine("Key: " + myMap.get(i).getKey() + "\tValue: " + myMap.get(i).getValue());
             }
+        }
+
+        public Set<Entry<K, V>> entrySet()
+        {
+            return myMap;
         }
 
         public System.Collections.Generic.List<K> getKeyList()
         {
             var keys = new System.Collections.Generic.List<K>();
 
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                keys.Add(myMap[i].getKey());
+                keys.Add(myMap.get(i).getKey());
             }
             return keys;
         }
@@ -3150,39 +3155,39 @@ namespace Adscol
         {
             var values = new System.Collections.Generic.List<V>();
 
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                values.Add(myMap[i].getValue());
+                values.Add(myMap.get(i).getValue());
             }
             return values;
         }
 
         public bool containsKey(K key)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                if (myMap[i].getKey().Equals(key)) return true;
+                if (myMap.get(i).getKey().Equals(key)) return true;
             }
             return false;
         }
 
         public bool containsValue(V value)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                if (myMap[i].getValue().Equals(value)) return true;
+                if (myMap.get(i).getValue().Equals(value)) return true;
             }
             return false;
         }
 
         public void clear()
         {
-            myMap.Clear();
+            myMap.clear();
         }
 
         public int size()
         {
-            return myMap.Count;
+            return myMap.size();
         }
 
         public bool isEmpty()
