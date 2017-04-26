@@ -61,12 +61,13 @@
  **************************************************************************/
 
 using System;
+using System.Linq;
 
 namespace Adscol
 {
     interface AdsClass<T>
     {
-        //TODO: void removeAll(T t);
+        //TODO: void removeAll(T t);, implement IEnumerable
         void print();
         System.Collections.Generic.List<T> getList(); //Change to ArrayList<T> soon
         bool contains(T t);
@@ -100,52 +101,40 @@ namespace Adscol
     {
         private Node<T> myList;
         private Node<T> myLast;
-
-        private void addLast(T t)
-        {
-            myLast = myList;
-            while (myLast.myNext != null)
-            {
-                myLast = myLast.myNext;
-            }
-            Node<T> temp = new Node<T>(t);
-            myLast.myNext = temp;
-        }
+        private Node<T> myFront;
 
         public LinkedList()
         {
             myList = null;
             myLast = null;
+            myFront = null;
         }
 
         public LinkedList(T t)
         {
             myList = new Node<T>(t);
             myLast = myList;
+            myFront = myList;
         }
 
         public T this[int index]
         {
-            get
-            {
-                return get(index);
-            }
-            set
-            {
-                set(index, value);
-            }
+            get => get(index);
+            set => set(index, value);
         }
 
         public void add(T t)
         {
+            Node<T> temp = new Node<T>(t);
             if (myList == null)
             {
-                Node<T> temp = new Node<T>(t);
                 myList = temp;
                 myLast = temp;
+                myFront = temp;
             } else
             {
-                this.addLast(t);
+                myFront.myNext = temp;
+                myFront = myFront.myNext;
             }
         }
 
@@ -158,7 +147,7 @@ namespace Adscol
                 myList = temp;
             } else if (index >= this.size() - 1)
             {
-                this.addLast(t);
+                this.add(t);
             } else
             {
                 int cnt = 0;
@@ -3241,10 +3230,7 @@ namespace Adscol
         
         public V this[K key]
         {
-            get
-            {
-                return get(key);
-            }
+            get => get(key);
         }
 
         public int searchForEntry(K key)
@@ -3313,6 +3299,17 @@ namespace Adscol
             {
                 if (hashTable[i] != null && !hashTable[i].isCleared()) Console.WriteLine("Key: " + hashTable[i].getKey() + "\tValue: " + hashTable[i].getValue());
             }
+        }
+
+        public System.Collections.Generic.List<Entry<K, V>> getList()
+        {
+            var items = new System.Collections.Generic.List<Entry<K, V>>();
+
+            for (int i = 0; i < hashTable.Count; i++)
+            {
+                if (hashTable[i] != null && !hashTable[i].isCleared()) items.Add(hashTable[i]);
+            }
+            return items;
         }
 
         public System.Collections.Generic.List<K> getKeyList()
