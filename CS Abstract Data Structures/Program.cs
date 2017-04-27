@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            GraphTest();
+            TreeSetTest();
             
             Console.ReadKey();
         }
@@ -87,27 +87,6 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(nums.size());
         }
 
-        static void LinkedListStackTest()
-        {
-            LinkedListStack<int> nums = new LinkedListStack<int>();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                nums.push(i);
-            }
-
-            Console.WriteLine(nums.peek());
-
-            Console.WriteLine(nums.pop());
-            Console.WriteLine(nums.pop());
-            Console.WriteLine(nums.pop());
-            Console.WriteLine(nums.size());
-            Console.WriteLine(nums.isEmpty());
-
-            Console.WriteLine();
-            nums.print();
-        }
-
         static void StackTest()
         {
             Stack<int> nums = new Stack<int>();
@@ -126,36 +105,6 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(nums.isEmpty());
 
             Console.WriteLine();
-            nums.print();
-        }
-
-        static void LinkedListQueueTest()
-        {
-            LinkedListQueue<int> nums = new LinkedListQueue<int>();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                nums.enqueue(i);
-            }
-
-            Console.WriteLine(nums.peek());
-
-            Console.WriteLine(nums.dequeue());
-            Console.WriteLine(nums.dequeue());
-            Console.WriteLine(nums.dequeue());
-            Console.WriteLine(nums.size());
-
-            Console.WriteLine("Is empty: " + nums.isEmpty() + "\n");
-
-            nums.print();
-            nums.clear();
-            Console.WriteLine();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                nums.enqueue(i);
-            }
-
             nums.print();
         }
 
@@ -189,37 +138,6 @@ namespace CS_Abstract_Data_Structures
             nums.print();
         }
         
-        static void LinkedListSortedSetTest()
-        {
-            LinkedListSortedSet<int> numsList = new LinkedListSortedSet<int>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                numsList.add(i);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                numsList.add(i);
-            }
-
-            numsList.print();
-            Console.WriteLine("Finished first list");
-
-            LinkedListSortedSet<int> nums2 = new LinkedListSortedSet<int>();
-            Random rand = new Random();
-
-            for (int i = 0; i < 100; i++)
-            {
-                int x = rand.Next(0, 10);
-                nums2.add(x);
-            }
-
-            nums2.print();
-
-            Console.WriteLine(nums2.size());
-        }
-
         static void SortedSetTest()
         {
             SortedSet<int> numsList = new SortedSet<int>();
@@ -238,37 +156,6 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine("Finished first list");
 
             SortedSet<int> nums2 = new SortedSet<int>();
-            Random rand = new Random();
-
-            for (int i = 0; i < 100; i++)
-            {
-                int x = rand.Next(0, 10);
-                nums2.add(x);
-            }
-
-            nums2.print();
-
-            Console.WriteLine(nums2.size());
-        }
-
-        static void LinkedListSetTest()
-        {
-            LinkedListSet<int> numsList = new LinkedListSet<int>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                numsList.add(i);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                numsList.add(i);
-            }
-
-            numsList.print();
-            Console.WriteLine("Finished first list");
-
-            LinkedListSet<int> nums2 = new LinkedListSet<int>();
             Random rand = new Random();
 
             for (int i = 0; i < 100; i++)
@@ -312,29 +199,7 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine(nums2.size());
         }
-
-        static void LinkedListMultisetTest()
-        {
-            LinkedListMultiset<int> nums = new LinkedListMultiset<int>();
-
-            Random rand = new Random();
-
-            for (int i = 0; i < 100; i++)
-            {
-
-                int x = rand.Next(0, 10);
-
-                nums.add(x);
-            }
-
-            nums.print();
-
-            Console.WriteLine("Size: " + nums.size());
-
-            Set<int> list = nums.getSet();
-            list.print();
-        }
-
+        
         static void MultisetTest()
         {
             Multiset<int> nums = new Multiset<int>();
@@ -355,22 +220,6 @@ namespace CS_Abstract_Data_Structures
 
             Set<int> list = nums.getSet();
             list.print();
-        }
-
-        static void LinkedListBagTest()
-        {
-            LinkedListBag<char> items = new LinkedListBag<char>();
-
-            string happy = "Happy Birthday";
-
-            foreach (char x in happy)
-            {
-                items.add(x);
-            }
-
-            items.print();
-
-            Console.WriteLine("Size: " + items.size());
         }
 
         static void BagTest()
@@ -807,6 +656,37 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine("\n\nOdds:");
             oddNumbers.print();
+        }
+
+        static void TreeSetTest()
+        {
+            Set<int> numsList = new Set<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                numsList.add(i);
+            }
+
+            numsList.print();
+            Console.WriteLine("Finished first list");
+
+            Set<int> nums2 = new Set<int>();
+            Random rand = new Random();
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rand.Next(0, 10);
+                nums2.add(x);
+            }
+
+            nums2.print();
+
+            Console.WriteLine(nums2.size());
         }
 
         static void GraphTest()

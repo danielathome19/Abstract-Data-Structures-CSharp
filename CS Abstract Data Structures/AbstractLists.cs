@@ -6,17 +6,11 @@
  * Current implemented:
  *  -Linked List
  *  -Doubly Linked List
- *  -Stack (Linked List)
  *  -Stack
- *  -Queue (Linked List)
  *  -Queue
- *  -Sorted Set (Linked List)
  *  -Sorted Set
- *  -Set (Linked List)
  *  -Set
- *  -Multiset (Linked List) (Sorted List)
  *  -Multiset (Sorted List)
- *  -Bag (LInked List)
  *  -Bag
  *  -Binary (Search) Tree
  *  -Priority Queue
@@ -29,11 +23,11 @@
  *  -HashMap (Dictionary)
  *  -Treap
  *  -HashSet
+ *  -TreeSet
  *  -Graph (Undirected)
  *
  * To do:
  *  -Multimap
- *  -TreeSet
  *  -MaxHeap (Binary Tree)
  *  -MaxHeap
  *  -MinHeap (Binary Tree)
@@ -443,119 +437,6 @@ namespace Adscol
         }
     }
 
-    class LinkedListStack<T> : AdsClass<T>
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        private void addFirst(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            temp.myNext = myList;
-            myList = temp;
-        }
-       
-        public LinkedListStack()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListStack(T t)
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-        public void push(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            if (myList == null)
-            {
-                myList = temp;
-                myLast = temp;
-            } else
-            {
-                this.addFirst(t);
-            }
-        }
-
-        public T pop()
-        {
-            T obj = myList.myObj;
-            myLast = myList;
-            Node<T> temp = myLast.myNext;
-            myList = temp;
-            myLast = myList;
-            return obj;
-        }
-
-        public T peek()
-        {
-            return myList.myObj;
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-
-            myLast = myList;
-            while (myLast != null)
-            {
-                items.Add(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-
-            return false;
-        }
-
-        public void clear()
-        {
-            myLast = null;
-            myList = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return this.size() == 0;
-        }
-
-    }
-
     class Stack<T> : AdsClass<T>
     {
         private System.Collections.Generic.List<T> myList;
@@ -619,113 +500,6 @@ namespace Adscol
         public bool isEmpty()
         {
             return myList.Count == 0;
-        }
-    }
-
-    class LinkedListQueue<T> : AdsClass<T>
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        public LinkedListQueue()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListQueue(T t)
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-        public void enqueue(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            if (myList == null)
-            {
-                myList = temp;
-                myLast = temp;
-            } else
-            {
-                myLast = myList;
-                while (myLast.myNext != null)
-                {
-                    myLast = myLast.myNext;
-                }
-                myLast.myNext = temp;
-            }
-        }
-
-        public T dequeue()
-        {
-            T obj = myList.myObj;
-            myLast = myList;
-            Node<T> temp = myLast.myNext;
-            myList = temp;
-            myLast = myList;
-            return obj;
-        }
-
-        public T peek()
-        {
-            return myList.myObj;
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-            myLast = myList;
-            while (myLast != null)
-            {
-                items.Add(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-            return false;
-        }
-
-        public void clear()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return this.size() == 0;
         }
     }
 
@@ -793,171 +567,6 @@ namespace Adscol
         public bool isEmpty()
         {
             return myList.Count == 0;
-        }
-    }
-
-    class LinkedListSortedSet<T> : AdsClass<T> where T : IComparable
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        private void addSorted(T t)
-        {
-            myLast = myList;
-            Node<T> temp = new Node<T>(t);
-            if (temp.myObj.CompareTo(myLast.myObj) == -1)
-            {
-                temp.myNext = myLast;
-                myList = temp;
-                return;
-            }
-
-            while (myLast.myNext != null)
-            {
-                if (temp.myObj.CompareTo(myLast.myNext.myObj) == -1)
-                {
-                    temp.myNext = myLast.myNext;
-                    myLast.myNext = temp;
-                    return;
-                }
-                myLast = myLast.myNext;
-            }
-
-            myLast.myNext = temp;
-        }
-
-        public LinkedListSortedSet()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListSortedSet(T t)
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-
-        public void add(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            if (myList == null)
-            {
-                myList = temp;
-                myLast = temp;
-            } else
-            {
-                if (!this.contains(t)) this.addSorted(t);
-            }
-        }
-
-        public void remove(int index)
-        {
-            if (index == 0)
-            {
-                myLast = myList;
-                Node<T> temp = myLast.myNext;
-                myList = temp;
-                myLast = myList;
-            }
-            else if (index >= (this.size() - 1))
-            {
-                myLast = myList;
-                while (myLast.myNext.myNext != null)
-                {
-                    myLast = myLast.myNext;
-                }
-                myLast.myNext = null;
-            }
-            else
-            {
-                int cnt = 0;
-                myLast = myList;
-                Node<T> tempx;
-                while ((myLast.myNext != null) && (cnt <= index))
-                {
-                    if (cnt == (index - 1))
-                    {
-                        tempx = myLast;
-                        tempx.myNext = myLast.myNext.myNext;
-                        myLast = tempx;
-                    }
-                    cnt++;
-                    myLast = myLast.myNext;
-                }
-            }
-        }
-
-        public T get(int index)
-        {
-            int cnt = 0;
-            myLast = myList;
-            T obj = default(T);
-            while ((myLast.myNext != null) && (cnt <= index))
-            {
-                if (cnt == index) obj = myLast.myObj;
-                myLast = myLast.myNext;
-                cnt++;
-            }
-            if (cnt == index) obj = myLast.myObj;
-            myLast = myList;
-            return obj;
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                items.Add(this.get(i));
-            }
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-            return false;
-        }
-
-        public void clear()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return (this.size() == 0);
         }
     }
 
@@ -1038,157 +647,6 @@ namespace Adscol
 
     }
 
-    class LinkedListSet<T> : AdsClass<T>
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        private void addLast(T t)
-        {
-            myLast = myList;
-            while (myLast.myNext != null)
-            {
-                myLast = myLast.myNext;
-            }
-            Node<T> temp = new Node<T>(t);
-            myLast.myNext = temp;
-        }
-
-        public LinkedListSet()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListSet(T t)
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-        public void add(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            if (myList == null)
-            {
-                myList = temp;
-                myLast = temp;
-            }
-            else
-            {
-                if (!this.contains(t)) this.addLast(t);
-            }
-        }
-
-        public void remove(int index)
-        {
-            if (index == 0)
-            {
-                myLast = myList;
-                Node<T> temp = myLast.myNext;
-                myList = temp;
-                myLast = myList;
-            }
-            else if (index >= (this.size() - 1))
-            {
-                myLast = myList;
-                while (myLast.myNext.myNext != null)
-                {
-                    myLast = myLast.myNext;
-                }
-                myLast.myNext = null;
-            }
-            else
-            {
-                int cnt = 0;
-                myLast = myList;
-                Node<T> tempx;
-                while ((myLast.myNext != null) && (cnt <= index))
-                {
-                    if (cnt == (index - 1))
-                    {
-                        tempx = myLast;
-                        tempx.myNext = myLast.myNext.myNext;
-                        myLast = tempx;
-                    }
-                    cnt++;
-                    myLast = myLast.myNext;
-                }
-            }
-        }
-
-        public T get(int index)
-        {
-            int cnt = 0;
-            myLast = myList;
-            T obj = default(T);
-            while ((myLast.myNext != null) && (cnt <= index))
-            {
-                if (cnt == index) obj = myLast.myObj;
-                myLast = myLast.myNext;
-                cnt++;
-            }
-            if (cnt == index) obj = myLast.myObj;
-            myLast = myList;
-            return obj;
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                items.Add(this.get(i));
-            }
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-            return false;
-        }
-
-        public void clear()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return (this.size() == 0);
-        }
-    }
-
     class Set<T> : AdsClass<T>
     {
         private System.Collections.Generic.List<T> myList;
@@ -1251,180 +709,6 @@ namespace Adscol
             return (this.size() == 0);
         }
 
-    }
-
-    class LinkedListMultiset<T> : AdsClass<T> where T : IComparable
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        private void addSorted(T t)
-        {
-            myLast = myList;
-            Node<T> temp = new Node<T>(t);
-            if (temp.myObj.CompareTo(myLast.myObj) == -1)
-            {
-                temp.myNext = myLast;
-                myList = temp;
-                return;
-            }
-            while (myLast.myNext != null)
-            {
-                if (temp.myObj.CompareTo(myLast.myNext.myObj) == -1)
-                {
-                    temp.myNext = myLast.myNext;
-                    myLast.myNext = temp;
-                    return;
-                }
-                myLast = myLast.myNext;
-            }
-
-            myLast.myNext = temp;
-        }
-
-        public LinkedListMultiset()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListMultiset(T t) : this()
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-        public void add(T t)
-        {
-            Node<T> temp = new Node<T>(t);
-            if (myList == null)
-            {
-                myList = temp;
-                myLast = temp;
-            } else
-            {
-                this.addSorted(t);
-            }
-        }
-
-        public void remove(int index)
-        {
-            if (index == 0)
-            {
-                myLast = myList;
-                Node<T> temp = myLast.myNext;
-                myList = temp;
-                myLast = myList;
-            }
-            else if (index == (this.size() - 1))
-            {
-                myLast = myList;
-                while (myLast.myNext.myNext != null)
-                {
-                    myLast = myLast.myNext;
-                }
-                myLast.myNext = null;
-            }
-            else
-            {
-                int cnt = 0;
-                myLast = myList;
-                Node<T> tempx;
-                while ((myLast.myNext != null) && (cnt <= index))
-                {
-                    if (cnt == (index - 1))
-                    {
-                        tempx = myLast;
-                        tempx.myNext = myLast.myNext.myNext;
-                        myLast = tempx;
-                    }
-                    cnt++;
-                    myLast = myLast.myNext;
-                }
-            }
-        }
-
-        public T get(int index)
-        {
-            int cnt = 0;
-            myLast = myList;
-            T obj = default(T);
-            while ((myLast.myNext != null) && (cnt <= index))
-            {
-                if (cnt == index) obj = myLast.myObj;
-                myLast = myLast.myNext;
-                cnt++;
-            }
-            if (cnt == index) obj = myLast.myObj;
-            myLast = myList;
-            return obj;
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                items.Add(this.get(i));
-            }
-            return items;
-        }
-
-        public Adscol.Set<T> getSet()
-        {
-            var items = new Adscol.Set<T>();
-
-            for (int i= 0; i < this.size(); i++)
-            {
-                items.add(this.get(i));
-            }
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-            return false;
-        }
-
-        public void clear()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return (this.size() == 0);
-        }
     }
 
     class Multiset<T> : AdsClass<T> where T : IComparable 
@@ -1514,118 +798,6 @@ namespace Adscol
             return (this.size() == 0);
         }
 
-    }
-
-    class LinkedListBag<T> : AdsClass<T>
-    {
-        private Node<T> myList;
-        private Node<T> myLast;
-
-        private void addLast(T t)
-        {
-            myLast = myList;
-            while (myLast.myNext != null)
-            {
-                myLast = myLast.myNext;
-            }
-            Node<T> temp = new Node<T>(t);
-            myLast.myNext = temp;
-        }
-
-        public LinkedListBag()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public LinkedListBag(T t)
-        {
-            myList = new Node<T>(t);
-            myLast = myList;
-        }
-
-        public void add(T t)
-        {
-            if (myList == null)
-            {
-                Node<T> temp = new Node<T>(t);
-                myList = temp;
-                myLast = temp;
-            }
-            else
-            {
-                this.addLast(t);
-            }
-        }
-
-        public T get(int index)
-        {
-            int cnt = 0;
-            myLast = myList;
-            while ((myLast.myNext != null) && (cnt <= index))
-            {
-                if (cnt == index) return myLast.myObj;
-                myLast = myLast.myNext;
-                cnt++;
-            }
-            if (cnt == index) return myLast.myObj;
-            return default(T);
-        }
-
-        public void print()
-        {
-            myLast = myList;
-            while (myLast != null)
-            {
-                Console.WriteLine(myLast.myObj);
-                myLast = myLast.myNext;
-            }
-        }
-
-        public System.Collections.Generic.List<T> getList()
-        {
-            var items = new System.Collections.Generic.List<T>();
-
-            for (int i = 0; i < this.size(); i++)
-            {
-                items.Add(this.get(i));
-            }
-            return items;
-        }
-
-        public bool contains(T t)
-        {
-            var items = this.getList();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Equals(t)) return true;
-            }
-            return false;
-        }
-
-        public void clear()
-        {
-            myList = null;
-            myLast = null;
-        }
-
-        public int size()
-        {
-            int cnt = 0;
-            myLast = myList;
-            while (myLast != null)
-            {
-                cnt++;
-                myLast = myLast.myNext;
-            }
-            return cnt;
-        }
-
-        public bool isEmpty()
-        {
-            return (this.size() == 0);
-        }
     }
 
     class Bag<T> : AdsClass<T>
@@ -4011,6 +3183,64 @@ namespace Adscol
         public bool isEmpty()
         {
             return noElements == 0;
+        }
+    }
+
+    class TreeSet<T> : AdsClass<T> where T : IComparable
+    {
+        private BinaryTree<T> tree;
+
+        public TreeSet()
+        {
+            tree = new BinaryTree<T>();
+        }
+
+        public TreeSet(T t) : this()
+        {
+            tree.add(t);
+        }
+
+        public void add(T t)
+        {
+            if (!tree.contains(t))
+            {
+                tree.add(t);
+            }
+        }
+
+        public void remove(T t)
+        {
+            tree.remove(t);
+        }
+
+        public void print()
+        {
+            tree.printInOrder();
+        }
+
+        public System.Collections.Generic.List<T> getList()
+        {
+            return tree.getListInOrder();
+        }
+
+        public bool contains(T t)
+        {
+            return tree.contains(t);
+        }
+
+        public void clear()
+        {
+            tree.clear();
+        }
+
+        public int size()
+        {
+            return tree.size();
+        }
+
+        public bool isEmpty()
+        {
+            return (this.isEmpty());
         }
     }
 
