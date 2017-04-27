@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            TreeSetTest();
+            GraphTest();
             
             Console.ReadKey();
         }
@@ -301,7 +301,6 @@ namespace CS_Abstract_Data_Structures
 
                 queue.enqueue(let, pr);
             }
-
             Console.WriteLine("Size: " + queue.size());
             queue.print();
 

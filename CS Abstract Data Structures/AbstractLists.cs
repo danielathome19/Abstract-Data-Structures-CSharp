@@ -61,9 +61,9 @@ namespace Adscol
 {
     interface AdsClass<T>
     {
-        //TODO: void removeAll(T t);, implement IEnumerable
+        //TODO: void removeAll(T t);, implement IEnumerable, change remove(int) to removeAt, make remove(T), int indexOf
         void print();
-        System.Collections.Generic.List<T> getList(); //Change to ArrayList<T> soon
+        ArrayList<T> getList();
         bool contains(T t);
         void clear();
         int size();
@@ -255,13 +255,13 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
+            var items = new ArrayList<T>();
 
             for (int i = 0; i < this.size(); i++)
             {
-                items.Add(this.get(i));
+                items.add(this.get(i));
             }
             return items;
         }
@@ -270,7 +270,7 @@ namespace Adscol
         {
             var items = this.getList();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].Equals(t)) return true;
             }
@@ -303,7 +303,7 @@ namespace Adscol
 
     class DoublyLinkedList<T> : AdsClass<T>
     {
-        //TODO: add remove(index, add(index), set(index)
+        //TODO: add remove(index), add(index), set(index)
         private Node<T> myList;
 
         public DoublyLinkedList()
@@ -313,7 +313,7 @@ namespace Adscol
 
         public DoublyLinkedList(T t)
         {
-            myList = new Node<T>(t);
+            this.add(t);
         }
 
         public void add(T t)
@@ -337,7 +337,6 @@ namespace Adscol
         {
             myList.myPrev = myList.myPrev.myPrev;
             myList.myPrev.myNext = myList;
-            return;
         }
 
         public void removeFirst()
@@ -385,14 +384,14 @@ namespace Adscol
                 temp = temp.myNext;
             }
         }
-
-        public System.Collections.Generic.List<T> getList()
+        
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
+            var items = new ArrayList<T>();
 
             for (int i = 0; i < this.size(); i++)
             {
-                items.Add(this.get(i));
+                items.add(this.get(i));
             }
             return items;
         }
@@ -401,7 +400,7 @@ namespace Adscol
         {
             var items = getList();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].Equals(t)) return true;
             }
@@ -439,34 +438,34 @@ namespace Adscol
 
     class Stack<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         public Stack()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public Stack(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void push(T t)
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public T pop()
         {
-            if (myList.Count == 0) return default(T);
-            T temp = myList[myList.Count - 1];
-            myList.RemoveAt(myList.Count - 1);
+            if (myList.size() == 0) return default(T);
+            T temp = myList[myList.size() - 1];
+            myList.remove(myList.size() - 1);
             return temp;
         }
 
         public T peek()
         {
-            return myList[myList.Count - 1];
+            return myList[myList.size() - 1];
         }
 
         public void print()
@@ -477,62 +476,62 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
         {
-            return myList.Count == 0;
+            return (this.size() == 0);
         }
     }
 
     class Queue<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         public Queue()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public Queue(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void enqueue(T t)
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public T dequeue()
         {
-            if (myList.Count == 0) return default(T);
+            if (myList.size() == 0) return default(T);
             T temp = myList[0];
-            myList.RemoveAt(0);
+            myList.remove(0);
             return temp;
         }
 
         public T peek()
         {
-            if (myList.Count == 0) return default(T);
+            if (myList.size() == 0) return default(T);
             return myList[0];
         }
 
@@ -544,57 +543,57 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
         {
-            return myList.Count == 0;
+            return (this.size() == 0);
         }
     }
 
     class SortedSet<T> : AdsClass<T> where T : IComparable
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
         
         private void addSorted(T t)
         {
-            for (int i = 0; i < myList.Count; i++)
+            for (int i = 0; i < myList.size(); i++)
             {
                 if (t.CompareTo(myList[i]) == -1)
                 {
-                    myList.Insert(i, t);
+                    myList.add(i, t);
                     return;
                 }
             }
-            myList.Add(t);
+            myList.add(t);
         }
 
         public SortedSet()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public SortedSet(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void add(T t)
@@ -604,7 +603,7 @@ namespace Adscol
 
         public void remove(int index)
         {
-            myList.RemoveAt(index);
+            myList.remove(index);
         }
 
         public T get(int index)
@@ -620,24 +619,24 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -649,26 +648,26 @@ namespace Adscol
 
     class Set<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         public Set()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public Set(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void add(T t)
         {
-            if (!this.contains(t)) myList.Add(t);
+            if (!this.contains(t)) myList.add(t);
         }
 
         public void remove(int index)
         {
-            myList.RemoveAt(index);
+            myList.remove(index);
         }
 
         public T get(int index)
@@ -684,24 +683,24 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
         
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -713,29 +712,29 @@ namespace Adscol
 
     class Multiset<T> : AdsClass<T> where T : IComparable 
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         private void addSorted(T t)
         {
-            for (int i = 0; i < myList.Count; i++)
+            for (int i = 0; i < myList.size(); i++)
             {
                 if (t.CompareTo(myList[i]) == -1)
                 {
-                    myList.Insert(i, t);
+                    myList.add(i, t);
                     return;
                 }
             }
-            myList.Add(t);
+            myList.add(t);
         }
 
         public Multiset()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public Multiset(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void add(T t)
@@ -745,7 +744,7 @@ namespace Adscol
 
         public void remove(int index)
         {
-            myList.RemoveAt(index);
+            myList.remove(index);
         }
 
         public T get(int index)
@@ -761,7 +760,7 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
@@ -770,7 +769,7 @@ namespace Adscol
         {
             var items = new Adscol.Set<T>();
 
-            foreach (var item in myList)
+            foreach (T item in myList)
             {
                 items.add(item);
             }
@@ -780,17 +779,17 @@ namespace Adscol
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -802,21 +801,21 @@ namespace Adscol
 
     class Bag<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         public Bag()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public Bag(T t) : this()
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public void add(T t)
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public T get(int index)
@@ -832,24 +831,24 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -875,20 +874,20 @@ namespace Adscol
     class BinaryTree<T> : AdsClassMin where T : IComparable
     {
         private TreeNode<T> root;
-        private System.Collections.Generic.List<T> items;
+        private ArrayList<T> items;
 
         private void getListInOrderT(TreeNode<T> r)
         {
             if (r == null) return;
             getListInOrderT(r.myLeft);
-            items.Add(r.myObj);
+            items.add(r.myObj);
             getListInOrderT(r.myRight);
         }
 
         private void getListPreOrderT(TreeNode<T> r)
         {
             if (r == null) { return; }
-            items.Add(r.myObj);
+            items.add(r.myObj);
             getListPreOrderT(r.myLeft);
             getListPreOrderT(r.myRight);
         }
@@ -898,7 +897,7 @@ namespace Adscol
             if (r == null) { return; }
             getListPostOrderT(r.myLeft);
             getListPostOrderT(r.myRight);
-            items.Add(r.myObj);
+            items.add(r.myObj);
         }
 
         private static void printInOrderT(TreeNode<T> r)
@@ -1030,7 +1029,7 @@ namespace Adscol
         public BinaryTree()
         {
             root = null;
-            items = new System.Collections.Generic.List<T>();
+            items = new ArrayList<T>();
         }
 
         public BinaryTree(T t) : this()
@@ -1225,23 +1224,23 @@ namespace Adscol
             printPreOrderT(root);
         }
 
-        public System.Collections.Generic.List<T> getListPreOrder()
+        public ArrayList<T> getListPreOrder()
         {
-            items.Clear();
+            items.clear();
             getListPreOrderT(root);
             return items;
         }
 
-        public System.Collections.Generic.List<T> getListInOrder()
+        public ArrayList<T> getListInOrder()
         {
-            items.Clear();
+            items.clear();
             getListInOrderT(root);
             return items;
         }
 
-        public System.Collections.Generic.List<T> getListPostOrder()
+        public ArrayList<T> getListPostOrder()
         {
-            items.Clear();
+            items.clear();
             getListPostOrderT(root);
             return items;
         }
@@ -1250,7 +1249,7 @@ namespace Adscol
         {
             var items = this.getListInOrder();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].Equals(t)) return true;
             }
@@ -1260,7 +1259,7 @@ namespace Adscol
         public void clear()
         {
             root = null;
-            items.Clear();
+            items.clear();
         }
 
         public int size()
@@ -1292,33 +1291,40 @@ namespace Adscol
             if (this.priority > o.priority) return 1;
             return -1;
         }
+
+        public override string ToString()
+        {
+            return "Priority: " + this.priority + " Data: " + this.myObj;
+        }
     }
 
     class PriorityQueue<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<PQNode<T>> myList;
+        private ArrayList<PQNode<T>> myList;
 
         public PriorityQueue()
         {
-            myList = new System.Collections.Generic.List<PQNode<T>>();
+            myList = new ArrayList<PQNode<T>>();
         }
 
         public void enqueue(T t, int priority)
         {
-            myList.Add(new PQNode<T>(priority, t));
+            myList.add(new PQNode<T>(priority, t));
 
-            myList.Sort();
+            myList.sort();
         }
 
         public T dequeue()
         {
+            if (myList[0] == null) return default(T);
             T temp = myList[0].myObj;
-            myList.RemoveAt(0);
+            myList.remove(0);
             return temp;
         }
 
         public T peek()
         {
+            if (myList[0] == null) return default(T);
             return myList[0].myObj;
         }
 
@@ -1326,17 +1332,17 @@ namespace Adscol
         {
             foreach (PQNode<T> item in myList)
             {
-                Console.WriteLine("Priority: " + item.priority + " Data: " + item.myObj);
+                Console.WriteLine(item.ToString());
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
+            var items = new ArrayList<T>();
 
             foreach (PQNode<T> item in myList)
             {
-                items.Add(item.myObj);
+                items.add(item.myObj);
             }
             return items;
         }
@@ -1344,17 +1350,17 @@ namespace Adscol
         public bool contains(T t)
         {
             var items = this.getList();
-            return items.Contains(t);
+            return items.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -1364,7 +1370,7 @@ namespace Adscol
 
     }
 
-    class ArrayList<T> : AdsClass<T>
+    class ArrayList<T> : AdsClass<T>, System.Collections.IEnumerable
     {
         private T[] array;
         private int _size;
@@ -1550,6 +1556,12 @@ namespace Adscol
             }
         }
 
+        public void remove(T t)
+        {
+            int indx = this.indexOf(t);
+            this.remove(indx);
+        }
+
         public void set(int index, T t)
         {
             if (index > _size)
@@ -1567,7 +1579,7 @@ namespace Adscol
             }
             return array[index];
         }
-
+        
         public void print()
         {
             for (int i = 0; i < _size; i++)
@@ -1576,7 +1588,7 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public System.Collections.Generic.List<T> getCollectionsList()
         {
             var items = new System.Collections.Generic.List<T>();
 
@@ -1585,6 +1597,11 @@ namespace Adscol
                 items.Add(array[i]);
             }
             return items;
+        }
+
+        public ArrayList<T> getList()
+        {
+            return this;
         }
 
         public bool contains(T t)
@@ -1615,6 +1632,16 @@ namespace Adscol
         public bool isEmpty()
         {
             return (this.size() == 0);
+        }
+
+
+        public int indexOf(T t)
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                if (array[i].Equals(t)) return i;
+            }
+            return -1;
         }
 
         public bool equals(ArrayList<T> a)
@@ -1648,6 +1675,11 @@ namespace Adscol
             }
 
             array = temp;
+        }
+
+        public void sort()
+        {
+            array = array.OrderBy(i => i == null).ThenBy(i => i).ToArray();
         }
 
         public void trimToSize()
@@ -1694,38 +1726,56 @@ namespace Adscol
             }
             return temp;
         }
+
+        private System.Collections.Generic.IEnumerable<T> itemsEnumerable()
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                if (array[i] != null) yield return array[i];
+            }
+        }
+
+        private System.Collections.Generic.IEnumerator<T> getEnumerator()
+        {
+            return itemsEnumerable().GetEnumerator();
+        }
+
+        public System.Collections.IEnumerator GetEnumerator()
+        {
+            return getEnumerator();
+        }
     }
 
     class Deque<T> : AdsClass<T>
     {
-        private System.Collections.Generic.List<T> myList;
+        private ArrayList<T> myList;
 
         public Deque()
         {
-            myList = new System.Collections.Generic.List<T>();
+            myList = new ArrayList<T>();
         }
 
         public void pushFront(T t)
         {
-            myList.Insert(0, t);
+            myList.add(0, t);
         }
 
         public void pushBack(T t)
         {
-            myList.Add(t);
+            myList.add(t);
         }
 
         public T popFront()
         {
             T obj = myList[0];
-            myList.RemoveAt(0);
+            myList.remove(0);
             return obj;
         }
 
         public T popBack()
         {
-            T obj = myList[myList.Count - 1];
-            myList.RemoveAt(myList.Count - 1);
+            T obj = myList[myList.size() - 1];
+            myList.remove(myList.size() - 1);
             return obj;
         }
 
@@ -1736,7 +1786,7 @@ namespace Adscol
 
         public T peekBack()
         {
-            return myList[myList.Count - 1];
+            return myList[myList.size() - 1];
         }
 
         public void print()
@@ -1747,24 +1797,24 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return myList;
         }
 
         public bool contains(T t)
         {
-            return myList.Contains(t);
+            return myList.contains(t);
         }
 
         public void clear()
         {
-            myList.Clear();
+            myList.clear();
         }
 
         public int size()
         {
-            return myList.Count;
+            return myList.size();
         }
 
         public bool isEmpty()
@@ -1851,15 +1901,15 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
-
+            var items = new ArrayList<T>();
+            
             int tempLoc = 0;
             for (int i = 0; i < myCurrentSize; i++)
             {
                 tempLoc = (tempLoc + 1) % myMaxSize;
-                items.Add(myBuffer[tempLoc]);
+                items.add(myBuffer[tempLoc]);
             }
 
             return items;
@@ -1869,7 +1919,7 @@ namespace Adscol
         {
             var items = this.getList();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].Equals(t)) return true;
             }
@@ -2012,9 +2062,9 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
+            var items = new ArrayList<T>();
 
             Node<T> myLast = myList;
 
@@ -2022,10 +2072,10 @@ namespace Adscol
             {
                 while (myLast.myNext != myList)
                 {
-                    items.Add(myLast.myObj);
+                    items.add(myLast.myObj);
                     myLast = myLast.myNext;
                 }
-                items.Add(myLast.myObj);
+                items.add(myLast.myObj);
             }
             return items;
         }
@@ -2034,7 +2084,7 @@ namespace Adscol
         {
             var items = this.getList();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].Equals(t)) return true;
             }
@@ -2121,11 +2171,11 @@ namespace Adscol
 
     class SortedMap<K, V> : AdsClassMin where K : IComparable
     {
-        private System.Collections.Generic.List<Entry<K, V>> myMap;
+        private ArrayList<Entry<K, V>> myMap;
 
         private int indexOf(K key)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
                 if (myMap[i].getKey().Equals(key)) return i;
             }
@@ -2134,7 +2184,7 @@ namespace Adscol
 
         public SortedMap()
         {
-            myMap = new System.Collections.Generic.List<Entry<K, V>>();
+            myMap = new ArrayList<Entry<K, V>>();
         }
 
         public V this[K key]
@@ -2150,8 +2200,8 @@ namespace Adscol
             if (!containsKey(key))
             {
                 Entry<K, V> temp = new Entry<K, V>(key, value);
-                myMap.Add(temp);
-                myMap.Sort();
+                myMap.add(temp);
+                myMap.sort();
             }
         }
 
@@ -2159,7 +2209,7 @@ namespace Adscol
         {
             if (containsKey(key))
             {
-                myMap.RemoveAt(this.indexOf(key));
+                myMap.remove(this.indexOf(key));
             }
         }
 
@@ -2174,37 +2224,37 @@ namespace Adscol
         
         public void print()
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
                 Console.WriteLine("Key: " + myMap[i].getKey() + "\tValue: " + myMap[i].getValue());
             }
         }
 
-        public System.Collections.Generic.List<K> getKeyList()
+        public ArrayList<K> getKeyList()
         {
-            var keys = new System.Collections.Generic.List<K>();
+            var keys = new ArrayList<K>();
 
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                keys.Add(myMap[i].getKey());
+                keys.add(myMap[i].getKey());
             }
             return keys;
         }
 
-        public System.Collections.Generic.List<V> getValueList()
+        public ArrayList<V> getValueList()
         {
-            var values = new System.Collections.Generic.List<V>();
+            var values = new ArrayList<V>();
 
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
-                values.Add(myMap[i].getValue());
+                values.add(myMap[i].getValue());
             }
             return values;
         }
 
         public bool containsKey(K key)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
                 if (myMap[i].getKey().Equals(key)) return true;
             }
@@ -2213,7 +2263,7 @@ namespace Adscol
 
         public bool containsValue(V value)
         {
-            for (int i = 0; i < myMap.Count; i++)
+            for (int i = 0; i < myMap.size(); i++)
             {
                 if (myMap[i].getValue().Equals(value)) return true;
             }
@@ -2222,12 +2272,12 @@ namespace Adscol
 
         public void clear()
         {
-            myMap.Clear();
+            myMap.clear();
         }
 
         public int size()
         {
-            return myMap.Count;
+            return myMap.size();
         }
 
         public bool isEmpty()
@@ -2301,24 +2351,24 @@ namespace Adscol
             return myMap;
         }
 
-        public System.Collections.Generic.List<K> getKeyList()
+        public ArrayList<K> getKeyList()
         {
-            var keys = new System.Collections.Generic.List<K>();
+            var keys = new ArrayList<K>();
 
             for (int i = 0; i < myMap.size(); i++)
             {
-                keys.Add(myMap.get(i).getKey());
+                keys.add(myMap.get(i).getKey());
             }
             return keys;
         }
 
-        public System.Collections.Generic.List<V> getValueList()
+        public ArrayList<V> getValueList()
         {
-            var values = new System.Collections.Generic.List<V>();
+            var values = new ArrayList<V>();
 
             for (int i = 0; i < myMap.size(); i++)
             {
-                values.Add(myMap.get(i).getValue());
+                values.add(myMap.get(i).getValue());
             }
             return values;
         }
@@ -2359,7 +2409,7 @@ namespace Adscol
 
     class HashMap<K, V> : AdsClassMin where K : IComparable
     {
-        private System.Collections.Generic.List<Entry<K, V>> hashTable;
+        private ArrayList<Entry<K, V>> hashTable;
 
         private int numberOfEntries;
         private int tableSize;
@@ -2378,10 +2428,10 @@ namespace Adscol
             numberOfEntries = 0;
             tableSize *= 2;
             loadFactor = 0;
-            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
-            for (int i = 0; i < tableSize; i++) hashTable.Add(null);
+            hashTable = new ArrayList<Entry<K, V>>();
+            for (int i = 0; i < tableSize; i++) hashTable.add(null);
 
-            for (int i = 0; i < prevHashTable.Count; i++)
+            for (int i = 0; i < prevHashTable.size(); i++)
             {
                 if (prevHashTable[i] != null && !prevHashTable[i].isCleared())
                     add(prevHashTable[i].getKey(), prevHashTable[i].getValue());
@@ -2393,10 +2443,10 @@ namespace Adscol
             numberOfEntries = 0;
             tableSize = 16;
             loadFactor = 0;
-            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
+            hashTable = new ArrayList<Entry<K, V>>();
             for (int i = 0; i < tableSize; i++)
             {
-                hashTable.Add(null);
+                hashTable.add(null);
             }
         }
         
@@ -2467,41 +2517,41 @@ namespace Adscol
 
         public void print()
         {
-            for (int i = 0; i < hashTable.Count; i++)
+            for (int i = 0; i < hashTable.size(); i++)
             {
                 if (hashTable[i] != null && !hashTable[i].isCleared()) Console.WriteLine("Key: " + hashTable[i].getKey() + "\tValue: " + hashTable[i].getValue());
             }
         }
 
-        public System.Collections.Generic.List<Entry<K, V>> getList()
+        public ArrayList<Entry<K, V>> getList()
         {
-            var items = new System.Collections.Generic.List<Entry<K, V>>();
+            var items = new ArrayList<Entry<K, V>>();
 
-            for (int i = 0; i < hashTable.Count; i++)
+            for (int i = 0; i < hashTable.size(); i++)
             {
-                if (hashTable[i] != null && !hashTable[i].isCleared()) items.Add(hashTable[i]);
+                if (hashTable[i] != null && !hashTable[i].isCleared()) items.add(hashTable[i]);
             }
             return items;
         }
 
-        public System.Collections.Generic.List<K> getKeyList()
+        public ArrayList<K> getKeyList()
         {
-            var keys = new System.Collections.Generic.List<K>();
+            var keys = new ArrayList<K>();
 
-            for (int i = 0; i < hashTable.Count; i++)
+            for (int i = 0; i < hashTable.size(); i++)
             {
-                if (hashTable[i] != null && !hashTable[i].isCleared()) keys.Add(hashTable[i].getKey());
+                if (hashTable[i] != null && !hashTable[i].isCleared()) keys.add(hashTable[i].getKey());
             }
             return keys;
         }
 
-        public System.Collections.Generic.List<V> getValueList()
+        public ArrayList<V> getValueList()
         {
-            var values = new System.Collections.Generic.List<V>();
+            var values = new ArrayList<V>();
 
-            for (int i = 0; i < hashTable.Count; i++)
+            for (int i = 0; i < hashTable.size(); i++)
             {
-                if (hashTable[i] != null && !hashTable[i].isCleared()) values.Add(hashTable[i].getValue());
+                if (hashTable[i] != null && !hashTable[i].isCleared()) values.add(hashTable[i].getValue());
             }
             return values;
         }
@@ -2513,7 +2563,7 @@ namespace Adscol
 
         public bool containsValue(V value)
         {
-            for (int i = 0; i < hashTable.Count; i++)
+            for (int i = 0; i < hashTable.size(); i++)
             {
                 if (hashTable[i] != null && !hashTable[i].isCleared())
                     if (hashTable[i].getValue().Equals(value)) return true;
@@ -2526,10 +2576,10 @@ namespace Adscol
             numberOfEntries = 0;
             tableSize = 16;
             loadFactor = 0;
-            hashTable = new System.Collections.Generic.List<Entry<K, V>>();
+            hashTable = new ArrayList<Entry<K, V>>();
             for (int i = 0; i < tableSize; i++)
             {
-                hashTable.Add(null);
+                hashTable.add(null);
             }
         }
 
@@ -2568,20 +2618,20 @@ namespace Adscol
         private TreapNode<T> root;
         private HashSet<int> hs;
 
-        private System.Collections.Generic.List<T> items;
+        private ArrayList<T> items;
 
         private void getListInOrderT(TreapNode<T> r)
         {
             if (r == null) return;
             getListInOrderT(r.myLeft);
-            items.Add(r.myObj);
+            items.add(r.myObj);
             getListInOrderT(r.myRight);
         }
 
         private void getListPreOrderT(TreapNode<T> r)
         {
             if (r == null) { return; }
-            items.Add(r.myObj);
+            items.add(r.myObj);
             getListPreOrderT(r.myLeft);
             getListPreOrderT(r.myRight);
         }
@@ -2591,7 +2641,7 @@ namespace Adscol
             if (r == null) { return; }
             getListPostOrderT(r.myLeft);
             getListPostOrderT(r.myRight);
-            items.Add(r.myObj);
+            items.add(r.myObj);
         }
 
         private static void printInOrderT(TreapNode<T> r)
@@ -2803,7 +2853,7 @@ namespace Adscol
             hs = new HashSet<int>();
             numElements = 0;
             root = null;
-            items = new System.Collections.Generic.List<T>();
+            items = new ArrayList<T>();
         }
 
         public void add(T data)
@@ -2873,23 +2923,23 @@ namespace Adscol
             printPreOrderT(root);
         }
 
-        public System.Collections.Generic.List<T> getListPreOrder()
+        public ArrayList<T> getListPreOrder()
         {
-            items.Clear();
+            items.clear();
             getListPreOrderT(root);
             return items;
         }
 
-        public System.Collections.Generic.List<T> getListInOrder()
+        public ArrayList<T> getListInOrder()
         {
-            items.Clear();
+            items.clear();
             getListInOrderT(root);
             return items;
         }
 
-        public System.Collections.Generic.List<T> getListPostOrder()
+        public ArrayList<T> getListPostOrder()
         {
-            items.Clear();
+            items.clear();
             getListPostOrderT(root);
             return items;
         }
@@ -2904,7 +2954,7 @@ namespace Adscol
             hs.clear();
             numElements = 0;
             root = null;
-            items.Clear();
+            items.clear();
         }
 
         public int size()
@@ -3126,13 +3176,13 @@ namespace Adscol
             }
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
-            var items = new System.Collections.Generic.List<T>();
+            var items = new ArrayList<T>();
             for (int i = 0; i < elements.Length; i++)
             {
                 if (elements[i] != null && elements[i].isInUse())
-                    items.Add(elements[i].getElement());
+                    items.add(elements[i].getElement());
             }
 
             return items;
@@ -3218,7 +3268,7 @@ namespace Adscol
             tree.printInOrder();
         }
 
-        public System.Collections.Generic.List<T> getList()
+        public ArrayList<T> getList()
         {
             return tree.getListInOrder();
         }
@@ -3240,7 +3290,7 @@ namespace Adscol
 
         public bool isEmpty()
         {
-            return (this.isEmpty());
+            return (this.size() == 0);
         }
     }
 
@@ -3248,12 +3298,12 @@ namespace Adscol
     {
 
         protected String id;
-        protected System.Collections.Generic.List<GraphNode> neighbors;
+        protected ArrayList<GraphNode> neighbors;
 
         public GraphNode(string id)
         {
             this.id = id;
-            this.neighbors = new System.Collections.Generic.List<GraphNode>();
+            this.neighbors = new ArrayList<GraphNode>();
         }
 
         public String getId()
@@ -3268,25 +3318,25 @@ namespace Adscol
 
         public bool hasNeighbor(GraphNode node)
         {
-            return this.neighbors.Contains(node);
+            return this.neighbors.contains(node);
         }
 
         public void addNeighbor(GraphNode node)
         {
-            if (this.neighbors.Contains(node))
+            if (this.neighbors.contains(node))
             {
                 return;
             }
 
-            this.neighbors.Add(node);
+            this.neighbors.add(node);
         }
 
         public void removeNeighbor(GraphNode node)
         {
-            this.neighbors.Remove(node);
+            this.neighbors.remove(node);
         }
 
-        public System.Collections.Generic.List<GraphNode> getNeighbors()
+        public ArrayList<GraphNode> getNeighbors()
         {
             return this.neighbors;
         }
@@ -3306,6 +3356,8 @@ namespace Adscol
 
     class Graph : AdsClassMin
     {
+        private ArrayList<GraphNode> vertices;
+
         private GraphNode getVertex(String id)
         {
             foreach (GraphNode vertex in this.vertices)
@@ -3317,12 +3369,10 @@ namespace Adscol
             }
             return null;
         }
-
-        private System.Collections.Generic.List<GraphNode> vertices;
-
+        
         public Graph()
         {
-            this.vertices = new System.Collections.Generic.List<GraphNode>();
+            this.vertices = new ArrayList<GraphNode>();
         }
 
         public void addVertex(String id)
@@ -3332,7 +3382,7 @@ namespace Adscol
                 return;
             }
 
-            this.vertices.Add(new GraphNode(id));
+            this.vertices.add(new GraphNode(id));
         }
 
         public void addEdge(String idFrom, String idTo)
@@ -3358,7 +3408,7 @@ namespace Adscol
                 return;
             }
 
-            this.vertices.RemoveAt(this.vertices.IndexOf(vertex));
+            this.vertices.remove(this.vertices.indexOf(vertex));
         }
         
         public void removeEdge(String idFrom, String idTo)
@@ -3428,9 +3478,9 @@ namespace Adscol
             }
         }
         
-        public System.Collections.Generic.List<GraphNode> getList()
+        public ArrayList<GraphNode> getList()
         {
-            return vertices;
+            return vertices.getList();
         }
 
         public bool containsVertex(String id)
@@ -3440,17 +3490,17 @@ namespace Adscol
 
         public void clear()
         {
-            vertices.Clear();
+            vertices.clear();
         }
 
         public int size()
         {
-            return vertices.Count;
+            return vertices.size();
         }
 
         public bool isEmpty()
         {
-            return (vertices.Count() == 0);
+            return (this.size() == 0);
         }
     }
 }
