@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            MapTest();
+            GraphTest();
             
             Console.ReadKey();
         }
@@ -807,6 +807,61 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine("\n\nOdds:");
             oddNumbers.print();
+        }
+
+        static void GraphTest()
+        {
+            Graph curGraph = new Graph();
+
+            curGraph.addVertex("A");
+            curGraph.addVertex("B");
+            curGraph.addVertex("C");
+            curGraph.addVertex("D");
+            curGraph.addVertex("E");
+            curGraph.addVertex("F");
+            
+            curGraph.addEdge("A", "B");
+            curGraph.addEdge("B", "C");
+            curGraph.addEdge("D", "C");
+            curGraph.addEdge("E", "B");
+            curGraph.addEdge("D", "G");
+
+            Console.WriteLine(curGraph.distanceBetween("A", "B"));
+            Console.WriteLine(curGraph.distanceBetween("A", "C"));
+            Console.WriteLine(curGraph.distanceBetween("A", "D"));
+            Console.WriteLine(curGraph.distanceBetween("C", "B"));
+            Console.WriteLine(curGraph.distanceBetween("D", "B"));
+            Console.WriteLine(curGraph.distanceBetween("D", "E"));
+            Console.WriteLine(curGraph.distanceBetween("D", "F"));
+            Console.WriteLine(curGraph.distanceBetween("D", "G"));
+
+            Console.WriteLine();
+            Console.WriteLine();
+            curGraph.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Graph testGraph = new Graph();
+
+            testGraph.addVertex("A");
+            testGraph.addVertex("B");
+            testGraph.addVertex("C");
+
+            testGraph.addEdge("A", "B");
+            testGraph.addEdge("B", "C");
+
+            Console.WriteLine(testGraph.distanceBetween("A", "B"));
+            Console.WriteLine(testGraph.distanceBetween("A", "C"));
+
+            testGraph.removeEdge("B", "C");
+            testGraph.removeEdge("B", "F");
+
+            Console.WriteLine(testGraph.distanceBetween("A", "B"));
+            Console.WriteLine(testGraph.distanceBetween("A", "C"));
+
+            Console.WriteLine();
+            testGraph.print();
         }
 
     }

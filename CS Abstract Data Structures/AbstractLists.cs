@@ -29,6 +29,7 @@
  *  -HashMap (Dictionary)
  *  -Treap
  *  -HashSet
+ *  -Graph (Undirected)
  *
  * To do:
  *  -Multimap
@@ -52,7 +53,6 @@
  *  -B+Tree
  *  -Ternary Tree
  *  -Red Black Tree
- *  -Undirected Graph
  *  -Directed Graph
  *  -Incidence Matrix
  *  -Adjacency List
@@ -4011,6 +4011,216 @@ namespace Adscol
         public bool isEmpty()
         {
             return noElements == 0;
+        }
+    }
+
+    class GraphNode
+    {
+
+        protected String id;
+        protected System.Collections.Generic.List<GraphNode> neighbors;
+
+        public GraphNode(string id)
+        {
+            this.id = id;
+            this.neighbors = new System.Collections.Generic.List<GraphNode>();
+        }
+
+        public String getId()
+        {
+            return this.id;
+        }
+
+        public void setId(string id)
+        {
+            this.id = id;
+        }
+
+        public bool hasNeighbor(GraphNode node)
+        {
+            return this.neighbors.Contains(node);
+        }
+
+        public void addNeighbor(GraphNode node)
+        {
+            if (this.neighbors.Contains(node))
+            {
+                return;
+            }
+
+            this.neighbors.Add(node);
+        }
+
+        public void removeNeighbor(GraphNode node)
+        {
+            this.neighbors.Remove(node);
+        }
+
+        public System.Collections.Generic.List<GraphNode> getNeighbors()
+        {
+            return this.neighbors;
+        }
+
+        public override string ToString()
+        {
+            string neighborArray = "[ ";
+
+            foreach (GraphNode x in neighbors)
+            {
+                neighborArray += x.id + " ";
+            }
+            neighborArray += "]";
+            return "Id: " + this.id + "\tNeigbors: " + neighborArray;
+        }
+    }
+
+    class Graph : AdsClassMin
+    {
+        private GraphNode getVertex(String id)
+        {
+            foreach (GraphNode vertex in this.vertices)
+            {
+                if (vertex.getId() == id)
+                {
+                    return vertex;
+                }
+            }
+            return null;
+        }
+
+        private System.Collections.Generic.List<GraphNode> vertices;
+
+        public Graph()
+        {
+            this.vertices = new System.Collections.Generic.List<GraphNode>();
+        }
+
+        public void addVertex(String id)
+        {
+            if (containsVertex(id))
+            {
+                return;
+            }
+
+            this.vertices.Add(new GraphNode(id));
+        }
+
+        public void addEdge(String idFrom, String idTo)
+        {
+            GraphNode vertexA = getVertex(idFrom);
+            GraphNode vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            vertexA.addNeighbor(vertexB);
+            vertexB.addNeighbor(vertexA);
+        }
+
+        public void removeVertex(String id)
+        {
+            GraphNode vertex = getVertex(id);
+
+            if (vertex == null)
+            {
+                return;
+            }
+
+            this.vertices.RemoveAt(this.vertices.IndexOf(vertex));
+        }
+        
+        public void removeEdge(String idFrom, String idTo)
+        {
+            GraphNode vertexA = getVertex(idFrom);
+            GraphNode vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            vertexA.removeNeighbor(vertexB);
+            vertexB.removeNeighbor(vertexA);
+        }
+        
+        public int distanceBetween(String idFrom, String idTo)
+        {
+            GraphNode vertexA = getVertex(idFrom);
+            GraphNode vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return 0;
+            }
+
+            System.Collections.Generic.List<GraphNode> visited = new System.Collections.Generic.List<GraphNode>();
+            Queue<GraphNode> queue = new Queue<GraphNode>();
+
+            int distance = 0;
+            queue.enqueue(vertexA);
+
+            while (!queue.isEmpty())
+            {
+                GraphNode current = queue.dequeue();
+                visited.Add(current);
+
+                distance++;
+
+                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                {
+                    if (currentNeighbor == vertexB)
+                    {
+                        return distance;
+                    }
+
+                    if (!visited.Contains(currentNeighbor))
+                    {
+                        queue.enqueue(currentNeighbor);
+                    }
+                }
+            }
+
+            return 0;
+        }
+        
+        public bool pathExists(String idFrom, String idTo)
+        {
+            return distanceBetween(idFrom, idTo) > 0;
+        }
+
+        public void print()
+        {
+            foreach (GraphNode x in vertices)
+            {
+                Console.WriteLine(x.ToString());
+            }
+        }
+        
+        public System.Collections.Generic.List<GraphNode> getList()
+        {
+            return vertices;
+        }
+
+        public bool containsVertex(String id)
+        {
+            return getVertex(id) != null;
+        }
+
+        public void clear()
+        {
+            vertices.Clear();
+        }
+
+        public int size()
+        {
+            return vertices.Count;
+        }
+
+        public bool isEmpty()
+        {
+            return (vertices.Count() == 0);
         }
     }
 }
