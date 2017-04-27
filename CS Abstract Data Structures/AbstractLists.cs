@@ -3297,7 +3297,7 @@ namespace Adscol
     class GraphNode
     {
 
-        protected String id;
+        protected string id;
         protected ArrayList<GraphNode> neighbors;
 
         public GraphNode(string id)
@@ -3306,7 +3306,7 @@ namespace Adscol
             this.neighbors = new ArrayList<GraphNode>();
         }
 
-        public String getId()
+        public string getId()
         {
             return this.id;
         }
@@ -3323,12 +3323,10 @@ namespace Adscol
 
         public void addNeighbor(GraphNode node)
         {
-            if (this.neighbors.contains(node))
+            if (!this.neighbors.contains(node))
             {
-                return;
+                this.neighbors.add(node);
             }
-
-            this.neighbors.add(node);
         }
 
         public void removeNeighbor(GraphNode node)
@@ -3358,7 +3356,7 @@ namespace Adscol
     {
         private ArrayList<GraphNode> vertices;
 
-        private GraphNode getVertex(String id)
+        private GraphNode getVertex(string id)
         {
             foreach (GraphNode vertex in this.vertices)
             {
@@ -3375,7 +3373,7 @@ namespace Adscol
             this.vertices = new ArrayList<GraphNode>();
         }
 
-        public void addVertex(String id)
+        public void addVertex(string id)
         {
             if (containsVertex(id))
             {
@@ -3385,7 +3383,7 @@ namespace Adscol
             this.vertices.add(new GraphNode(id));
         }
 
-        public void addEdge(String idFrom, String idTo)
+        public void addEdge(string idFrom, string idTo)
         {
             GraphNode vertexA = getVertex(idFrom);
             GraphNode vertexB = getVertex(idTo);
@@ -3399,7 +3397,7 @@ namespace Adscol
             vertexB.addNeighbor(vertexA);
         }
 
-        public void removeVertex(String id)
+        public void removeVertex(string id)
         {
             GraphNode vertex = getVertex(id);
 
@@ -3411,7 +3409,7 @@ namespace Adscol
             this.vertices.remove(this.vertices.indexOf(vertex));
         }
         
-        public void removeEdge(String idFrom, String idTo)
+        public void removeEdge(string idFrom, string idTo)
         {
             GraphNode vertexA = getVertex(idFrom);
             GraphNode vertexB = getVertex(idTo);
@@ -3425,7 +3423,7 @@ namespace Adscol
             vertexB.removeNeighbor(vertexA);
         }
         
-        public int distanceBetween(String idFrom, String idTo)
+        public int distanceBetween(string idFrom, string idTo)
         {
             GraphNode vertexA = getVertex(idFrom);
             GraphNode vertexB = getVertex(idTo);
@@ -3465,7 +3463,7 @@ namespace Adscol
             return 0;
         }
         
-        public bool pathExists(String idFrom, String idTo)
+        public bool pathExists(string idFrom, string idTo)
         {
             return distanceBetween(idFrom, idTo) > 0;
         }
@@ -3483,7 +3481,7 @@ namespace Adscol
             return vertices.getList();
         }
 
-        public bool containsVertex(String id)
+        public bool containsVertex(string id)
         {
             return getVertex(id) != null;
         }
