@@ -3435,7 +3435,7 @@ namespace Adscol
                 return 0;
             }
 
-            System.Collections.Generic.List<GraphNode> visited = new System.Collections.Generic.List<GraphNode>();
+            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
             Queue<GraphNode> queue = new Queue<GraphNode>();
 
             int distance = 0;
@@ -3444,7 +3444,7 @@ namespace Adscol
             while (!queue.isEmpty())
             {
                 GraphNode current = queue.dequeue();
-                visited.Add(current);
+                visited.add(current);
 
                 distance++;
 
@@ -3455,7 +3455,7 @@ namespace Adscol
                         return distance;
                     }
 
-                    if (!visited.Contains(currentNeighbor))
+                    if (!visited.contains(currentNeighbor))
                     {
                         queue.enqueue(currentNeighbor);
                     }
