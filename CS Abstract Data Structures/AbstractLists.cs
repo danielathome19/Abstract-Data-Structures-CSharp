@@ -41,7 +41,9 @@
  *  -Bitset
  *  -Bitfield
  *  -Queap
+ *  -Quad Tree
  *  -Splay Tree
+ *  -Segment Tree
  *  -2 3 Tree (2-3)
  *  -2 4 Tree (2-3-4)
  *  -AVL Tree
