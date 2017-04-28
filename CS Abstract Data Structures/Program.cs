@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            TrieTest();
+            UnionFindTest();
 
             Console.ReadKey();
         }
@@ -838,6 +838,47 @@ namespace CS_Abstract_Data_Structures
                 results.print();
                 
             } while (true);
+        }
+
+        static void UnionFindTest()
+        {
+            UnionFind uf = new UnionFind(5);
+            Console.WriteLine(uf.componentSize(0));
+            Console.WriteLine(uf.componentSize(1));
+            Console.WriteLine(uf.componentSize(2));
+            Console.WriteLine(uf.componentSize(3));
+            Console.WriteLine(uf.componentSize(4));
+
+            uf.unify(0, 1);
+            Console.WriteLine(uf.componentSize(0));
+            Console.WriteLine(uf.componentSize(1));
+            Console.WriteLine(uf.componentSize(2));
+            Console.WriteLine(uf.componentSize(3));
+            Console.WriteLine(uf.componentSize(4));
+
+            Console.WriteLine(uf.components());
+
+            int sz = 7;
+            UnionFind uf2 = new UnionFind(sz);
+
+            for (int i = 0; i < sz; i++) Console.WriteLine(uf2.connected(i, i));
+
+            uf2.unify(0, 2);
+
+            Console.WriteLine(uf2.connected(0, 2));
+            Console.WriteLine(uf2.connected(2, 0));
+
+            UnionFind uf3 = new UnionFind(5);
+            Console.WriteLine(uf3.size());
+            uf3.unify(0, 1);
+            uf3.find(3);
+            Console.WriteLine(uf3.size());
+            uf3.unify(1, 2);
+            Console.WriteLine(uf3.size());
+            uf3.unify(0, 2);
+            uf3.find(1);
+            Console.WriteLine(uf3.size());
+            uf3.unify(2, 1);
         }
     }
 }
