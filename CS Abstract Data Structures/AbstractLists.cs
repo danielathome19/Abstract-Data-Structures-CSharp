@@ -24,8 +24,9 @@
  *  -Treap
  *  -HashSet
  *  -TreeSet
- *  -Graph (Undirected)
+ *  -Graph (Undirected) (Adjacency List)
  *  -Fenwick Tree
+ *  -Trie
  *
  * To do:
  *  -Multimap
@@ -39,7 +40,6 @@
  *  -Bitset
  *  -Bitfield
  *  -Queap
- *  -Trie
  *  -Splay Tree
  *  -2 3 Tree (2-3)
  *  -2 4 Tree (2-3-4)
@@ -50,7 +50,6 @@
  *  -Red Black Tree
  *  -Directed Graph
  *  -Incidence Matrix
- *  -Adjacency List
  *  -Adjacency Matrix
  * 
  **************************************************************************/
@@ -1744,6 +1743,72 @@ namespace Adscol
         public System.Collections.IEnumerator GetEnumerator()
         {
             return getEnumerator();
+        }
+
+        public struct Enumerator : System.Collections.Generic.IEnumerator<T>
+        {
+            private ArrayList<T> list;
+            private int index;
+            private T current;
+
+            internal Enumerator(ArrayList<T> list)
+            {
+                this.list = list;
+                index = 0;
+                current = default(T);
+            }
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+
+                ArrayList<T> localList = list;
+
+                if (((uint)index < (uint)localList._size))
+                {
+                    current = localList.array[index];
+                    index++;
+                    return true;
+                }
+                return MoveNextRare();
+            }
+
+            private bool MoveNextRare()
+            {
+                index = list._size + 1;
+                current = default(T);
+                return false;
+            }
+
+            public T Current
+            {
+                get
+                {
+                    return current;
+                }
+            }
+
+            Object System.Collections.IEnumerator.Current
+            {
+                get
+                {
+                    if (index == 0 || index == list._size + 1)
+                    {
+                        throw new Exception("Invalid Operation");
+                    }
+                    return Current;
+                }
+            }
+
+            void System.Collections.IEnumerator.Reset()
+            {
+                index = 0;
+                current = default(T);
+            }
+
         }
     }
 
@@ -3608,4 +3673,184 @@ namespace Adscol
         }
 
     }
+
+    class TrieNode
+    {
+        public char ch;
+        public int count = 0;
+        public bool isWordEnding = false;
+        public HashMap<char, TrieNode> children = new HashMap<char, TrieNode>();
+
+        public TrieNode(char ch)
+        {
+            this.ch = ch;
+        }
+
+        public void addChild(TrieNode node, char c)
+        {
+            children.add(c, node);
+        }
+    }
+
+    class Trie
+    {
+        private void clear(TrieNode node)
+        {
+
+            if (node == null) return;
+
+            foreach (char ch in node.children.getKeyList())
+            {
+                TrieNode nextNode = node.children.get(ch);
+                clear(nextNode);
+                nextNode = null;
+            }
+
+            node.children.clear();
+            node.children = null;
+        }
+        
+        private void findWordsThatStartWith(TrieNode node, string prefix, int currentLevel, string currentWord, ArrayList<string> lstResult)
+        {
+            if (currentLevel <= prefix.Length - 1)
+            {
+                TrieNode child = node.children.get(prefix[currentLevel]);
+                if (child != null)
+                {
+                    findWordsThatStartWith(child, prefix, currentLevel + 1, currentWord + prefix[currentLevel], lstResult);
+                }
+            }
+            else
+            {
+                var enumerator = node.children.getList().GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    string newWord = currentWord + ((Entry<char, TrieNode>)(enumerator.Current)).getKey();
+
+                    if (((Entry<char, TrieNode>)(enumerator.Current)).getValue().isWordEnding)
+                    {
+                        lstResult.add(newWord);
+                    }
+
+                    findWordsThatStartWith(((Entry<char, TrieNode>)(enumerator.Current)).getValue(), prefix, currentLevel, newWord, lstResult);
+                }
+            }
+        }
+
+        private const char rootCharacter = '\0';
+        private TrieNode root;
+
+        public Trie()
+        {
+            root = new TrieNode(rootCharacter);
+
+        }
+        
+        public void add(string key, int numInserts)
+        {
+
+            if (key == null) throw new ArgumentNullException();
+            if (numInserts <= 0) throw new ArgumentOutOfRangeException("Number of inserts must be greater than zero");
+
+            TrieNode node = root;
+            
+            for (int i = 0; i < key.Length; ++i)
+            {
+                char ch = key[i];
+                TrieNode nextNode = node.children.get(ch);
+                
+                if (nextNode == null)
+                {
+                    nextNode = new TrieNode(ch);
+                    node.addChild(nextNode, ch);
+                }
+
+                node = nextNode;
+                node.count += numInserts;
+            }
+
+            if (node != root)
+            {
+                node.isWordEnding = true;
+            }
+        }
+        
+        public void add(string key)
+        {
+            add(key, 1);
+        }
+        
+        public void remove(string key, int numDeletions)
+        {
+            if (!contains(key)) return;
+
+            if (numDeletions <= 0) throw new ArgumentOutOfRangeException("Number of deletions must be positive");
+
+            TrieNode node = root;
+            for (int i = 0; i < key.Length; i++)
+            {
+
+                char ch = key[i];
+                TrieNode curNode = node.children.get(ch);
+                curNode.count -= numDeletions;
+                
+                if (curNode.count <= 0)
+                {
+                    node.children.remove(ch);
+                    curNode.children = null;
+                    curNode = null;
+                    return;
+                }
+
+                node = curNode;
+            }
+        }
+
+        public void remove(string key)
+        {
+            remove(key, 1);
+        }
+        
+        public bool contains(string key)
+        {
+            return count(key) != 0;
+        }
+        
+        public void clear()
+        {
+
+            root.children = null;
+            root = new TrieNode(rootCharacter);
+
+        }
+
+        public int count(string key)
+        {
+
+            if (key == null) throw new ArgumentNullException();
+
+            TrieNode node = root;
+
+            for (int i = 0; i < key.Length; i++)
+            {
+                char ch = key[i];
+                if (node == null) return 0;
+                node = node.children.get(ch);
+            }
+
+            if (node != null) return node.count;
+            return 0;
+        }
+
+        public ArrayList<string> findWordsThatStartWith(string prefix)
+        {
+            ArrayList<string> result = new ArrayList<string>();
+
+            findWordsThatStartWith(root, prefix, 0, string.Empty, result);
+
+            return result;
+        }
+
+    }
+
 }

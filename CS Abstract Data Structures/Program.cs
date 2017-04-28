@@ -11,8 +11,8 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            FenwickTreeTest();
-            
+            TrieTest();
+
             Console.ReadKey();
         }
 
@@ -774,5 +774,70 @@ namespace CS_Abstract_Data_Structures
             ft.print();
         }
 
+        static void TrieTest()
+        {
+            Trie t1 = new Trie();
+            
+            t1.add("");
+            Console.WriteLine(t1.contains(""));
+            t1.add("");
+            Console.WriteLine(t1.contains(""));
+            t1.add("");
+            Console.WriteLine(t1.contains(""));
+
+            Trie t2 = new Trie();
+            t2.add("aaaaa");
+            t2.add("aaaaa");
+            t2.add("aaaaa");
+            t2.add("aaaaa");
+            t2.add("aaaaa");
+            Console.WriteLine(t2.contains("aaaaa"));
+            Console.WriteLine(t2.contains("aaaa"));
+            Console.WriteLine(t2.contains("aaa"));
+            Console.WriteLine(t2.contains("aa"));
+            Console.WriteLine(t2.contains("a"));
+
+            Trie t3 = new Trie();
+
+            t3.add("AE");
+            t3.add("AE");
+            t3.add("AH");
+            t3.add("AH");
+            t3.add("AH7");
+            t3.add("A7");
+            t3.add("7");
+            t3.add("7");
+            t3.add("B");
+            t3.add("B");
+            t3.add("B");
+            t3.add("B");
+
+            Console.WriteLine(t3.contains("A"));
+            Console.WriteLine(t3.contains("AH"));
+            Console.WriteLine(t3.contains("A7"));
+            Console.WriteLine(t3.contains("AE"));
+            Console.WriteLine(t3.contains("AH7"));
+            Console.WriteLine(t3.contains("7"));
+            Console.WriteLine(t3.contains("B"));
+            
+            Console.WriteLine(t3.contains("Ar"));
+            Console.WriteLine(t3.contains("A8"));
+            Console.WriteLine(t3.contains("AH6"));
+            Console.WriteLine(t3.contains("C"));
+
+            Console.WriteLine();
+            
+            do
+            {
+                Console.Write("Enter prefix: ");
+                string prefixSearch = Console.ReadLine();
+
+                var results = t3.findWordsThatStartWith(prefixSearch);
+
+                Console.WriteLine($"\nWords that start with {prefixSearch}:");
+                results.print();
+                
+            } while (true);
+        }
     }
 }
