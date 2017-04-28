@@ -31,10 +31,8 @@
  *
  * To do:
  *  -Multimap
- *  -MaxHeap (Binary Tree)
- *  -MaxHeap
- *  -MinHeap (Binary Tree)
- *  -MinHeap
+ *  -Heap (Binary Tree)
+ *  -Heap
  *  -Skip List
  *  -Sorted List (Linked List)
  *  -Unrolled Linked List
@@ -3947,4 +3945,5 @@ namespace Adscol
         }
 
     }
+
 }
