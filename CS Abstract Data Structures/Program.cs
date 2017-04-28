@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            GraphTest();
+            FenwickTreeTest();
             
             Console.ReadKey();
         }
@@ -741,6 +741,37 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine();
             testGraph.print();
+        }
+
+        static void FenwickTreeTest()
+        {
+            long[] ar = { 0 /*Dummy value*/, 1, 2, 3, 4, 5, 6 };
+            //first entry is not used and can be any value
+
+            FenwickTree ft = new FenwickTree(ar);
+
+            // Range queries should start at an index of 1
+            Console.WriteLine(ft.sum(1, 6));
+            Console.WriteLine(ft.sum(1, 5));
+            Console.WriteLine(ft.sum(1, 4));
+            Console.WriteLine(ft.sum(1, 3));
+            Console.WriteLine(ft.sum(1, 2));
+            Console.WriteLine(ft.sum(1, 1));
+
+            try
+            {
+                Console.WriteLine(ft.sum(1, 0)); // <-- invalid bounds!
+            } catch (Exception e) { Console.WriteLine(e.ToString()); }
+
+            Console.WriteLine(ft.sum(3, 5));
+            Console.WriteLine(ft.sum(2, 6));
+            Console.WriteLine(ft.sum(4, 4));
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            ft.print();
         }
 
     }

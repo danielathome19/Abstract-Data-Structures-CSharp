@@ -25,6 +25,7 @@
  *  -HashSet
  *  -TreeSet
  *  -Graph (Undirected)
+ *  -Fenwick Tree
  *
  * To do:
  *  -Multimap
@@ -3500,5 +3501,111 @@ namespace Adscol
         {
             return (this.size() == 0);
         }
+    }
+
+    class FenwickTree : AdsClassMin
+    {
+        private int leastSignificantBit(int i)
+        {
+            return i & -i;
+        }
+        
+        private long[] tree;
+        private int originalSize;
+
+        public FenwickTree(int size)
+        {
+            tree = new long[size + 1];
+            originalSize = size;
+        }
+        
+        public FenwickTree(long[] values)
+        {
+
+            if (values == null) throw new ArgumentNullException("Values array cannot be null!");
+
+            this.tree = (long[])values.Clone();
+
+            for (int i = 1; i < tree.Length; i++)
+            {
+                int j = i + leastSignificantBit(i);
+                if (j < tree.Length) tree[j] += tree[i];
+            }
+            originalSize = values.Length;
+
+        }
+        
+        public void add(int i, long k)
+        {
+            while (i < tree.Length)
+            {
+                tree[i] += k;
+                i += leastSignificantBit(i);
+            }
+        }
+        
+        public void set(int i, long k)
+        {
+            long value = sum(i, i);
+            add(i, k - value);
+        }
+
+        public void print()
+        {
+            foreach (long x in tree)
+            {
+                Console.WriteLine(x);
+            }
+        }
+
+        public ArrayList<long> getList()
+        {
+            var items = new ArrayList<long>();
+
+            foreach (long x in tree)
+            {
+                items.add(x);
+            }
+
+            return items;
+        }
+
+        public bool contains(long l)
+        {
+            return tree.Contains(l);
+        }
+
+        public void clear()
+        {
+            tree = new long[originalSize + 1];
+        }
+
+        public int size()
+        {
+            return tree.Length;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public long prefixSum(int i)
+        {
+            long sum = 0L;
+            while (i > 0)
+            {
+                sum += tree[i];
+                i &= ~leastSignificantBit(i);
+            }
+            return sum;
+        }
+
+        public long sum(int i, int j)
+        {
+            if (j < i) throw new ArgumentOutOfRangeException("j must be greater than or equal to i");
+            return prefixSum(j) - prefixSum(i - 1);
+        }
+
     }
 }
