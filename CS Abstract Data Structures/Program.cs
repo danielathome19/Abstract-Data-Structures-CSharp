@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            UnionFindTest();
+            GraphTest();
 
             Console.ReadKey();
         }
@@ -741,6 +741,12 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine();
             testGraph.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            curGraph.breadthFirstSearch("A", "D");
+            curGraph.depthFirstSearch("A", "D");
         }
 
         static void FenwickTreeTest()
@@ -804,6 +810,12 @@ namespace CS_Abstract_Data_Structures
             t3.add("AH");
             t3.add("AH");
             t3.add("AH7");
+            t3.add("AHH7");
+            t3.add("AHHD7");
+            t3.add("AHHDE7");
+            t3.add("AHHDEG7");
+            t3.add("AHHDEGE7");
+            t3.add("AHHDEGEF7");
             t3.add("A7");
             t3.add("7");
             t3.add("7");
@@ -834,7 +846,7 @@ namespace CS_Abstract_Data_Structures
 
                 var results = t3.findWordsThatStartWith(prefixSearch);
 
-                Console.WriteLine($"\nWords that start with {prefixSearch}:");
+                Console.WriteLine("\nWords that start with {0}:", prefixSearch);
                 results.print();
                 
             } while (true);

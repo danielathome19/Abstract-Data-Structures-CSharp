@@ -114,8 +114,13 @@ namespace Adscol
 
         public T this[int index]
         {
-            get => get(index);
-            set => set(index, value);
+            get { 
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
         }
 
         public void add(T t)
@@ -2519,7 +2524,9 @@ namespace Adscol
         
         public V this[K key]
         {
-            get => get(key);
+            get { 
+                return get(key);
+            }
         }
 
         public int searchForEntry(K key)
@@ -3361,11 +3368,10 @@ namespace Adscol
         }
     }
 
-    class GraphNode
+    class GraphNode : IComparable<GraphNode>
     {
-
-        protected string id;
-        protected ArrayList<GraphNode> neighbors;
+        private string id;
+        private ArrayList<GraphNode> neighbors;
 
         public GraphNode(string id)
         {
@@ -3401,6 +3407,11 @@ namespace Adscol
             this.neighbors.remove(node);
         }
 
+        public void sortNeighbors()
+        {
+            this.neighbors.sort();
+        }
+
         public ArrayList<GraphNode> getNeighbors()
         {
             return this.neighbors;
@@ -3416,6 +3427,11 @@ namespace Adscol
             }
             neighborArray += "]";
             return "Id: " + this.id + "\tNeigbors: " + neighborArray;
+        }
+
+        public int CompareTo(GraphNode g)
+        {
+            return this.id.CompareTo(g.id);
         }
     }
 
@@ -3442,7 +3458,7 @@ namespace Adscol
 
         public void addVertex(string id)
         {
-            if (containsVertex(id))
+            if (contains(id))
             {
                 return;
             }
@@ -3489,7 +3505,40 @@ namespace Adscol
             vertexA.removeNeighbor(vertexB);
             vertexB.removeNeighbor(vertexA);
         }
+
+        public void print()
+        {
+            foreach (GraphNode x in vertices)
+            {
+                Console.WriteLine(x.ToString());
+            }
+        }
         
+        public ArrayList<GraphNode> getList()
+        {
+            return vertices.getList();
+        }
+
+        public bool contains(string vertexId)
+        {
+            return getVertex(vertexId) != null;
+        }
+
+        public void clear()
+        {
+            vertices.clear();
+        }
+
+        public int size()
+        {
+            return vertices.size();
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
         public int distanceBetween(string idFrom, string idTo)
         {
             GraphNode vertexA = getVertex(idFrom);
@@ -3529,43 +3578,110 @@ namespace Adscol
 
             return 0;
         }
-        
+
         public bool pathExists(string idFrom, string idTo)
         {
             return distanceBetween(idFrom, idTo) > 0;
         }
 
-        public void print()
+        public void depthFirstSearch(string idFrom, string idTo)
         {
-            foreach (GraphNode x in vertices)
+            GraphNode vertexA = getVertex(idFrom);
+            GraphNode vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
             {
-                Console.WriteLine(x.ToString());
+                return;
             }
-        }
-        
-        public ArrayList<GraphNode> getList()
-        {
-            return vertices.getList();
+
+            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
+            Stack<GraphNode> stack = new Stack<GraphNode>();
+
+            stack.push(vertexA);
+            bool founder = false;
+
+            while (!stack.isEmpty() && !founder)
+            {
+                GraphNode current = stack.pop();
+                current.sortNeighbors();
+                visited.add(current);
+
+                if (current.getNeighbors().contains(vertexB))
+                {
+                    founder = true;
+                }
+
+                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                {
+                    currentNeighbor.sortNeighbors();
+                    if (currentNeighbor == vertexB)
+                    {
+                        founder = true;
+                    }
+
+                    foreach (GraphNode neighborFriends in currentNeighbor.getNeighbors()) {
+                        if (!visited.contains(neighborFriends))
+                        {
+                            stack.push(neighborFriends);
+                        }
+                    }
+
+                    if (!visited.contains(currentNeighbor))
+                    {
+                        stack.push(currentNeighbor);
+                    }
+                }
+            }
+
+            Console.Write("DFS: ");
+            for (int i = 0; i < visited.size(); i++)
+            {
+                Console.Write(visited[i].getId() + "-->");
+            }
+            Console.WriteLine(idTo);
         }
 
-        public bool containsVertex(string id)
+        public void breadthFirstSearch(string idFrom, string idTo)
         {
-            return getVertex(id) != null;
-        }
+            GraphNode vertexA = getVertex(idFrom);
+            GraphNode vertexB = getVertex(idTo);
 
-        public void clear()
-        {
-            vertices.clear();
-        }
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
 
-        public int size()
-        {
-            return vertices.size();
-        }
+            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
+            Queue<GraphNode> queue = new Queue<GraphNode>();
 
-        public bool isEmpty()
-        {
-            return (this.size() == 0);
+            queue.enqueue(vertexA);
+            bool founder = false;
+
+            while (!queue.isEmpty() && !founder)
+            {
+                GraphNode current = queue.dequeue();
+                visited.add(current);
+
+                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                {
+                    if (currentNeighbor == vertexB)
+                    {
+                        founder = true;
+                    }
+
+                    if (!visited.contains(currentNeighbor))
+                    {
+                        queue.enqueue(currentNeighbor);
+                    }
+                }
+            }
+
+            Console.Write("BFS: ");
+            for (int i = 0; i < visited.size(); i++)
+            {
+                Console.Write(visited[i].getId() + "-->");
+            }
+            Console.WriteLine(idTo);
         }
     }
 
