@@ -36,7 +36,6 @@
  *  -Sorted List (Linked List)
  *  -Unrolled Linked List
  *  -Bitset
- *  -Bitfield
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
