@@ -16,6 +16,7 @@ namespace CS_Abstract_Data_Structures
             Console.ReadKey();
         }
 
+        #region TestMethods
         static void LinkedListTest()
         {
             LinkedList<char> list = new LinkedList<char>();
@@ -1030,5 +1031,6 @@ namespace CS_Abstract_Data_Structures
             set.xor(set2);
             set.print();
         }
+        #endregion
     }
 }
