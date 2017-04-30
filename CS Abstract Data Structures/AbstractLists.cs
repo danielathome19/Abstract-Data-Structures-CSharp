@@ -48,7 +48,6 @@
  *  -Ternary Tree
  *  -Red Black Tree
  *  -Directed Graph
- *  -Incidence Matrix
  *  -Adjacency Matrix
  * 
  **************************************************************************/
