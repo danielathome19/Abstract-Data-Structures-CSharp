@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            GraphTest();
+            HeapTest();
 
             Console.ReadKey();
         }
@@ -893,5 +893,97 @@ namespace CS_Abstract_Data_Structures
             uf3.unify(2, 1);
         }
 
+        static void HeapTest()
+        {
+            Console.WriteLine("Max heap test:");
+
+            Heap<int> heapTree = new Heap<int>();
+
+            heapTree.push(4);
+            heapTree.push(12);
+            heapTree.push(14);
+            heapTree.push(5);
+            heapTree.push(8);
+            heapTree.push(15);
+            heapTree.push(30);
+            heapTree.push(1);
+
+            Console.WriteLine("Size: " + heapTree.size());
+
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+            int extract = heapTree.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+            extract = heapTree.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+            extract = heapTree.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+            heapTree.push(6);
+            heapTree.push(13);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+
+
+            Console.WriteLine("\n\nMin heap test:");
+
+            Heap<int> heapTree2 = new Heap<int>(true);
+
+            heapTree2.push(4);
+            heapTree2.push(12);
+            heapTree2.push(14);
+            heapTree2.push(5);
+            heapTree2.push(8);
+            heapTree2.push(15);
+            heapTree2.push(30);
+            heapTree2.push(1);
+
+            Console.WriteLine("Size: " + heapTree2.size());
+
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree2.print();
+
+            extract = heapTree2.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree2.print();
+
+            extract = heapTree2.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree.print();
+
+            extract = heapTree2.pop();
+            Console.WriteLine("Extracted: " + extract);
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree2.print();
+
+            heapTree2.push(6);
+            heapTree2.push(13);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            heapTree2.print();
+        }
     }
 }

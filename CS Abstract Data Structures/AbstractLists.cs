@@ -28,11 +28,10 @@
  *  -Fenwick Tree
  *  -Trie
  *  -Union Find (Disjointed Set)
+ *  -Heap
  *
  * To do:
  *  -Multimap
- *  -Heap (Binary Tree)
- *  -Heap
  *  -Skip List
  *  -Sorted List (Linked List)
  *  -Unrolled Linked List
@@ -863,7 +862,7 @@ namespace Adscol
         }
     }
 
-    class TreeNode<T>
+    class TreeNode<T> where T : IComparable
     {
         public T myObj;
         public TreeNode<T> myLeft;
@@ -874,6 +873,14 @@ namespace Adscol
             myObj = t;
             myLeft = null;
             myRight = null;
+        }
+
+        public TreeNode(T t, TreeNode<T> myLeft, TreeNode<T> myRight)
+        {
+
+            this.myObj = t;
+            this.myLeft = myLeft;
+            this.myRight = myRight;
         }
     }
 
@@ -4062,4 +4069,302 @@ namespace Adscol
 
     }
 
+    class Heap<T> : AdsClass<T> where T : IComparable
+    {
+        private TreeNode<T>[] nodes;
+
+        private int elements;
+        private int current;
+
+        private bool maxHeapMode;
+
+        private const int FIRST_ELEMENT = 0;
+        private const double RESIZE_FACTOR = 0.90; 
+        private const int RESIZE_INCREMENT = 100;
+
+        private int SIZE = 100;
+
+        private int getmyLeftPos(int parentPos)
+        {
+            return (2 * parentPos) + 1;
+        }
+
+        private int getmyRightPos(int parentPos)
+        {
+            return (2 * parentPos) + 2;
+        }
+
+        private int getParentPos(int sonPos)
+        {
+            int parentPos;
+
+            if (sonPos % 2 == 0) parentPos = (sonPos / 2) - 1;
+            else parentPos = sonPos / 2;
+
+            return parentPos;
+        }
+
+        private bool resizeIsNeeded()
+        {
+            return ((double)(elements / SIZE)) >= RESIZE_FACTOR;
+        }
+
+        private void resort()
+        {
+            bool ordered = false;
+            int current = FIRST_ELEMENT;
+
+            while (!ordered)
+            {
+
+                int left = getmyLeftPos(current);
+                int right = getmyRightPos(current);
+
+                if (left >= elements) ordered = true;
+                else
+                {
+
+                    if (maxHeapMode)
+                    {
+
+                        if (nodes[right] == null || nodes[left].myObj.CompareTo(nodes[right].myObj) > 0)
+                        {
+
+                            if (nodes[current].myObj.CompareTo(nodes[left].myObj) < 0)
+                            {
+
+                                T aux = nodes[current].myObj;
+                                nodes[current].myObj = nodes[left].myObj;
+                                nodes[left].myObj = aux;
+                                current = left;
+                            }
+                            else ordered = true;
+                        }
+                        else if (nodes[left].myObj.CompareTo(nodes[right].myObj) < 0)
+                        {
+
+                            if (nodes[current].myObj.CompareTo(nodes[right].myObj) < 0)
+                            {
+                                T aux = nodes[current].myObj;
+                                nodes[current].myObj = nodes[right].myObj;
+                                nodes[right].myObj = aux;
+                                current = right;
+                            }
+                            else ordered = true;
+                        }
+                    }
+                    else
+                    {
+
+                        if (nodes[right] == null || nodes[left].myObj.CompareTo(nodes[right].myObj) < 0)
+                        {
+                            if (nodes[current].myObj.CompareTo(nodes[left].myObj) > 0)
+                            {
+
+                                T aux = nodes[current].myObj;
+                                nodes[current].myObj = nodes[left].myObj;
+                                nodes[left].myObj = aux;
+                                current = left;
+                            }
+                            else ordered = true;
+                        }
+                        else if (nodes[left].myObj.CompareTo(nodes[right].myObj) > 0)
+                        {
+                            if (nodes[current].myObj.CompareTo(nodes[right].myObj) > 0)
+                            {
+
+                                T aux = nodes[current].myObj;
+                                nodes[current].myObj = nodes[right].myObj;
+                                nodes[right].myObj = aux;
+                                current = right;
+                            }
+                            else ordered = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void resizeTree()
+        {
+            SIZE += RESIZE_INCREMENT;
+
+            TreeNode<T>[] copy = new TreeNode<T>[SIZE];
+
+            nodes.CopyTo(copy, 0);
+
+            nodes = copy;
+        }
+
+        private void sort(int addedPos)
+        {
+            int parentPos = getParentPos(addedPos);
+            bool ordered = false;
+
+            while (parentPos >= 0 && !ordered)
+            {
+                if (nodes[addedPos].myObj.CompareTo(nodes[parentPos].myObj) < 0 && !maxHeapMode)
+                {
+                    T aux = nodes[addedPos].myObj;
+                    nodes[addedPos].myObj = nodes[parentPos].myObj;
+                    nodes[parentPos].myObj = aux;
+                    addedPos = parentPos;
+                }
+                else if (nodes[addedPos].myObj.CompareTo(nodes[parentPos].myObj) > 0 && maxHeapMode)
+                {
+                    T aux = nodes[addedPos].myObj;
+                    nodes[addedPos].myObj = nodes[parentPos].myObj;
+                    nodes[parentPos].myObj = aux;
+                    addedPos = parentPos;
+                }
+                else
+                {
+                    ordered = true;
+                }
+
+                parentPos = getParentPos(addedPos);
+            }
+        }
+
+        /// <summary>
+        /// Generates a default (max) heap
+        /// </summary>
+        public Heap() : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Generates a new heap based on the "minHeap" parameter. If set to true, the heap will be a min heap, otherwise it will default to a max heap.
+        /// </summary>
+        /// <param name="minHeap"></param>
+        public Heap(bool minHeap)
+        {
+            nodes = new TreeNode<T>[SIZE];
+
+            maxHeapMode = !minHeap;
+            elements = 0;
+            current = 0;
+        }
+
+        public void push(T element)
+        {
+
+            if (current == FIRST_ELEMENT && nodes[current] == null)
+            {
+                nodes[current] = new TreeNode<T>(element);
+                elements++;
+            }
+            else
+            {
+
+                int pos = getmyLeftPos(current);
+                if (nodes[pos] == null)
+                {
+
+                    nodes[pos] = new TreeNode<T>(element);
+                    nodes[current].myLeft = nodes[pos];
+                    elements++;
+                }
+                else
+                {
+
+                    pos = getmyRightPos(current);
+                    if (nodes[pos] == null)
+                    {
+                        nodes[pos] = new TreeNode<T>(element);
+                        nodes[current].myRight = nodes[pos];
+                        elements++;
+                        current++;
+                    }
+                }
+
+                sort(pos);
+            }
+
+            if (resizeIsNeeded()) resizeTree();
+        }
+
+        public T pop()
+        {
+
+            T element = peek();
+            nodes[FIRST_ELEMENT] = null;
+
+            if (element != null && elements > 0)
+            {
+
+                elements--;
+                current = getParentPos(elements);
+
+                nodes[FIRST_ELEMENT] = nodes[elements];
+                nodes[elements] = null;
+
+                resort();
+            }
+
+            return element;
+        }
+
+        public T peek()
+        {
+            if (nodes == null) return default(T);
+            return nodes[FIRST_ELEMENT].myObj;
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < elements; i++)
+            {
+                Console.WriteLine(nodes[i].myObj);
+            }
+        }
+
+        public ArrayList<T> getList()
+        {
+            var items = new ArrayList<T>();
+
+            for (int i = 0; i < elements; i++)
+            {
+                items.add(nodes[i].myObj);
+            }
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            return this.getList().contains(t);
+        }
+
+        public void clear()
+        {
+            nodes = new TreeNode<T>[SIZE];
+
+            SIZE = 100;
+            elements = 0;
+            current = 0;
+        }
+
+        public int size()
+        {
+            return elements;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public void setMaxHeapMode()
+        {
+            if (elements > 0) throw new AccessViolationException("This method can only be called if the heap is empty.");
+            maxHeapMode = true;
+        }
+
+        public void setMinHeapMode()
+        {
+            if (elements > 0) throw new AccessViolationException("This method can only be called if the heap is empty.");
+            maxHeapMode = false;
+        }
+    }
 }
