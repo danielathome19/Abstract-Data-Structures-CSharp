@@ -29,13 +29,13 @@
  *  -Trie
  *  -Union Find (Disjointed Set)
  *  -Heap
+ *  -BitSet
  *
  * To do:
  *  -Multimap
  *  -Skip List
  *  -Sorted List (Linked List)
  *  -Unrolled Linked List
- *  -Bitset
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
@@ -4365,5 +4365,168 @@ namespace Adscol
             if (elements > 0) throw new AccessViolationException("This method can only be called if the heap is empty.");
             maxHeapMode = false;
         }
+    }
+
+    class BitSet : AdsClassMin
+    {
+        private bool[] myList;
+
+        /// <summary>
+        /// Generates a bitset of specified size with all values preset to "initialValue"
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="initalValue"></param>
+        public BitSet(int size, bool initalValue)
+        {
+            myList = new bool[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                myList[i] = initalValue;
+            }
+        }
+
+        /// <summary>
+        /// Generates a bitset of specified size with all values preset to false
+        /// </summary>
+        /// <param name="size"></param>
+        public BitSet(int size) : this(size, false)
+        {
+        }
+
+        public bool this[int index]
+        {
+            get
+            {
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
+        }
+
+        public void set(int index, bool value)
+        {
+            myList[index] = value;
+        }
+
+        public void setAll(bool value)
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                myList[i] = value;
+            }
+        }
+
+        public bool get(int index)
+        {
+            return myList[index];
+        }
+
+        public void print()
+        {
+            string bin = "";
+            for (int i = 0; i < myList.Length; i++)
+            {
+                bin += ((myList[i]) ? 1 : 0);
+                if ((i + 1) % 4 == 0 && (i + 1) != myList.Length) bin += " ";
+            }
+            char[] arr = bin.ToCharArray();
+            Array.Reverse(arr);
+            Console.WriteLine(arr);
+        }
+
+        public ArrayList<bool> getList()
+        {
+            var items = new ArrayList<bool>();
+
+            foreach (bool x in myList)
+            {
+                items.add(x);
+            }
+
+            return items;
+        }
+
+        public void clear()
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                myList[i] = false;
+            }
+        }
+
+        /// <summary>
+        /// Returns amount of values set to true
+        /// </summary>
+        /// <returns></returns>
+        public int size()
+        {
+            int cnt = 0;
+
+            for (int i = 0; i < myList.Length; i++)
+            {
+                if (myList[i])
+                {
+                    cnt++;
+                }
+            }
+
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public void and(BitSet bits)
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                try
+                {
+                    myList[i] = myList[i] & bits[i];
+                }
+                catch (Exception e)
+                { }
+            }
+        }
+
+        public void or(BitSet bits)
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                try
+                {
+                    myList[i] = myList[i] | bits[i];
+                }
+                catch (Exception e)
+                { }
+            }
+        }
+
+        public void xor(BitSet bits)
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                try
+                {
+                    myList[i] = myList[i] ^ bits[i];
+                }
+                catch (Exception e)
+                { }
+            }
+        }
+
+        public void not()
+        {
+            for (int i = 0; i < myList.Length; i++)
+            {
+                myList[i] = !myList[i];
+            }
+        }
+
     }
 }

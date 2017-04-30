@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            HeapTest();
+            BitSetTest();
 
             Console.ReadKey();
         }
@@ -984,6 +984,51 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine();
             Console.WriteLine();
             heapTree2.print();
+        }
+
+        static void BitSetTest()
+        {
+            BitSet set = new BitSet(8);
+
+            set[2] = true;
+            set[3] = true;
+            set[4] = true;
+            set[5] = true;
+
+            set.print();
+
+            Console.WriteLine();
+
+            set.not();
+            set.print();
+
+            set.not();
+
+            BitSet set2 =  new BitSet(6);
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 6; i++)
+            {
+                int ran = rand.Next(0, 2);
+
+                set2[i] = (ran == 0);
+            }
+
+            Console.WriteLine("Set 2:");
+            set2.print();
+
+            Console.WriteLine("\nSet 1 AND Set 2");
+            set.and(set2);
+            set.print();
+
+            Console.WriteLine("\nSet 1 OR Set 2");
+            set.or(set2);
+            set.print();
+
+            Console.WriteLine("\nSet 1 XOR Set 2");
+            set.xor(set2);
+            set.print();
         }
     }
 }
