@@ -39,6 +39,7 @@
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
+ *  -Scapegoat Tree
  *  -Segment Tree
  *  -2 3 Tree (2-3)
  *  -2 4 Tree (2-3-4)
