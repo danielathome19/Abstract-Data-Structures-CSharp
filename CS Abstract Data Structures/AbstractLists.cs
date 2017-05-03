@@ -46,6 +46,7 @@
  *  -B-Tree
  *  -B+Tree
  *  -Ternary Tree
+ *  -AVL Tree
  *  -Red Black Tree
  *  -Directed Graph
  *  -Adjacency Matrix
@@ -306,7 +307,6 @@ namespace Adscol
 
     class DoublyLinkedList<T> : AdsClass<T>
     {
-        //TODO: add remove(index), add(index), set(index)
         private Node<T> myList;
 
         public DoublyLinkedList()
@@ -336,12 +336,24 @@ namespace Adscol
             }
         }
 
+        public void add(int index, T t)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void remove(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        //TODO: Remove
         public void removeLast()
         {
             myList.myPrev = myList.myPrev.myPrev;
             myList.myPrev.myNext = myList;
         }
 
+        //TODO: Remove
         public void removeFirst()
         {
             Node<T> temp = myList.myNext;
@@ -349,6 +361,11 @@ namespace Adscol
             temp.myNext = myList.myNext.myNext;
             myList.myPrev.myNext = temp;
             myList = temp;
+        }
+
+        public void set(int index, T t)
+        {
+            throw new NotImplementedException();
         }
 
         public T get(int index)
