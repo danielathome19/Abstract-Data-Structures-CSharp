@@ -30,10 +30,10 @@
  *  -Union Find (Disjointed Set)
  *  -Heap
  *  -BitSet
+ *  -Skip List
  *
  * To do:
  *  -Multimap
- *  -Skip List
  *  -Sorted List (Linked List)
  *  -Unrolled Linked List
  *  -Queap
@@ -4527,5 +4527,319 @@ namespace Adscol
             }
         }
 
+    }
+
+    class SkipNode<T> where T : IComparable
+    {
+        private int myHeight;
+        private SkipNodeList<T> myNodes;
+        public T myValue;
+
+        public SkipNode(T t, int height)
+        {
+            myValue = t;
+            myHeight = height;
+            myNodes = new SkipNodeList<T>(height);
+        }
+
+        public void set(int index, SkipNode<T> n)
+        {
+            myNodes[index] = n;
+        }
+
+        public SkipNode<T> get(int index)
+        {
+            return myNodes[index];
+        }
+
+        public void incrementHeight()
+        {
+            myNodes.incrementHeight();
+        }
+
+        public void decrementHeight()
+        {
+            myNodes.decremenetHeight();
+        }
+
+        public int getHeight()
+        {
+            return myNodes.getCapacity();
+        }
+
+        public SkipNode<T> this[int index]
+        {
+            get { return myNodes[index]; }
+            set { myNodes[index] = value; }
+        }
+
+        public override string ToString()
+        {
+            string str = myValue + "\n";
+
+            foreach (SkipNode<T> node in myNodes.getList())
+            {
+                str += node.ToString();
+                break;
+            }
+
+            return str;
+        }
+    }
+
+    class SkipNodeList<T> : System.Collections.CollectionBase where T : IComparable
+    {
+        private int myCapacity;
+
+        public SkipNodeList(int height)
+        {
+            base.InnerList.Capacity = height;
+            myCapacity = height;
+
+            for (int i = 0; i < height; i++)
+            {
+                base.InnerList.Add(null);
+            }
+        }
+
+        public void incrementHeight()
+        {
+            myCapacity++;
+            base.InnerList.Capacity = myCapacity;
+            base.InnerList.Add(null);
+        }
+
+        public void decremenetHeight()
+        {
+            myCapacity--;
+            base.InnerList.RemoveAt(myCapacity);
+        }
+
+        public void add(SkipNode<T> n)
+        {
+            if (base.InnerList.Count == myCapacity)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            else
+            {
+                base.InnerList.Add(n);
+            }
+        }
+
+        public void set(int index, SkipNode<T> n)
+        {
+            base.InnerList[index] = n;
+        }
+
+        public SkipNode<T> get(int index)
+        {
+            return (SkipNode<T>) base.InnerList[index];
+        }
+
+        public int getCapacity()
+        {
+            return myCapacity;
+        }
+
+        public SkipNode<T> this[int index]
+        {
+            get { return get(index); }
+            set { set(index, value); }
+        }
+
+        public ArrayList<SkipNode<T>> getList()
+        {
+            var items = new ArrayList<SkipNode<T>>();
+
+            foreach (var x in base.InnerList)
+            {
+                if (x != null) items.add((SkipNode<T>)x);
+            }
+
+            return items;
+        }
+
+    }
+
+    class SkipList<T> : AdsClass<T> where T: IComparable
+    {
+        private SkipNode<T> myHead;
+        private int myCount;
+        private Random rndNum;
+
+        private const double PROB = 0.5;
+
+        private int chooseRandomHeight(int maxLevel)
+        {
+            int level = 1;
+            while (rndNum.NextDouble() < PROB && level < maxLevel)
+            {
+                level++;
+            }
+
+            return level;
+        }
+
+        public SkipList() : this(-1)
+        {
+        }
+
+        public SkipList(int randomSeed)
+        {
+            myHead = new SkipNode<T>(default(T), 1);
+            myCount = 0;
+
+            if (randomSeed < 0)
+            {
+                rndNum = new Random();
+            }
+            else
+            {
+                rndNum = new Random(randomSeed);
+            }
+        }
+
+        public void add(T t)
+        {
+            SkipNode<T>[] updates = new SkipNode<T>[myHead.getHeight()];
+            SkipNode<T> current = myHead;
+            int i = 0;
+            
+            for (i = myHead.getHeight() - 1; i >= 0; i--)
+            {
+                while (current[i] != null && current[i].myValue.CompareTo(t) < 0)
+                    current = current[i];
+
+                updates[i] = current;
+            }
+
+            if (current[0] != null && current[0].myValue.CompareTo(t) == 0)
+            {
+                return;
+            }
+
+            SkipNode<T> n = new SkipNode<T>(t, chooseRandomHeight(myHead.getHeight() + 1));
+            myCount++; 
+
+            if (n.getHeight() > myHead.getHeight())
+            {
+                myHead.incrementHeight();
+                myHead[myHead.getHeight() - 1] = n;
+            }
+            
+            for (i = 0; i < n.getHeight(); i++)
+            {
+                if (i < updates.Length)
+                {
+                    n[i] = updates[i][i];
+                    updates[i][i] = n;
+                }
+            }
+        }
+
+        public void remove(T t)
+        {
+            SkipNode<T>[] updates = new SkipNode<T>[myHead.getHeight()];
+            SkipNode<T> current = myHead;
+
+            int i = 0;
+
+            for (i = myHead.getHeight() - 1; i >= 0; i--)
+            {
+                while (current[i] != null && current[i].myValue.CompareTo(t) < 0)
+                    current = current[i];
+
+                updates[i] = current;
+            }
+
+            current = current[0];
+            if (current != null && current.myValue.CompareTo(t) == 0)
+            {
+                myCount--;
+                
+                for (i = 0; i < myHead.getHeight(); i++)
+                {
+                    if (updates[i][i] != current)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        updates[i][i] = current[i];
+                    }
+                }
+                
+                if (myHead[myHead.getHeight() - 1] == null)
+                {
+                    myHead.decrementHeight();
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        public void print()
+        {
+            Console.WriteLine(myHead[0].ToString());
+        }
+
+        public ArrayList<T> getList()
+        {
+            throw new NotImplementedException();
+            var items = new ArrayList<T>();
+
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            SkipNode<T> current = myHead;
+
+            for (int i = myHead.getHeight() - 1; i >= 0; i--)
+            {
+                while (current[i] != null)
+                {
+                    int results = current[i].myValue.CompareTo(t);
+                    if (results == 0)
+                    {
+                        return true;
+                    }
+                    else if (results < 0)
+                    {
+                        current = current[i];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        public void clear()
+        {
+            myHead = new SkipNode<T>(default(T), 1);
+            myCount = 0;
+        }
+
+        public int size()
+        {
+            return myCount;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public int getHeight()
+        {
+            return myHead.getHeight();
+        }
     }
 }

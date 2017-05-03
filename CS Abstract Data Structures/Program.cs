@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            BitSetTest();
+            SkipListTest();
 
             Console.ReadKey();
         }
@@ -1030,6 +1030,38 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine("\nSet 1 XOR Set 2");
             set.xor(set2);
             set.print();
+        }
+
+        static void SkipListTest()
+        {
+            SkipList<int> list = new SkipList<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 10; i++)
+            {
+                list.add(i);
+            }
+
+            list.print();
+
+            list.remove(7);
+            list.remove(3);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            list.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(list.contains(3));
+            Console.WriteLine(list.contains(5));
+
         }
         #endregion
     }
