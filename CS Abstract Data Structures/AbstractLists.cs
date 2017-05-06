@@ -3706,6 +3706,11 @@ namespace Adscol
             }
             Console.WriteLine(idTo);
         }
+
+        public void dijkstrasAlgorithm()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class FenwickTree : AdsClassMin
