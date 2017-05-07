@@ -4,7 +4,7 @@ A collection of data structures using C# generics.
 # Usage
 Program files are kept within the _master_ branch.
 
-All classes are kept within the __AbstractLists.cs__ file in a namespace __Adscol__, to be included within the program. All currently implemented structures are written at the top of the file.
+All classes are kept within the __AbstractLists.cs__ file in the namespace __Adscol__, to be included within the program. All currently implemented structures are written at the top of the file.
 
 The __Program.cs__ file contains working tests for most/all methods for each data structure.
 
