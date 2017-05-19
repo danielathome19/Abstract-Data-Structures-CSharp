@@ -24,7 +24,7 @@
  *  -Treap
  *  -HashSet
  *  -TreeSet
- *  -Graph (Undirected) (Adjacency List)
+ *  -Graph (Unweighted) (Adjacency List)
  *  -Fenwick Tree
  *  -Trie
  *  -Union Find (Disjointed Set)
@@ -49,8 +49,7 @@
  *  -Ternary Tree
  *  -AVL Tree
  *  -Red Black Tree
- *  -Directed Graph
- *  -Adjacency Matrix
+ *  -Graph (Weighted) (Adjacency List)
  * 
  **************************************************************************/
 
@@ -3391,15 +3390,17 @@ namespace Adscol
         }
     }
 
-    class GraphNode : IComparable<GraphNode>
+    class GraphNode<T> : IComparable<GraphNode<T>>
     {
         private string id;
-        private ArrayList<GraphNode> neighbors;
+        private T data;
+        private ArrayList<GraphNode<T>> neighbors;
 
-        public GraphNode(string id)
+        public GraphNode(string id, T data)
         {
             this.id = id;
-            this.neighbors = new ArrayList<GraphNode>();
+            this.data = data;
+            this.neighbors = new ArrayList<GraphNode<T>>();
         }
 
         public string getId()
@@ -3412,12 +3413,22 @@ namespace Adscol
             this.id = id;
         }
 
-        public bool hasNeighbor(GraphNode node)
+        public T getData()
+        {
+            return this.data;
+        }
+
+        public void setData(T data)
+        {
+            this.data = data;
+        }
+
+        public bool hasNeighbor(GraphNode<T> node)
         {
             return this.neighbors.contains(node);
         }
 
-        public void addNeighbor(GraphNode node)
+        public void addNeighbor(GraphNode<T> node)
         {
             if (!this.neighbors.contains(node))
             {
@@ -3425,7 +3436,7 @@ namespace Adscol
             }
         }
 
-        public void removeNeighbor(GraphNode node)
+        public void removeNeighbor(GraphNode<T> node)
         {
             this.neighbors.remove(node);
         }
@@ -3435,7 +3446,7 @@ namespace Adscol
             this.neighbors.sort();
         }
 
-        public ArrayList<GraphNode> getNeighbors()
+        public ArrayList<GraphNode<T>> getNeighbors()
         {
             return this.neighbors;
         }
@@ -3444,7 +3455,7 @@ namespace Adscol
         {
             string neighborArray = "[ ";
 
-            foreach (GraphNode x in neighbors)
+            foreach (GraphNode<T> x in neighbors)
             {
                 neighborArray += x.id + " ";
             }
@@ -3452,19 +3463,19 @@ namespace Adscol
             return "Id: " + this.id + "\tNeigbors: " + neighborArray;
         }
 
-        public int CompareTo(GraphNode g)
+        public int CompareTo(GraphNode<T> g)
         {
             return this.id.CompareTo(g.id);
         }
     }
 
-    class Graph : AdsClassMin
+    class Graph<T> : AdsClassMin
     {
-        private ArrayList<GraphNode> vertices;
+        private ArrayList<GraphNode<T>> vertices;
 
-        private GraphNode getVertex(string id)
+        private GraphNode<T> getVertex(string id)
         {
-            foreach (GraphNode vertex in this.vertices)
+            foreach (GraphNode<T> vertex in this.vertices)
             {
                 if (vertex.getId() == id)
                 {
@@ -3476,23 +3487,28 @@ namespace Adscol
         
         public Graph()
         {
-            this.vertices = new ArrayList<GraphNode>();
+            this.vertices = new ArrayList<GraphNode<T>>();
         }
 
-        public void addVertex(string id)
+        public void addVertex(string id, T data)
         {
             if (contains(id))
             {
                 return;
             }
 
-            this.vertices.add(new GraphNode(id));
+            this.vertices.add(new GraphNode<T>(id, data));
         }
 
-        public void addEdge(string idFrom, string idTo)
+        /// <summary>
+        /// Adds node idTo as a neighbor of idFrom only
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdgeForward(string idFrom, string idTo)
         {
-            GraphNode vertexA = getVertex(idFrom);
-            GraphNode vertexB = getVertex(idTo);
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
 
             if (vertexA == null || vertexB == null)
             {
@@ -3500,25 +3516,53 @@ namespace Adscol
             }
 
             vertexA.addNeighbor(vertexB);
+        }
+
+        /// <summary>
+        /// Adds node idFrom as a neighbor of idTo only
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdgeBackward(string idFrom, string idTo)
+        {
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+            
             vertexB.addNeighbor(vertexA);
+        }
+
+        /// <summary>
+        /// Adds nodes idFrom and idTo as neighbors of each other
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdge(string idFrom, string idTo)
+        {
+            addEdgeForward(idFrom, idTo);
+            addEdgeBackward(idFrom, idTo);
         }
 
         public void removeVertex(string id)
         {
-            GraphNode vertex = getVertex(id);
+            GraphNode<T> vertex = getVertex(id);
 
             if (vertex == null)
             {
                 return;
             }
 
-            this.vertices.remove(this.vertices.indexOf(vertex));
+            vertices.remove(vertices.indexOf(vertex));
         }
         
         public void removeEdge(string idFrom, string idTo)
         {
-            GraphNode vertexA = getVertex(idFrom);
-            GraphNode vertexB = getVertex(idTo);
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
 
             if (vertexA == null || vertexB == null)
             {
@@ -3529,15 +3573,39 @@ namespace Adscol
             vertexB.removeNeighbor(vertexA);
         }
 
+        public T getNodeData(string id)
+        {
+            GraphNode<T> node = getVertex(id);
+
+            if (node != null)
+            {
+                return node.getData();
+            }
+            else
+            {
+                return default(T);
+            }
+        }
+
+        public void setNodeData(string id, T data)
+        {
+            GraphNode<T> node = getVertex(id);
+
+            if (node != null)
+            {
+                node.setData(data);
+            }
+        }
+
         public void print()
         {
-            foreach (GraphNode x in vertices)
+            foreach (GraphNode<T> x in vertices)
             {
                 Console.WriteLine(x.ToString());
             }
         }
         
-        public ArrayList<GraphNode> getList()
+        public ArrayList<GraphNode<T>> getList()
         {
             return vertices.getList();
         }
@@ -3564,28 +3632,28 @@ namespace Adscol
 
         public int distanceBetween(string idFrom, string idTo)
         {
-            GraphNode vertexA = getVertex(idFrom);
-            GraphNode vertexB = getVertex(idTo);
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
 
             if (vertexA == null || vertexB == null)
             {
                 return 0;
             }
 
-            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
-            Queue<GraphNode> queue = new Queue<GraphNode>();
+            ArrayList<GraphNode<T>> visited = new ArrayList<GraphNode<T>>();
+            Queue<GraphNode<T>> queue = new Queue<GraphNode<T>>();
 
             int distance = 0;
             queue.enqueue(vertexA);
 
             while (!queue.isEmpty())
             {
-                GraphNode current = queue.dequeue();
+                GraphNode<T> current = queue.dequeue();
                 visited.add(current);
 
                 distance++;
 
-                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                foreach (GraphNode<T> currentNeighbor in current.getNeighbors())
                 {
                     if (currentNeighbor == vertexB)
                     {
@@ -3609,23 +3677,23 @@ namespace Adscol
 
         public void depthFirstSearch(string idFrom, string idTo)
         {
-            GraphNode vertexA = getVertex(idFrom);
-            GraphNode vertexB = getVertex(idTo);
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
 
             if (vertexA == null || vertexB == null)
             {
                 return;
             }
 
-            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
-            Stack<GraphNode> stack = new Stack<GraphNode>();
+            ArrayList<GraphNode<T>> visited = new ArrayList<GraphNode<T>>();
+            Stack<GraphNode<T>> stack = new Stack<GraphNode<T>>();
 
             stack.push(vertexA);
             bool founder = false;
 
             while (!stack.isEmpty() && !founder)
             {
-                GraphNode current = stack.pop();
+                GraphNode<T> current = stack.pop();
                 current.sortNeighbors();
                 visited.add(current);
 
@@ -3634,7 +3702,7 @@ namespace Adscol
                     founder = true;
                 }
 
-                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                foreach (GraphNode<T> currentNeighbor in current.getNeighbors())
                 {
                     currentNeighbor.sortNeighbors();
                     if (currentNeighbor == vertexB)
@@ -3642,7 +3710,7 @@ namespace Adscol
                         founder = true;
                     }
 
-                    foreach (GraphNode neighborFriends in currentNeighbor.getNeighbors()) {
+                    foreach (GraphNode<T> neighborFriends in currentNeighbor.getNeighbors()) {
                         if (!visited.contains(neighborFriends))
                         {
                             stack.push(neighborFriends);
@@ -3666,26 +3734,26 @@ namespace Adscol
 
         public void breadthFirstSearch(string idFrom, string idTo)
         {
-            GraphNode vertexA = getVertex(idFrom);
-            GraphNode vertexB = getVertex(idTo);
+            GraphNode<T> vertexA = getVertex(idFrom);
+            GraphNode<T> vertexB = getVertex(idTo);
 
             if (vertexA == null || vertexB == null)
             {
                 return;
             }
 
-            ArrayList<GraphNode> visited = new ArrayList<GraphNode>();
-            Queue<GraphNode> queue = new Queue<GraphNode>();
+            ArrayList<GraphNode<T>> visited = new ArrayList<GraphNode<T>>();
+            Queue<GraphNode<T>> queue = new Queue<GraphNode<T>>();
 
             queue.enqueue(vertexA);
             bool founder = false;
 
             while (!queue.isEmpty() && !founder)
             {
-                GraphNode current = queue.dequeue();
+                GraphNode<T> current = queue.dequeue();
                 visited.add(current);
 
-                foreach (GraphNode currentNeighbor in current.getNeighbors())
+                foreach (GraphNode<T> currentNeighbor in current.getNeighbors())
                 {
                     if (currentNeighbor == vertexB)
                     {
@@ -3706,13 +3774,8 @@ namespace Adscol
             }
             Console.WriteLine(idTo);
         }
-
-        public void dijkstrasAlgorithm()
-        {
-            throw new NotImplementedException();
-        }
     }
-
+   
     class FenwickTree : AdsClassMin
     {
         private int leastSignificantBit(int i)
