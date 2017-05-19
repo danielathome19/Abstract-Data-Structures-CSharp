@@ -130,6 +130,15 @@ namespace Adscol
                 myFront = temp;
             } else
             {
+                if (myFront == null)
+                {
+                    myLast = myList;
+                    while (myLast.myNext != null)
+                    {
+                        myLast = myLast.myNext;
+                    }
+                    myFront = myLast;
+                }
                 myFront.myNext = temp;
                 myFront = myFront.myNext;
             }
@@ -180,6 +189,7 @@ namespace Adscol
                     myLast = myLast.myNext;
                 }
                 myLast.myNext = null;
+                myFront = myLast;
             }
             else
             {
@@ -284,6 +294,7 @@ namespace Adscol
         {
             myList = null;
             myLast = null;
+            myFront = null;
         }
 
         public int size()
@@ -4941,8 +4952,9 @@ namespace Adscol
             {
                 throw new ArgumentOutOfRangeException("Amount of elements must be smaller than maxCount");
             }
-            
-            Array.Copy(t, myData, t.Length);            
+
+            Array.Copy(t, myData, t.Length);
+            myCount = t.Length;
         }
     }
 
@@ -4994,6 +5006,15 @@ namespace Adscol
             }
             else
             {
+                if (myFront == null)
+                {
+                    myLast = myList;
+                    while (myLast.myNext != null)
+                    {
+                        myLast = myLast.myNext;
+                    }
+                    myFront = myLast;
+                }
                 myFront.myNext = temp;
                 myFront = myFront.myNext;
             }
@@ -5046,6 +5067,7 @@ namespace Adscol
                     myLast = myLast.myNext;
                 }
                 myLast.myNext = null;
+                myFront = myLast;
             }
             else
             {
@@ -5120,11 +5142,12 @@ namespace Adscol
             int cnt = 1;
             while (myLast != null)
             {
-                Console.WriteLine("Node {0}:", cnt);
-                foreach (T x in myList.myData)
+                Console.Write("Node {0}: ", cnt);
+                for (int i = 0; i < myLast.myCount; i++)
                 {
-                    Console.WriteLine(x);
+                    Console.Write(myLast.myData[i]);
                 }
+                Console.WriteLine();
                 cnt++;
                 myLast = myLast.myNext;
             }
@@ -5134,12 +5157,15 @@ namespace Adscol
         {
             var items = new ArrayList<T>();
 
-            for (int i = 0; i < this.size(); i++)
+            myLast = myList;
+
+            while (myLast != null)
             {
-                foreach (T x in myList.myData)
+                for (int i = 0; i < myLast.myCount; i++)
                 {
-                    items.add(x);
+                    items.add(myLast.myData[i]);
                 }
+                myLast = myLast.myNext;
             }
             return items;
         }
@@ -5159,6 +5185,7 @@ namespace Adscol
         {
             myList = null;
             myLast = null;
+            myFront = null;
         }
 
         public int size()

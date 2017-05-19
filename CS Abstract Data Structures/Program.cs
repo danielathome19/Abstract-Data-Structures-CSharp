@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            SkipListTest();
+            GraphTest();
 
             Console.ReadKey();
         }
@@ -34,7 +34,7 @@ namespace CS_Abstract_Data_Structures
 
             string st = "abcdefghijklmnopqrstuvwxyz";
             list.add(st[0]);
-            
+
             Console.WriteLine();
             for (int i = 0; i < st.Length; i++)
             {
@@ -138,7 +138,7 @@ namespace CS_Abstract_Data_Structures
 
             nums.print();
         }
-        
+
         static void SortedSetTest()
         {
             SortedSet<int> numsList = new SortedSet<int>();
@@ -200,7 +200,7 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine(nums2.size());
         }
-        
+
         static void MultisetTest()
         {
             Multiset<int> nums = new Multiset<int>();
@@ -357,7 +357,7 @@ namespace CS_Abstract_Data_Structures
                 list.pushBack(300);
 
                 Console.WriteLine("Size: " + list.size());
-                
+
                 Console.WriteLine(list.popBack());
                 Console.WriteLine(list.popBack());
                 Console.WriteLine(list.popBack());
@@ -375,13 +375,13 @@ namespace CS_Abstract_Data_Structures
                 {
                     Console.WriteLine("Empty queue");
                 }
-                
+
                 list2.pushBack(100);
                 list2.pushBack(200);
                 list2.pushBack(300);
 
                 Console.WriteLine("Size: " + list2.size());
-                
+
                 Console.WriteLine(list2.popFront());
                 Console.WriteLine(list2.popFront());
                 Console.WriteLine(list2.popFront());
@@ -639,7 +639,7 @@ namespace CS_Abstract_Data_Structures
             for (int i = 0; i < 5; i++)
             {
                 evenNumbers.add(i * 2);
-                
+
                 oddNumbers.add((i * 2) + 1);
             }
 
@@ -699,7 +699,7 @@ namespace CS_Abstract_Data_Structures
             curGraph.addVertex("D", 3);
             curGraph.addVertex("E", 4);
             curGraph.addVertex("F", 5);
-            
+
             curGraph.addEdge("A", "B");
             curGraph.addEdge("B", "C");
             curGraph.addEdge("D", "C");
@@ -768,7 +768,8 @@ namespace CS_Abstract_Data_Structures
             try
             {
                 Console.WriteLine(ft.sum(1, 0)); // <-- invalid bounds!
-            } catch (Exception e) { Console.WriteLine(e.ToString()); }
+            }
+            catch (Exception e) { Console.WriteLine(e.ToString()); }
 
             Console.WriteLine(ft.sum(3, 5));
             Console.WriteLine(ft.sum(2, 6));
@@ -784,7 +785,7 @@ namespace CS_Abstract_Data_Structures
         static void TrieTest()
         {
             Trie t1 = new Trie();
-            
+
             t1.add("");
             Console.WriteLine(t1.contains(""));
             t1.add("");
@@ -832,14 +833,14 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(t3.contains("AH7"));
             Console.WriteLine(t3.contains("7"));
             Console.WriteLine(t3.contains("B"));
-            
+
             Console.WriteLine(t3.contains("Ar"));
             Console.WriteLine(t3.contains("A8"));
             Console.WriteLine(t3.contains("AH6"));
             Console.WriteLine(t3.contains("C"));
 
             Console.WriteLine();
-            
+
             do
             {
                 Console.Write("Enter prefix: ");
@@ -849,7 +850,7 @@ namespace CS_Abstract_Data_Structures
 
                 Console.WriteLine("\nWords that start with {0}:", prefixSearch);
                 results.print();
-                
+
             } while (true);
         }
 
@@ -1005,7 +1006,7 @@ namespace CS_Abstract_Data_Structures
 
             set.not();
 
-            BitSet set2 =  new BitSet(6);
+            BitSet set2 = new BitSet(6);
 
             Random rand = new Random();
 
@@ -1064,6 +1065,50 @@ namespace CS_Abstract_Data_Structures
 
         }
 
+        static void UnrolledLinkedListTest()
+        {
+            UnrolledLinkedList<char> list = new UnrolledLinkedList<char>(5);
+            list.add('w', 'x', 'y', 'z');
+            list.add('w', 'x', 'y', 'z');
+            list.add('w', 'x', 'y', 'z');
+            list.add('w', 'x', 'y', 'z');
+            list.add('w', 'x', 'y', 'z');
+            list.add('w', 'x', 'y', 'z');
+            list.print();
+
+            Console.WriteLine(list.size());
+            list.clear();
+            list.print();
+
+            string st = "abcdefghijklmnopqrstuvwxyz";
+
+            Console.WriteLine();
+            for (int i = 0; i < st.Length - 3; i++)
+            {
+                list.add(st[i], st[i + 1], st[i + 2], st[i + 3]);
+            }
+
+            list.print();
+            list.clear();
+
+            Console.WriteLine("Printed alphabet");
+
+            UnrolledLinkedList<int> nums = new UnrolledLinkedList<int>(5);
+
+            for (int i = 0; i < 10; i++)
+            {
+                nums.add(i, i * 2, i * 3, i * 4);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                foreach (int x in nums.get(i))
+                {
+                    Console.Write(x + " ");
+                }
+                Console.WriteLine();
+            }
+        }
         #endregion
     }
 }
