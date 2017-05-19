@@ -47,7 +47,6 @@
  *  -B-Tree
  *  -B+Tree
  *  -Ternary Tree
- *  -AVL Tree
  *  -Red Black Tree
  *  -Graph (Weighted) (Adjacency List)
  * 
