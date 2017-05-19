@@ -31,11 +31,11 @@
  *  -Heap
  *  -BitSet
  *  -Skip List
+ *  -Unrolled Linked List
  *
  * To do:
  *  -Multimap
  *  -Sorted List (Linked List)
- *  -Unrolled Linked List
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
@@ -3460,7 +3460,7 @@ namespace Adscol
                 neighborArray += x.id + " ";
             }
             neighborArray += "]";
-            return "Id: " + this.id + "\tNeigbors: " + neighborArray;
+            return "Id: " + this.id + "\tData: " + this.data + "\tNeigbors: " + neighborArray;
         }
 
         public int CompareTo(GraphNode<T> g)
@@ -4574,7 +4574,7 @@ namespace Adscol
                 {
                     myList[i] = myList[i] & bits[i];
                 }
-                catch (Exception e)
+                catch (Exception)
                 { }
             }
         }
@@ -4600,7 +4600,7 @@ namespace Adscol
                 {
                     myList[i] = myList[i] ^ bits[i];
                 }
-                catch (Exception e)
+                catch (Exception)
                 { }
             }
         }
@@ -4875,9 +4875,6 @@ namespace Adscol
         public ArrayList<T> getList()
         {
             throw new NotImplementedException();
-            var items = new ArrayList<T>();
-
-            return items;
         }
 
         public bool contains(T t)
@@ -4926,6 +4923,260 @@ namespace Adscol
         public int getHeight()
         {
             return myHead.getHeight();
+        }
+    }
+
+    class UnrolledNode<T>
+    {
+        public T[] myData;
+        public int myCount;
+        public UnrolledNode<T> myNext;
+
+        public UnrolledNode(int maxCount, params T[] t)
+        {
+            myNext = null;
+            myCount = 0;
+            myData = new T[maxCount];
+
+            if (t.Length > maxCount)
+            {
+                throw new ArgumentOutOfRangeException("Amount of elements must be smaller than maxCount");
+            }
+            
+            Array.Copy(t, myData, t.Length);            
+        }
+    }
+
+    class UnrolledLinkedList<T> : AdsClass<T>
+    {
+        private UnrolledNode<T> myList;
+        private UnrolledNode<T> myLast;
+        private UnrolledNode<T> myFront;
+        private int maxSize;
+        
+        /// <param name="maxSize">The max size of each node</param>
+        public UnrolledLinkedList(int maxSize)
+        {
+            this.maxSize = maxSize;
+            myList = null;
+            myLast = null;
+            myFront = null;
+        }
+
+        /// <param name="maxSize">The max size of each node</param>
+        public UnrolledLinkedList(int maxSize, params T[] data)
+        {
+            this.maxSize = maxSize;
+            myList = new UnrolledNode<T>(maxSize, data);
+            myLast = myList;
+            myFront = myList;
+        }
+
+        public T[] this[int index]
+        {
+            get
+            {
+                return get(index);
+            }
+            set
+            {
+                set(index, value);
+            }
+        }
+
+        public void add(params T[] t)
+        {
+            UnrolledNode<T> temp = new UnrolledNode<T>(maxSize, t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+                myFront = temp;
+            }
+            else
+            {
+                myFront.myNext = temp;
+                myFront = myFront.myNext;
+            }
+        }
+
+        public void add(int index, params T[] t)
+        {
+            if (index == 0)
+            {
+                UnrolledNode<T> temp = new UnrolledNode<T>(maxSize, t);
+                temp.myNext = myList;
+                myList = temp;
+            }
+            else if (index >= this.size() - 1)
+            {
+                this.add(t);
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                UnrolledNode<T> temp = new UnrolledNode<T>(maxSize, t);
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        temp.myNext = myLast.myNext;
+                        myLast.myNext = temp;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public void remove(int index)
+        {
+            if (index == 0)
+            {
+                myLast = myList;
+                UnrolledNode<T> temp = myLast.myNext;
+                myList = temp;
+                myLast = myList;
+            }
+            else if (index == (this.size() - 1))
+            {
+                myLast = myList;
+                while (myLast.myNext.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = null;
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        UnrolledNode<T> temp = myLast;
+                        temp.myNext = myLast.myNext.myNext;
+                        myLast = temp;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public void set(int index, params T[] t)
+        {
+            UnrolledNode<T> temp = new UnrolledNode<T>(maxSize, t);
+            if (index == 0)
+            {
+                temp.myNext = myList.myNext;
+                myList = temp;
+                myLast = myList;
+            }
+            else if (index == (this.size() - 1))
+            {
+                myLast = myList;
+                while (myLast.myNext.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = temp;
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        temp.myNext = myLast.myNext.myNext;
+                        myLast.myNext = temp;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public T[] get(int index)
+        {
+            int cnt = 0;
+            myLast = myList;
+            while ((myLast.myNext != null) && (cnt <= index))
+            {
+                if (cnt == index) return myLast.myData;
+                myLast = myLast.myNext;
+                cnt++;
+            }
+            if (cnt == index) return myLast.myData;
+            return new T[0];
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            int cnt = 1;
+            while (myLast != null)
+            {
+                Console.WriteLine("Node {0}:", cnt);
+                foreach (T x in myList.myData)
+                {
+                    Console.WriteLine(x);
+                }
+                cnt++;
+                myLast = myLast.myNext;
+            }
+        }
+
+        public ArrayList<T> getList()
+        {
+            var items = new ArrayList<T>();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                foreach (T x in myList.myData)
+                {
+                    items.add(x);
+                }
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < items.size(); i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt += myLast.myCount;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
         }
     }
 }

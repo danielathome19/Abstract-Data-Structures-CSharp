@@ -691,14 +691,14 @@ namespace CS_Abstract_Data_Structures
 
         static void GraphTest()
         {
-            Graph curGraph = new Graph();
+            Graph<int> curGraph = new Graph<int>();
 
-            curGraph.addVertex("A");
-            curGraph.addVertex("B");
-            curGraph.addVertex("C");
-            curGraph.addVertex("D");
-            curGraph.addVertex("E");
-            curGraph.addVertex("F");
+            curGraph.addVertex("A", 0);
+            curGraph.addVertex("B", 1);
+            curGraph.addVertex("C", 2);
+            curGraph.addVertex("D", 3);
+            curGraph.addVertex("E", 4);
+            curGraph.addVertex("F", 5);
             
             curGraph.addEdge("A", "B");
             curGraph.addEdge("B", "C");
@@ -722,11 +722,11 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine();
             Console.WriteLine();
 
-            Graph testGraph = new Graph();
+            Graph<int> testGraph = new Graph<int>();
 
-            testGraph.addVertex("A");
-            testGraph.addVertex("B");
-            testGraph.addVertex("C");
+            testGraph.addVertex("A", 0);
+            testGraph.addVertex("B", 1);
+            testGraph.addVertex("C", 2);
 
             testGraph.addEdge("A", "B");
             testGraph.addEdge("B", "C");
@@ -1063,6 +1063,7 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine(list.contains(5));
 
         }
+
         #endregion
     }
 }
