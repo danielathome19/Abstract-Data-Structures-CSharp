@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            SegmentTreeTest();
+            SplayTreeTest();
 
             Console.ReadKey();
         }
@@ -1304,7 +1304,7 @@ namespace CS_Abstract_Data_Structures
         static void SegmentTreeTest()
         {
             int[] A = { 8, 7, 3, 9, 5, 1, 10 };
-            SegmentTreeFunc<int> t = new SegmentTreeFunc<int>(A.Length);
+            SegmentTree<int> t = new SegmentTree<int>(A.Length);
             t.buildTree(A);
             Console.WriteLine("{0} ", t.get(0, 1));
             Console.WriteLine("{0} ", t.get(1, 1));
@@ -1329,6 +1329,33 @@ namespace CS_Abstract_Data_Structures
             Console.WriteLine("{0} ", t.get(0, 3));
             Console.WriteLine("{0} ", t.get(3, 3));
             Console.WriteLine();
+        }
+
+        static void SplayTreeTest()
+        {
+            SplayTree<int> impl = new SplayTree<int>();
+            impl.add(17);
+            impl.add(39);
+            impl.add(22);
+            impl.add(42);
+            impl.add(70);
+            impl.add(64);
+            impl.add(84);
+            impl.add(99);
+
+            Console.WriteLine("Preorder after insert: " + impl);
+            
+            Console.WriteLine("Leave counts: " + impl.leafCount(impl.getRoot()));
+            Console.WriteLine("Leave counts: " + impl.leafSum(impl.getRoot()));
+            
+            impl.remove(22);
+            Console.WriteLine("After delete preorder: " + impl);
+            
+            Console.WriteLine("Node found or not: " + impl.contains(42));
+            Console.WriteLine("After search preorder: " + impl);
+            
+            Console.WriteLine("Node found or not: " + impl.contains(98));
+            Console.WriteLine("After search preorder: " + impl);
         }
         #endregion
     }

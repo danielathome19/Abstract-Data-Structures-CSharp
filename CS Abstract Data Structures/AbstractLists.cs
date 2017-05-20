@@ -38,11 +38,11 @@
  *  -Sorted List (Linked List)
  *  -Interval Tree
  *  -Segment Tree
+ *  -Splay Tree
  *
  * To do:
  *  -Queap
  *  -Quad Tree
- *  -Splay Tree
  *  -Scapegoat Tree
  *  -2 3 Tree (2-3)
  *  -2 4 Tree (2-3-4)
@@ -56,6 +56,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Adscol
 {
@@ -6581,5 +6582,290 @@ namespace Adscol
         {
             return (this.size() == 0);
         }
+    }
+
+    class SplayNode<T> where T : IComparable
+    {
+        public T data;
+        public SplayNode<T> left;
+        public SplayNode<T> right;
+
+        public SplayNode(T element)
+        {
+            this.data = element;
+            left = null;
+            right = null;
+        }
+    }
+
+    class SplayTree<T> where T : IComparable
+    {
+        private static class Add<T>
+        {
+            public static readonly Func<T, T, T> Do;
+
+            static Add()
+            {
+                var par1 = Expression.Parameter(typeof(T));
+                var par2 = Expression.Parameter(typeof(T));
+
+                var add = Expression.Add(par1, par2);
+
+                Do = Expression.Lambda<Func<T, T, T>>(add, par1, par2).Compile();
+            }
+        }
+        
+        private SplayNode<T> leftRotate(SplayNode<T> node)
+        {
+            SplayNode<T> newT = node.left;
+            node.left = newT.right;
+            newT.right = node;
+            return newT;
+        }
+        
+        private SplayNode<T> rightRotate(SplayNode<T> node)
+        {
+            SplayNode<T> newT = node.right;
+            node.right = newT.left;
+            newT.left = node;
+            return newT;
+        }
+
+        private SplayNode<T> add(T item, SplayNode<T> node)
+        {
+            if (node == null)
+            {
+                return new SplayNode<T>(item);
+            }
+            else
+            {
+                if (item.CompareTo(node.data) < 0)
+                {
+                    node.left = add(item, node.left);
+                }
+                else if (item.CompareTo(node.data) > 0)
+                {
+                    node.right = add(item, node.right);
+                }
+                return node;
+            }
+        }
+
+        private void adjustTree(T data)
+        {
+            bool flag = true;
+            SplayNode<T> node = root;
+            SplayNode<T> parent;
+            SplayNode<T> grparent;
+            SplayNode<T> ggparent;
+            parent = null;
+            grparent = null;
+            ggparent = null;
+
+            while (true)
+            {
+                if (node == null || data.Equals(node.data))
+                {
+                    break;
+                }
+                else if (node.left != null && data.CompareTo(node.data) < 0)
+                {
+                    if (data.Equals(node.left.data))
+                    {
+                        node = leftRotate(node);
+                    }
+                    else if (node.left.left != null && data.Equals(node.left.left.data))
+                    {
+                        grparent = node;
+                        parent = node.left;
+                        node = leftRotate(grparent);
+                        node = leftRotate(parent);
+                        flag = true;
+                    }
+                    else if (node.left.right != null && data.Equals(node.left.right.data))
+                    {
+                        grparent = node;
+                        parent = node.left;
+                        grparent.left = rightRotate(parent);
+                        node = leftRotate(grparent);
+                        flag = true;
+                    }
+                    else if (data.CompareTo(node.data) < 0)
+                    {
+                        ggparent = node;
+                        node = node.left;
+                    }
+                }
+                else if (node.right != null && data.CompareTo(node.data) > 0)
+                {
+                    if (data.Equals(node.right.data))
+                    {
+                        node = rightRotate(node);
+                    }
+                    else if (node.right.right != null && data.Equals(node.right.right.data))
+                    {
+                        grparent = node;
+                        parent = node.right;
+                        node = rightRotate(grparent);
+                        node = rightRotate(parent);
+                        flag = true;
+                    }
+                    else if (node.right.left != null && data.Equals(node.right.left.data))
+                    {
+                        grparent = node;
+                        parent = node.right;
+                        grparent.right = leftRotate(parent);
+                        node = rightRotate(grparent);
+                        flag = true;
+                    }
+                    else if (data.CompareTo(node.data) > 0)
+                    {
+                        ggparent = node;
+                        node = node.right;
+                    }
+                }
+                else if ((node.left == null && data.CompareTo(node.data) < 0) || (node.right == null && data.CompareTo(node.data) > 0))
+                {
+                    data = node.data;
+                    node = root;
+                    ggparent = null;
+                }
+                if (flag && ggparent != null)
+                {
+                    if (node.data.CompareTo(ggparent.data) < 0)
+                    {
+                        ggparent.left = node;
+                    }
+                    else if (node.data.CompareTo(ggparent.data) > 0)
+                    {
+                        ggparent.right = node;
+                    }
+
+                    node = root;
+                    ggparent = null;
+                    flag = false;
+                }
+            }
+            root = node;
+        }
+
+        private SplayNode<T> root;
+        private string stringx;
+
+        public SplayTree()
+        {
+            root = null;
+        }
+
+        public void add(T item)
+        {
+            root = add(item, root);
+            adjustTree(item);
+        }
+
+        public void remove(T item)
+        {
+            if (!isNull())
+            {
+                adjustTree(item);
+                if (root != null && root.data.Equals(item))
+                {
+                    if (root.left != null)
+                    {
+                        SplayNode<T> tmp = root.right;
+                        root = root.left;
+                        adjustTree(item);
+                        root.right = tmp;
+                    }
+                    else
+                    {
+                        root = root.right;
+                    }
+                }
+            }
+        }
+
+        public T getRootValue()
+        {
+            if (root != null)
+            {
+                return root.data;
+            }
+            else
+            {
+                return default(T);
+            }
+        }
+
+        public SplayNode<T> getRoot()
+        {
+            return root;
+        }
+
+        void preOrder(SplayNode<T> node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            stringx += node.data + " -> ";
+            preOrder(node.left);
+            preOrder(node.right);
+        }
+
+        public bool isNull()
+        {
+            return root == null;
+        }
+
+        public int leafCount(SplayNode<T> node)
+        {
+            if (node == null)
+                return 0;
+            if (node.left == null && node.right == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return leafCount(node.left) + leafCount(node.right);
+            }
+        }
+
+        public T leafSum(SplayNode<T> node)
+        {
+            if (node == null)
+            {
+                return default(T);
+            }
+            if (node.left == null && node.right == null)
+            {
+                return node.data;
+            }
+            else
+            {
+                return Add<T>.Do(leafSum(node.left), leafSum(node.right));
+            }
+        }
+
+        public bool contains(T item)
+        {
+            if (isNull())
+            {
+                return false;
+            }
+
+            adjustTree(item);
+            return (root.data.Equals(item));
+        }
+
+        public override string ToString()
+        {
+            stringx = "";
+            preOrder(getRoot());
+            return stringx;
+        }
+
     }
 }
