@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            MultiMapTest();
+            IntervalTreeTest();
 
             Console.ReadKey();
         }
@@ -1161,6 +1161,80 @@ namespace CS_Abstract_Data_Structures
             for (int i = 0; i < items.Length; i++)
             {
                 Console.WriteLine(items[i]);
+            }
+        }
+
+        static void TreeMapTest()
+        {
+            TreeMap<string, int> table = new TreeMap<string, int>();
+
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+            table.add("Jack", 71);
+            table.add("Jill", 64);
+            table.add("Abe", 33);
+            table.add("Beth", 21);
+            table.add("Chuck", 12);
+            table.add("Dot", 38);
+            table.add("Mike", 75);
+            table.add("Nick", 58);
+            table.add("Otis", 45);
+
+            table.print();
+
+            Console.WriteLine("\nSize: " + table.size());
+            Console.WriteLine(table.get("wow"));
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+            Console.WriteLine(table.get("Jack"));
+            Console.WriteLine(table.get("Jill"));
+
+            Console.WriteLine("\nSize: " + table.size());
+
+            Console.WriteLine(table.get("Jane"));
+            Console.WriteLine(table.get("Joe"));
+
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+            table.add("Otis", 45);
+
+            Console.WriteLine("\nSize: " + table.size());
+            table.add("Jane", 35);
+            table.add("Joe", 14);
+
+            Console.WriteLine("\nSize: " + table.size());
+        }
+
+        static void IntervalTreeTest()
+        {
+            IntervalTree<int> it = new IntervalTree<int>();
+
+            it.addInterval(0L, 10L, 1);
+            it.addInterval(20L, 30L, 2);
+            it.addInterval(15L, 17L, 3);
+            it.addInterval(25L, 35L, 4);
+
+            ArrayList<int> result1 = it.get(5L);
+            ArrayList<int> result2 = it.get(10L);
+            ArrayList<int> result3 = it.get(29L);
+            ArrayList<int> result4 = it.get(5L, 15L);
+
+            Console.WriteLine("Intervals that contain 5L:");
+            foreach (int r in result1)
+            {
+                Console.WriteLine(r);
+            }
+
+            Console.WriteLine("Intervals that contain 29L:");
+            foreach (int r in result3)
+            {
+                Console.WriteLine(r);
+            }
+
+            Console.WriteLine("Intervals that intersect (5L,15L):");
+            foreach (int r in result4)
+            {
+                Console.WriteLine(r);
             }
         }
         #endregion

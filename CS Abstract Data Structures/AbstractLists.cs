@@ -20,6 +20,7 @@
  *  -Circular Linked List
  *  -SortedMap
  *  -Map
+ *  -TreeMap
  *  -MultiMap
  *  -HashMap (Dictionary)
  *  -Treap
@@ -34,6 +35,7 @@
  *  -Skip List
  *  -Unrolled List (Linked List)
  *  -Sorted List (Linked List)
+ *  -Interval Tree
  *
  * To do:
  *  -Queap
@@ -2223,7 +2225,7 @@ namespace Adscol
         }
     }
 
-    class Entry<K, V> : IComparable<Entry<K, V>> where K : IComparable
+    class Entry<K, V> : IComparable<Entry<K, V>>, IComparable where K : IComparable
     {
         private K key;
         private V value;
@@ -2269,6 +2271,11 @@ namespace Adscol
         public int CompareTo(Entry<K, V> o)
         {
             return key.CompareTo(o.key);
+        }
+
+        public int CompareTo(object o)
+        {
+            return key.CompareTo(((Entry<K, V>) o).key);
         }
     }
 
@@ -2331,6 +2338,11 @@ namespace Adscol
             {
                 Console.WriteLine("Key: " + myMap[i].getKey() + "\tValue: " + myMap[i].getValue());
             }
+        }
+
+        public ArrayList<Entry<K, V>> getEntryList()
+        {
+            return myMap;
         }
 
         public ArrayList<K> getKeyList()
@@ -2490,6 +2502,124 @@ namespace Adscol
             for (int i = 0; i < myMap.size(); i++)
             {
                 if (myMap.get(i).getValue().Equals(value)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myMap.clear();
+        }
+
+        public int size()
+        {
+            return myMap.size();
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class TreeMap<K, V> : AdsClassMin where K : IComparable
+    {
+        private BinaryTree<Entry<K, V>> myMap;
+
+        private int indexOf(K key)
+        {
+            ArrayList<Entry<K, V>> list = myMap.getListInOrder();
+
+            for (int i = 0; i < list.size(); i++)
+            {
+                if (list.get(i).getKey().Equals(key)) return i;
+            }
+            return -1;
+        }
+
+        public TreeMap()
+        {
+            myMap = new BinaryTree<Entry<K, V>>();
+        }
+
+        public V this[K key]
+        {
+            get
+            {
+                return get(key);
+            }
+        }
+
+        public void add(K key, V value)
+        {
+            if (!containsKey(key))
+            {
+                Entry<K, V> temp = new Entry<K, V>(key, value);
+                myMap.add(temp);
+            }
+        }
+
+        public void remove(K key)
+        {
+            if (containsKey(key))
+            {
+                myMap.remove(new Entry<K, V>(key, default(V)));
+            }
+        }
+
+        public V get(K key)
+        {
+            if (containsKey(key))
+            {
+                return myMap.getListInOrder().get(this.indexOf(key)).getValue();
+            }
+            return default(V);
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                Console.WriteLine("Key: " + myMap.getListInOrder().get(i).getKey() + "\tValue: " + myMap.getListInOrder().get(i).getValue());
+            }
+        }
+
+        public ArrayList<K> getKeyList()
+        {
+            var keys = new ArrayList<K>();
+
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                keys.add(myMap.getListInOrder().get(i).getKey());
+            }
+            return keys;
+        }
+
+        public ArrayList<V> getValueList()
+        {
+            var values = new ArrayList<V>();
+
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                values.add(myMap.getListInOrder().get(i).getValue());
+            }
+            return values;
+        }
+
+        public bool containsKey(K key)
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.getListInOrder().get(i).getKey().Equals(key)) return true;
+            }
+            return false;
+        }
+
+        public bool containsValue(V value)
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.getListInOrder().get(i).getValue().Equals(value)) return true;
             }
             return false;
         }
@@ -5517,6 +5647,398 @@ namespace Adscol
         public bool isEmpty()
         {
             return (this.size() == 0);
+        }
+    }
+
+    class Interval<T> : IComparable
+    {
+        private long start;
+        private long end;
+        private T data;
+
+        public Interval(long start, long end, T data)
+        {
+            this.start = start;
+            this.end = end;
+            this.data = data;
+        }
+
+        public long getStart()
+        {
+            return start;
+        }
+
+        public void setStart(long start)
+        {
+            this.start = start;
+        }
+
+        public long getEnd()
+        {
+            return end;
+        }
+
+        public void setEnd(long end)
+        {
+            this.end = end;
+        }
+
+        public T getData()
+        {
+            return data;
+        }
+
+        public void setData(T data)
+        {
+            this.data = data;
+        }
+        
+        public bool contains(long time)
+        {
+            return time < end && time > start;
+        }
+        
+        public bool intersects(Interval<T> other)
+        {
+            return other.getEnd() > start && other.getStart() < end;
+        }
+        
+        public int CompareTo(object other)
+        {
+            if (start < ((Interval<T>)other).getStart())
+            {
+                return -1;
+            }
+            else if (start > ((Interval<T>)other).getStart())
+            {
+                return 1;
+            }
+            else if (end < ((Interval<T>)other).getEnd())
+            {
+                return -1;
+            }
+            else if (end > ((Interval<T>)other).getEnd())
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+    }
+
+    class IntervalNode<T>
+    {
+
+        private SortedMap<Interval<T>, ArrayList<Interval<T>>> intervals;
+        private long center;
+        private IntervalNode<T> leftNode;
+        private IntervalNode<T> rightNode;
+
+        public IntervalNode()
+        {
+            intervals = new SortedMap<Interval<T>, ArrayList<Interval<T>>>();
+            center = 0;
+            leftNode = null;
+            rightNode = null;
+        }
+
+        public IntervalNode(ArrayList<Interval<T>> intervalList)
+        {
+
+            intervals = new SortedMap<Interval<T>, ArrayList<Interval<T>>>();
+
+            SortedSet<long> endpoints = new SortedSet<long>();
+
+            foreach (Interval<T> interval in intervalList)
+            {
+                endpoints.add(interval.getStart());
+                endpoints.add(interval.getEnd());
+            }
+
+            long median = getMedian(endpoints);
+            center = median;
+
+            ArrayList<Interval<T>> left = new ArrayList<Interval<T>>();
+            ArrayList<Interval<T>> right = new ArrayList<Interval<T>>();
+
+            foreach (Interval<T> interval in intervalList)
+            {
+                if (interval.getEnd() < median)
+                {
+                    left.add(interval);
+                }
+                else if (interval.getStart() > median)
+                {
+                    right.add(interval);
+                }
+                else
+                {
+                    ArrayList<Interval<T>> posting = intervals.get(interval);
+                    if (posting == null)
+                    {
+                        posting = new ArrayList<Interval<T>>();
+                        intervals.add(interval, posting);
+                    }
+                    posting.add(interval);
+                }
+            }
+
+            if (left.size() > 0)
+            {
+                leftNode = new IntervalNode<T>(left);
+            }
+            if (right.size() > 0)
+            {
+                rightNode = new IntervalNode<T>(right);
+            }
+        }
+
+        public ArrayList<Interval<T>> stab(long time)
+        {
+            ArrayList<Interval<T>> result = new ArrayList<Interval<T>>();
+
+            foreach (Entry<Interval<T>, ArrayList<Interval<T>>> entry in intervals.getEntryList())
+            {
+                if (entry.getKey().contains(time))
+                {
+                    foreach (Interval<T> interval in entry.getValue())
+                    {
+                        result.add(interval);
+                    }
+                }
+                else if (entry.getKey().getStart() > time)
+                {
+                    break;
+                }
+            }
+
+            if (time < center && leftNode != null)
+            {
+                result.appendAll(leftNode.stab(time));
+            }
+            else if (time > center && rightNode != null)
+            {
+                result.appendAll(rightNode.stab(time));
+            }
+            return result;
+        }
+
+        public ArrayList<Interval<T>> query(Interval<T> target)
+        {
+            ArrayList<Interval<T>> result = new ArrayList<Interval<T>>();
+
+            foreach (Entry<Interval<T>, ArrayList<Interval<T>>> entry in intervals.getEntryList())
+            {
+                if (entry.getKey().intersects(target))
+                {
+                    foreach (Interval<T> interval in entry.getValue())
+                    {
+                        result.add(interval);
+                    }
+                }
+                else if (entry.getKey().getStart() > target.getEnd())
+                {
+                    break;
+                }
+            }
+
+            if (target.getStart() < center && leftNode != null)
+            {
+                result.appendAll(leftNode.query(target));
+            }
+            if (target.getEnd() > center && rightNode != null)
+            {
+                result.appendAll(rightNode.query(target));
+            }
+
+            return result;
+        }
+
+        public long getCenter()
+        {
+            return center;
+        }
+
+        public void setCenter(long center)
+        {
+            this.center = center;
+        }
+
+        public IntervalNode<T> getLeft()
+        {
+            return leftNode;
+        }
+
+        public void setLeft(IntervalNode<T> left)
+        {
+            this.leftNode = left;
+        }
+
+        public IntervalNode<T> getRight()
+        {
+            return rightNode;
+        }
+
+        public void setRight(IntervalNode<T> right)
+        {
+            this.rightNode = right;
+        }
+        
+        private long getMedian(SortedSet<long> set)
+        {
+            int i = 0;
+            int middle = set.size() / 2;
+            foreach (long point in set.getList())
+            {
+                if (i == middle)
+                    return point;
+                i++;
+            }
+            return default(long);
+        }
+        
+        public override string ToString()
+        {
+            string sb = "";
+            sb += (center + ": ");
+            foreach (Entry<Interval<T>, ArrayList<Interval<T>>> entry in intervals.getEntryList())
+            {
+                sb += ("[" + entry.getKey().getStart() + "," + entry.getKey().getEnd() + "]:{");
+                foreach (Interval<T> interval in entry.getValue())
+                {
+                    sb += ("(" + interval.getStart() + "," + interval.getEnd() + "," + interval.getData() + ")");
+                }
+                sb += ("} ");
+            }
+            return sb;
+        }
+    }
+
+    class IntervalTree<T>
+    {
+
+        private IntervalNode<T> head;
+        private ArrayList<Interval<T>> intervalList;
+        private bool inSync;
+        private int _size;
+        
+        public IntervalTree()
+        {
+            this.head = new IntervalNode<T>();
+            this.intervalList = new ArrayList<Interval<T>>();
+            this.inSync = true;
+            this._size = 0;
+        }
+        
+        public IntervalTree(ArrayList<Interval<T>> intervalList)
+        {
+            this.head = new IntervalNode<T>(intervalList);
+            this.intervalList = new ArrayList<Interval<T>>();
+            this.intervalList.appendAll(intervalList);
+            this.inSync = true;
+            this._size = intervalList.size();
+        }
+        
+        public ArrayList<T> get(long time)
+        {
+            ArrayList<Interval<T>> intervals = getIntervals(time);
+            ArrayList<T> result = new ArrayList<T>();
+            foreach (Interval<T> interval in intervals)
+            {
+                result.add(interval.getData());
+            }
+
+            return result;
+        }
+        
+        public ArrayList<Interval<T>> getIntervals(long time)
+        {
+            build();
+            return head.stab(time);
+        }
+        
+        public ArrayList<T> get(long start, long end)
+        {
+            ArrayList<Interval<T>> intervals = getIntervals(start, end);
+            ArrayList<T> result = new ArrayList<T>();
+
+            foreach (Interval<T> interval in intervals)
+            {
+                result.add(interval.getData());
+            }
+
+            return result;
+        }
+        
+        public ArrayList<Interval<T>> getIntervals(long start, long end)
+        {
+            build();
+            return head.query(new Interval<T>(start, end, default(T)));
+        }
+        
+        public void addInterval(Interval<T> interval)
+        {
+            intervalList.add(interval);
+            inSync = false;
+        }
+        
+        public void addInterval(long begin, long end, T data)
+        {
+            intervalList.add(new Interval<T>(begin, end, data));
+            inSync = false;
+        }
+        
+        public bool isInSync()
+        {
+            return inSync;
+        }
+        
+        public void build()
+        {
+            if (!inSync)
+            {
+                head = new IntervalNode<T>(intervalList);
+                inSync = true;
+                _size = intervalList.size();
+            }
+        }
+        
+        public int size()
+        {
+            return _size;
+        }
+        
+        public int listSize()
+        {
+            return intervalList.size();
+        }
+        
+        public override string ToString()
+        {
+            return nodeString(head, 0);
+        }
+
+        private string nodeString(IntervalNode<T> node, int level)
+        {
+            if (node == null)
+            {
+                return "";
+            }
+
+            string sb = "";
+            for (int i = 0; i < level; i++)
+            {
+                sb += ("\t");
+            }
+
+            sb += (node + "\n");
+            sb += (nodeString(node.getLeft(), level + 1));
+            sb += (nodeString(node.getRight(), level + 1));
+
+            return sb;
         }
     }
 }
