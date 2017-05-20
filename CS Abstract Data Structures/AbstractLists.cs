@@ -27,6 +27,7 @@
  *  -HashSet
  *  -TreeSet
  *  -Graph (Unweighted) (Adjacency List)
+ *  -Graph (Weighted) (Adjacency List)
  *  -Fenwick Tree
  *  -Trie
  *  -Union Find (Disjointed Set)
@@ -50,7 +51,6 @@
  *  -B+Tree
  *  -Ternary Tree
  *  -Red Black Tree
- *  -Graph (Weighted) (Adjacency List)
  * 
  **************************************************************************/
 
@@ -4061,6 +4061,411 @@ namespace Adscol
                 Console.Write(visited[i].getId() + "-->");
             }
             Console.WriteLine(idTo);
+        }
+    }
+
+    class WeightedGraphNode<T> : IComparable<WeightedGraphNode<T>>, IComparable
+    {
+        private string id;
+        private T data;
+        private SortedMap<WeightedGraphNode<T>, int> neighbors;
+
+        public WeightedGraphNode(string id, T data)
+        {
+            this.id = id;
+            this.data = data;
+            this.neighbors = new SortedMap<WeightedGraphNode<T>, int>();
+        }
+
+        public string getId()
+        {
+            return this.id;
+        }
+
+        public void setId(string id)
+        {
+            this.id = id;
+        }
+
+        public T getData()
+        {
+            return this.data;
+        }
+
+        public void setData(T data)
+        {
+            this.data = data;
+        }
+
+        public bool hasNeighbor(WeightedGraphNode<T> node)
+        {
+            return this.neighbors.containsKey(node);
+        }
+
+        public void addNeighbor(WeightedGraphNode<T> node, int cost)
+        {
+            if (!this.neighbors.containsKey(node))
+            {
+                this.neighbors.add(node, cost);
+            }
+        }
+
+        public void removeNeighbor(WeightedGraphNode<T> node)
+        {
+            this.neighbors.remove(node);
+        }
+
+        public SortedMap<WeightedGraphNode<T>, int> getNeighbors()
+        {
+            return this.neighbors;
+        }
+
+        public override string ToString()
+        {
+            string neighborArray = "[ ";
+
+            foreach (Entry<WeightedGraphNode<T>, int> x in neighbors.getEntryList())
+            {
+                neighborArray += x.getKey().id + " " + "Cost: " + x.getValue() + " ";
+            }
+            neighborArray += "]";
+            return "Id: " + this.id + "\tData: " + this.data + "\tNeigbors: " + neighborArray;
+        }
+
+        public int CompareTo(WeightedGraphNode<T> g)
+        {
+            return this.id.CompareTo(g.id);
+        }
+
+        public int CompareTo(object g)
+        {
+            return CompareTo((WeightedGraphNode<T>) g);
+        }
+    }
+
+    class WeightedGraph<T> : AdsClassMin
+    {
+        private ArrayList<WeightedGraphNode<T>> vertices;
+
+        private WeightedGraphNode<T> getVertex(string id)
+        {
+            foreach (WeightedGraphNode<T> vertex in this.vertices)
+            {
+                if (vertex.getId() == id)
+                {
+                    return vertex;
+                }
+            }
+            return null;
+        }
+
+        public WeightedGraph()
+        {
+            this.vertices = new ArrayList<WeightedGraphNode<T>>();
+        }
+
+        public void addVertex(string id, T data)
+        {
+            if (contains(id))
+            {
+                return;
+            }
+
+            this.vertices.add(new WeightedGraphNode<T>(id, data));
+        }
+
+        /// <summary>
+        /// Adds node idTo as a neighbor of idFrom only
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdgeForward(string idFrom, string idTo, int cost)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            vertexA.addNeighbor(vertexB, cost);
+        }
+
+        /// <summary>
+        /// Adds node idFrom as a neighbor of idTo only
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdgeBackward(string idFrom, string idTo, int cost)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            vertexB.addNeighbor(vertexA, cost);
+        }
+
+        /// <summary>
+        /// Adds nodes idFrom and idTo as neighbors of each other
+        /// </summary>
+        /// <param name="idFrom"></param>
+        /// <param name="idTo"></param>
+        public void addEdge(string idFrom, string idTo, int cost)
+        {
+            addEdgeForward(idFrom, idTo, cost);
+            addEdgeBackward(idFrom, idTo, cost);
+        }
+
+        public void removeVertex(string id)
+        {
+            WeightedGraphNode<T> vertex = getVertex(id);
+
+            if (vertex == null)
+            {
+                return;
+            }
+
+            vertices.remove(vertices.indexOf(vertex));
+        }
+
+        public void removeEdge(string idFrom, string idTo)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            vertexA.removeNeighbor(vertexB);
+            vertexB.removeNeighbor(vertexA);
+        }
+
+        public T getNodeData(string id)
+        {
+            WeightedGraphNode<T> node = getVertex(id);
+
+            if (node != null)
+            {
+                return node.getData();
+            }
+            else
+            {
+                return default(T);
+            }
+        }
+
+        public void setNodeData(string id, T data)
+        {
+            WeightedGraphNode<T> node = getVertex(id);
+
+            if (node != null)
+            {
+                node.setData(data);
+            }
+        }
+
+        public void print()
+        {
+            foreach (WeightedGraphNode<T> x in vertices)
+            {
+                Console.WriteLine(x.ToString());
+            }
+        }
+
+        public ArrayList<WeightedGraphNode<T>> getList()
+        {
+            return vertices.getList();
+        }
+
+        public bool contains(string vertexId)
+        {
+            return getVertex(vertexId) != null;
+        }
+
+        public void clear()
+        {
+            vertices.clear();
+        }
+
+        public int size()
+        {
+            return vertices.size();
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public int distanceBetween(string idFrom, string idTo)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return 0;
+            }
+
+            ArrayList<WeightedGraphNode<T>> visited = new ArrayList<WeightedGraphNode<T>>();
+            Queue<WeightedGraphNode<T>> queue = new Queue<WeightedGraphNode<T>>();
+            Queue<int> costs = new Queue<int>();
+
+            int distance = 0;
+            queue.enqueue(vertexA);
+            costs.enqueue(0);
+
+            while (!queue.isEmpty())
+            {
+                WeightedGraphNode<T> current = queue.dequeue();
+                visited.add(current);
+                distance += costs.dequeue();
+
+                foreach (Entry<WeightedGraphNode<T>, int> cn in current.getNeighbors().getEntryList())
+                {
+                    WeightedGraphNode<T> currentNeighbor = cn.getKey();
+                    
+                    if (currentNeighbor == vertexB)
+                    {
+                        return distance;
+                    }
+
+                    if (!visited.contains(currentNeighbor))
+                    {
+                        queue.enqueue(currentNeighbor);
+                        costs.enqueue(cn.getValue());
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        public bool pathExists(string idFrom, string idTo)
+        {
+            return distanceBetween(idFrom, idTo) > 0;
+        }
+
+        public void depthFirstSearch(string idFrom, string idTo)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            ArrayList<WeightedGraphNode<T>> visited = new ArrayList<WeightedGraphNode<T>>();
+            Stack<WeightedGraphNode<T>> stack = new Stack<WeightedGraphNode<T>>();
+            Stack<int> costs = new Stack<int>();
+
+            stack.push(vertexA);
+            bool founder = false;
+
+            while (!stack.isEmpty() && !founder)
+            {
+                WeightedGraphNode<T> current = stack.pop();
+                visited.add(current);
+
+                if (current.getNeighbors().getKeyList().contains(vertexB))
+                {
+                    founder = true;
+                }
+
+                foreach (Entry<WeightedGraphNode<T>, int> cn in current.getNeighbors().getEntryList())
+                {
+                    WeightedGraphNode<T> currentNeighbor = cn.getKey();
+
+                    if (currentNeighbor == vertexB)
+                    {
+                        founder = true;
+                    }
+
+                    foreach (Entry<WeightedGraphNode<T>, int> nf in currentNeighbor.getNeighbors().getEntryList())
+                    {
+                        WeightedGraphNode<T> neighborFriends = nf.getKey();
+
+                        if (!visited.contains(neighborFriends))
+                        {
+                            stack.push(neighborFriends);
+                            costs.push(nf.getValue());
+                        }
+                    }
+
+                    if (!visited.contains(currentNeighbor))
+                    {
+                        stack.push(currentNeighbor);
+                        costs.push(cn.getValue());
+                    }
+                }
+            }
+
+            Console.Write("DFS: ");
+            for (int i = 0; i < visited.size(); i++)
+            {
+                Console.Write(visited[i].getId() + "--" + costs.pop() + "-->");
+            }
+            Console.WriteLine(idTo);
+        }
+
+        public void breadthFirstSearch(string idFrom, string idTo)
+        {
+            WeightedGraphNode<T> vertexA = getVertex(idFrom);
+            WeightedGraphNode<T> vertexB = getVertex(idTo);
+
+            if (vertexA == null || vertexB == null)
+            {
+                return;
+            }
+
+            ArrayList<WeightedGraphNode<T>> visited = new ArrayList<WeightedGraphNode<T>>();
+            Queue<WeightedGraphNode<T>> queue = new Queue<WeightedGraphNode<T>>();
+            ArrayList<int> costs = new ArrayList<int>();
+
+            queue.enqueue(vertexA);
+            bool founder = false;
+
+            while (!queue.isEmpty() && !founder)
+            {
+                WeightedGraphNode<T> current = queue.dequeue();
+                visited.add(current);
+
+                foreach (Entry<WeightedGraphNode<T>, int> cn in current.getNeighbors().getEntryList())
+                {
+                    WeightedGraphNode<T> currentNeighbor = cn.getKey();
+
+                    if (currentNeighbor == vertexB)
+                    {
+                        founder = true;
+                    }
+
+                    if (!visited.contains(currentNeighbor))
+                    {
+                        queue.enqueue(currentNeighbor);
+                        costs.add(cn.getValue());
+                    }
+                }
+            }
+
+            Console.Write("BFS: ");
+            for (int i = 0; i < visited.size(); i++)
+            {
+                Console.Write(visited[i].getId() + "--" + costs[i] + "-->");
+            }
+            Console.WriteLine(idTo);
+        }
+
+        public void dijkstrasAlgorithm(string idTo, string idFrom)
+        {
+            throw new NotImplementedException();
         }
     }
    

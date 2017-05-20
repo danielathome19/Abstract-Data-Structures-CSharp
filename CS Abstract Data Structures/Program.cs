@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            IntervalTreeTest();
+            WeightedGraphTest();
 
             Console.ReadKey();
         }
@@ -1236,6 +1236,70 @@ namespace CS_Abstract_Data_Structures
             {
                 Console.WriteLine(r);
             }
+        }
+
+
+        static void WeightedGraphTest()
+        {
+            WeightedGraph<int> curGraph = new WeightedGraph<int>();
+
+            curGraph.addVertex("A", 0);
+            curGraph.addVertex("B", 1);
+            curGraph.addVertex("C", 2);
+            curGraph.addVertex("D", 3);
+            curGraph.addVertex("E", 4);
+            curGraph.addVertex("F", 5);
+
+            Random rand = new Random();
+
+            curGraph.addEdge("A", "B", rand.Next(1, 50));
+            curGraph.addEdge("B", "C", rand.Next(1, 50));
+            curGraph.addEdge("D", "C", rand.Next(1, 50));
+            curGraph.addEdge("E", "B", rand.Next(1, 50));
+            curGraph.addEdge("D", "G", rand.Next(1, 50));
+
+            Console.WriteLine(curGraph.distanceBetween("A", "B"));
+            Console.WriteLine(curGraph.distanceBetween("A", "C"));
+            Console.WriteLine(curGraph.distanceBetween("A", "D"));
+            Console.WriteLine(curGraph.distanceBetween("C", "B"));
+            Console.WriteLine(curGraph.distanceBetween("D", "B"));
+            Console.WriteLine(curGraph.distanceBetween("D", "E"));
+            Console.WriteLine(curGraph.distanceBetween("D", "F"));
+            Console.WriteLine(curGraph.distanceBetween("D", "G"));
+
+            Console.WriteLine();
+            Console.WriteLine();
+            curGraph.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            WeightedGraph<int> testGraph = new WeightedGraph<int>();
+
+            testGraph.addVertex("A", 0);
+            testGraph.addVertex("B", 1);
+            testGraph.addVertex("C", 2);
+
+            testGraph.addEdge("A", "B", rand.Next(1, 50));
+            testGraph.addEdge("B", "C", rand.Next(1, 50));
+
+            Console.WriteLine(testGraph.distanceBetween("A", "B"));
+            Console.WriteLine(testGraph.distanceBetween("A", "C"));
+
+            testGraph.removeEdge("B", "C");
+            testGraph.removeEdge("B", "F");
+
+            Console.WriteLine(testGraph.distanceBetween("A", "B"));
+            Console.WriteLine(testGraph.distanceBetween("A", "C"));
+
+            Console.WriteLine();
+            testGraph.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            curGraph.breadthFirstSearch("A", "D");
+            curGraph.depthFirstSearch("A", "D");
         }
         #endregion
     }
