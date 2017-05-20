@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            SortedListTest();
+            MultiMapTest();
 
             Console.ReadKey();
         }
@@ -1136,6 +1136,32 @@ namespace CS_Abstract_Data_Structures
             }
 
             nums.print();
+        }
+
+        static void MultiMapTest()
+        {
+            MultiMap<char, int> map = new MultiMap<char, int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 25; i++)
+            {
+                char key = (char)rand.Next(65, 71);
+                map.add(key, rand.Next(0, 50));
+            }
+
+            map.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            int[] items = map.get('A');
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                Console.WriteLine(items[i]);
+            }
         }
         #endregion
     }

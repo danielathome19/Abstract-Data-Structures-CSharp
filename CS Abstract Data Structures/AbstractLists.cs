@@ -20,6 +20,7 @@
  *  -Circular Linked List
  *  -SortedMap
  *  -Map
+ *  -MultiMap
  *  -HashMap (Dictionary)
  *  -Treap
  *  -HashSet
@@ -35,7 +36,6 @@
  *  -Sorted List (Linked List)
  *
  * To do:
- *  -Multimap
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
@@ -2449,7 +2449,7 @@ namespace Adscol
             }
         }
 
-        public Set<Entry<K, V>> entrySet()
+        public Set<Entry<K, V>> getEntrySet()
         {
             return myMap;
         }
@@ -2507,6 +2507,155 @@ namespace Adscol
         public bool isEmpty()
         {
             return (this.size() == 0);
+        }
+    }
+
+    class MultiMap<K, V> : AdsClassMin where K : IComparable
+    {
+        private ArrayList<Entry<K, V>> myMap;
+
+        private int indexOf(K key)
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.get(i).getKey().Equals(key)) return i;
+            }
+            return -1;
+        }
+
+        public MultiMap()
+        {
+            myMap = new ArrayList<Entry<K, V>>();
+        }
+
+        public V[] this[K key]
+        {
+            get
+            {
+                return get(key);
+            }
+        }
+
+        public void add(K key, V value)
+        {
+            Entry<K, V> temp = new Entry<K, V>(key, value);
+            myMap.add(temp);
+        }
+
+        public void remove(K key)
+        {
+            if (containsKey(key))
+            {
+                myMap.remove(this.indexOf(key));
+            }
+        }
+
+        public void removeAll(K key)
+        {
+            while (containsKey(key))
+            {
+                myMap.remove(this.indexOf(key));
+            }
+        }
+
+        public V[] get(K key)
+        {
+            if (containsKey(key))
+            {
+                int cnt = 0;
+                V[] items = new V[keyCount(key)];
+
+                for (int i = 0; i < myMap.size(); i++)
+                {
+                    if (myMap.get(i).getKey().Equals(key))
+                    {
+                        items[cnt] = myMap.get(i).getValue();
+                        cnt++;
+                    }
+                }
+                return items;
+            }
+            return new V[0];
+        }
+
+        public void print()
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                Console.WriteLine("Key: " + myMap.get(i).getKey() + "\tValue: " + myMap.get(i).getValue());
+            }
+        }
+
+        public ArrayList<Entry<K, V>> getEntryList()
+        {
+            return myMap;
+        }
+
+        public ArrayList<K> getKeyList()
+        {
+            var keys = new ArrayList<K>();
+
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                keys.add(myMap.get(i).getKey());
+            }
+            return keys;
+        }
+
+        public ArrayList<V> getValueList()
+        {
+            var values = new ArrayList<V>();
+
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                values.add(myMap.get(i).getValue());
+            }
+            return values;
+        }
+
+        public bool containsKey(K key)
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.get(i).getKey().Equals(key)) return true;
+            }
+            return false;
+        }
+
+        public bool containsValue(V value)
+        {
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.get(i).getValue().Equals(value)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myMap.clear();
+        }
+
+        public int size()
+        {
+            return myMap.size();
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+
+        public int keyCount(K key)
+        {
+            int cnt = 0;
+
+            for (int i = 0; i < myMap.size(); i++)
+            {
+                if (myMap.get(i).getKey().Equals(key)) cnt++;
+            }
+
+            return cnt;
         }
     }
 
