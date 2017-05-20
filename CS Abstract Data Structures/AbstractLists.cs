@@ -5280,7 +5280,7 @@ namespace Adscol
                 {
                     myList[i] = myList[i] | bits[i];
                 }
-                catch (Exception e)
+                catch (Exception)
                 { }
             }
         }
