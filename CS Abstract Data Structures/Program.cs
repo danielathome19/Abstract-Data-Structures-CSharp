@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            GraphTest();
+            SortedListTest();
 
             Console.ReadKey();
         }
@@ -1067,7 +1067,7 @@ namespace CS_Abstract_Data_Structures
 
         static void UnrolledLinkedListTest()
         {
-            UnrolledLinkedList<char> list = new UnrolledLinkedList<char>(5);
+            UnrolledList<char> list = new UnrolledList<char>(5);
             list.add('w', 'x', 'y', 'z');
             list.add('w', 'x', 'y', 'z');
             list.add('w', 'x', 'y', 'z');
@@ -1093,7 +1093,7 @@ namespace CS_Abstract_Data_Structures
 
             Console.WriteLine("Printed alphabet");
 
-            UnrolledLinkedList<int> nums = new UnrolledLinkedList<int>(5);
+            UnrolledList<int> nums = new UnrolledList<int>(5);
 
             for (int i = 0; i < 10; i++)
             {
@@ -1108,6 +1108,34 @@ namespace CS_Abstract_Data_Structures
                 }
                 Console.WriteLine();
             }
+        }
+
+        static void SortedListTest()
+        {
+            Random rand = new Random();
+
+            SortedList<int> list = new SortedList<int>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                list.add(rand.Next(0, 20));
+            }
+
+            Console.WriteLine("Size: " + list.size());
+            list.print();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            SortedList<double> nums = new SortedList<double>();
+
+            for (int i = 0; i < 25; i++)
+            {
+                nums.add(rand.NextDouble() + rand.Next(0, 10));
+            }
+
+            nums.print();
         }
         #endregion
     }

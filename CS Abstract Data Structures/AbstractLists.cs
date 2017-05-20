@@ -31,11 +31,11 @@
  *  -Heap
  *  -BitSet
  *  -Skip List
- *  -Unrolled Linked List
+ *  -Unrolled List (Linked List)
+ *  -Sorted List (Linked List)
  *
  * To do:
  *  -Multimap
- *  -Sorted List (Linked List)
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
@@ -1671,7 +1671,6 @@ namespace Adscol
         {
             return (this.size() == 0);
         }
-
 
         public int indexOf(T t)
         {
@@ -4958,7 +4957,7 @@ namespace Adscol
         }
     }
 
-    class UnrolledLinkedList<T> : AdsClass<T>
+    class UnrolledList<T> : AdsClass<T>
     {
         private UnrolledNode<T> myList;
         private UnrolledNode<T> myLast;
@@ -4966,7 +4965,7 @@ namespace Adscol
         private int maxSize;
         
         /// <param name="maxSize">The max size of each node</param>
-        public UnrolledLinkedList(int maxSize)
+        public UnrolledList(int maxSize)
         {
             this.maxSize = maxSize;
             myList = null;
@@ -4975,7 +4974,7 @@ namespace Adscol
         }
 
         /// <param name="maxSize">The max size of each node</param>
-        public UnrolledLinkedList(int maxSize, params T[] data)
+        public UnrolledList(int maxSize, params T[] data)
         {
             this.maxSize = maxSize;
             myList = new UnrolledNode<T>(maxSize, data);
@@ -5195,6 +5194,172 @@ namespace Adscol
             while (myLast != null)
             {
                 cnt += myLast.myCount;
+                myLast = myLast.myNext;
+            }
+            return cnt;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
+        }
+    }
+
+    class SortedList<T> : AdsClass<T> where T : IComparable
+    {
+        private Node<T> myList;
+        private Node<T> myLast;
+
+        private void addSorted(T t)
+        {
+            myLast = myList;
+            Node<T> temp = new Node<T>(t);
+            if (temp.myObj.CompareTo(myLast.myObj) == -1)
+            {
+                temp.myNext = myLast;
+                myList = temp;
+                return;
+            }
+
+            while (myLast.myNext != null)
+            {
+                if (temp.myObj.CompareTo(myLast.myNext.myObj) == -1)
+                {
+                    temp.myNext = myLast.myNext;
+                    myLast.myNext = temp;
+                    return;
+                }
+                myLast = myLast.myNext;
+            }
+
+            myLast.myNext = temp;
+        }
+
+        public SortedList()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public SortedList(T t)
+        {
+            myList = new Node<T>(t);
+            myLast = myList;
+        }
+
+
+        public void add(T t)
+        {
+            Node<T> temp = new Node<T>(t);
+            if (myList == null)
+            {
+                myList = temp;
+                myLast = temp;
+            }
+            else
+            {
+                this.addSorted(t);
+            }
+        }
+
+        public void remove(int index)
+        {
+            if (index == 0)
+            {
+                myLast = myList;
+                Node<T> temp = myLast.myNext;
+                myList = temp;
+                myLast = myList;
+            }
+            else if (index >= (this.size() - 1))
+            {
+                myLast = myList;
+                while (myLast.myNext.myNext != null)
+                {
+                    myLast = myLast.myNext;
+                }
+                myLast.myNext = null;
+            }
+            else
+            {
+                int cnt = 0;
+                myLast = myList;
+                Node<T> tempx;
+                while ((myLast.myNext != null) && (cnt <= index))
+                {
+                    if (cnt == (index - 1))
+                    {
+                        tempx = myLast;
+                        tempx.myNext = myLast.myNext.myNext;
+                        myLast = tempx;
+                    }
+                    cnt++;
+                    myLast = myLast.myNext;
+                }
+            }
+        }
+
+        public T get(int index)
+        {
+            int cnt = 0;
+            myLast = myList;
+            T obj = default(T);
+            while ((myLast.myNext != null) && (cnt <= index))
+            {
+                if (cnt == index) obj = myLast.myObj;
+                myLast = myLast.myNext;
+                cnt++;
+            }
+            if (cnt == index) obj = myLast.myObj;
+            myLast = myList;
+            return obj;
+        }
+
+        public void print()
+        {
+            myLast = myList;
+            while (myLast != null)
+            {
+                Console.WriteLine(myLast.myObj);
+                myLast = myLast.myNext;
+            }
+        }
+
+        public ArrayList<T> getList()
+        {
+            var items = new ArrayList<T>();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                items.add(this.get(i));
+            }
+            return items;
+        }
+
+        public bool contains(T t)
+        {
+            var items = this.getList();
+
+            for (int i = 0; i < this.size(); i++)
+            {
+                if (items[i].Equals(t)) return true;
+            }
+            return false;
+        }
+
+        public void clear()
+        {
+            myList = null;
+            myLast = null;
+        }
+
+        public int size()
+        {
+            int cnt = 0;
+            myLast = myList;
+            while (myLast != null)
+            {
+                cnt++;
                 myLast = myLast.myNext;
             }
             return cnt;
