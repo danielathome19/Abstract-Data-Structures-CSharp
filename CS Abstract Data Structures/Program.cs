@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            WeightedGraphTest();
+            SegmentTreeTest();
 
             Console.ReadKey();
         }
@@ -1238,7 +1238,6 @@ namespace CS_Abstract_Data_Structures
             }
         }
 
-
         static void WeightedGraphTest()
         {
             WeightedGraph<int> curGraph = new WeightedGraph<int>();
@@ -1300,6 +1299,36 @@ namespace CS_Abstract_Data_Structures
 
             curGraph.breadthFirstSearch("A", "D");
             curGraph.depthFirstSearch("A", "D");
+        }
+
+        static void SegmentTreeTest()
+        {
+            int[] A = { 8, 7, 3, 9, 5, 1, 10 };
+            SegmentTreeFunc<int> t = new SegmentTreeFunc<int>(A.Length);
+            t.buildTree(A);
+            Console.WriteLine("{0} ", t.get(0, 1));
+            Console.WriteLine("{0} ", t.get(1, 1));
+            Console.WriteLine("{0} ", t.get(1, 2));
+            Console.WriteLine("{0} ", t.get(1, 3));
+            Console.WriteLine("{0} ", t.get(0, 3));
+            Console.WriteLine("{0} ", t.get(3, 3));
+            Console.WriteLine();
+            t.set(11, 2, 2);
+            Console.WriteLine("{0} ", t.get(0, 1));
+            Console.WriteLine("{0} ", t.get(1, 1));
+            Console.WriteLine("{0} ", t.get(1, 2));
+            Console.WriteLine("{0} ", t.get(1, 3));
+            Console.WriteLine("{0} ", t.get(0, 3));
+            Console.WriteLine("{0} ", t.get(3, 3));
+            Console.WriteLine();
+            t.set(33, 1, 2);
+            Console.WriteLine("{0} ", t.get(0, 1));
+            Console.WriteLine("{0} ", t.get(1, 1));
+            Console.WriteLine("{0} ", t.get(1, 2));
+            Console.WriteLine("{0} ", t.get(1, 3));
+            Console.WriteLine("{0} ", t.get(0, 3));
+            Console.WriteLine("{0} ", t.get(3, 3));
+            Console.WriteLine();
         }
         #endregion
     }

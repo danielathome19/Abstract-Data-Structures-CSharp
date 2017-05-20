@@ -37,13 +37,13 @@
  *  -Unrolled List (Linked List)
  *  -Sorted List (Linked List)
  *  -Interval Tree
+ *  -Segment Tree
  *
  * To do:
  *  -Queap
  *  -Quad Tree
  *  -Splay Tree
  *  -Scapegoat Tree
- *  -Segment Tree
  *  -2 3 Tree (2-3)
  *  -2 4 Tree (2-3-4)
  *  -AVL Tree
@@ -6444,6 +6444,142 @@ namespace Adscol
             sb += (nodeString(node.getRight(), level + 1));
 
             return sb;
+        }
+    }
+
+    class SegmentTree<T> : AdsClassMin where T : IComparable
+    {
+        private void buildTree(T[] arr, int node, int begin, int end)
+        {
+            if (begin == end)
+            {
+                this.tree.set(node, arr[begin]);
+            }
+            else
+            {
+                int left = 2 * node;
+                int right = 2 * node + 1;
+                this.buildTree(arr, left, begin, (begin + end) / 2);
+                this.buildTree(arr, right, (begin + end) / 2 + 1, end);
+                T i1 = this.tree.get(left);
+                T i2 = this.tree.get(right);
+                this.tree.set(node, max(i1, i2));
+            }
+        }
+
+        private T set(T value, int node, int b, int e, int i, int j)
+        {
+            if (i > e || j < b)
+            {
+                return this.get(b, e);
+            }
+            if (b == e)
+            {
+                this.tree.set(node, value);
+                return value;
+            }
+
+            if (this.get(node, b, e, i, j).Equals(value))
+            {
+                return value;
+            }
+
+            T t1 = set(value, node * 2, b, (b + e) / 2, i, j);
+            T t2 = set(value, node * 2 + 1, (b + e) / 2 + 1, e, i, j);
+            T tt = max(t1, t2);
+            this.tree.set(node, tt);
+            return tt;
+        }
+
+        private T get(int node, int b, int e, int i, int j)
+        {
+            if (i > e || j < b)
+            {
+                return default(T);
+            }
+            if (b >= i && e <= j)
+            {
+                return this.tree.get(node);
+            }
+
+            T t1 = get(2 * node, b, (b + e) / 2, i, j);
+            T t2 = get(2 * node + 1, (b + e) / 2 + 1, e, i, j);
+            if (t1 == null) return t2;
+            if (t2 == null) return t1;
+
+            return max(t1, t2);
+        }
+
+        private int length;
+        private ArrayList<T> tree;
+        private int startLen;
+
+        public SegmentTree(int len)
+        {
+            startLen = len;
+            this.length = len;
+            int arrayLen = 1;
+            while (arrayLen < 2 * len)
+            {
+                arrayLen <<= 1;
+            }
+
+            this.tree = new ArrayList<T>();
+            for (int i = 0; i < arrayLen; i++)
+            {
+                this.tree.add(default(T));
+            }
+        }
+
+        public T max(T t1, T t2)
+        {
+            return (t1.CompareTo(t2) >= 0) ? t1 : t2;
+        }
+
+        public void buildTree(T[] arr)
+        {
+            this.buildTree(arr, 1, 0, arr.Length - 1);
+        }
+
+        public void set(T value, int i)
+        {
+            set(value, i, i);
+        }
+
+        public void set(T value, int i, int j)
+        {
+            if (i < 0 || j > this.length - 1 || i > j) return;
+            set(value, 1, 0, this.length - 1, i, j);
+        }
+
+        public T get(int i, int j)
+        {
+            return this.get(1, 0, this.length - 1, i, j);
+        }
+
+        public void clear()
+        {
+            length = startLen;
+            this.tree = new ArrayList<T>();
+            int arrayLen = 1;
+            while (arrayLen < 2 * length)
+            {
+                arrayLen <<= 1;
+            }
+            for (int i = 0; i < arrayLen; i++)
+            {
+                this.tree.add(default(T));
+            }
+        }
+
+        public int size()
+        {
+            return length;
+        }
+
+        public bool isEmpty()
+        {
+            return (this.size() == 0);
         }
     }
 }
