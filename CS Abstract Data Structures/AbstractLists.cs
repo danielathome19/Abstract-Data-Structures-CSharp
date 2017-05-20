@@ -39,6 +39,7 @@
  *  -Interval Tree
  *  -Segment Tree
  *  -Splay Tree
+ *  -Ternary Tree
  *
  * To do:
  *  -Queap
@@ -49,7 +50,6 @@
  *  -AVL Tree
  *  -B-Tree
  *  -B+Tree
- *  -Ternary Tree
  *  -Red Black Tree
  * 
  **************************************************************************/
@@ -1577,6 +1577,14 @@ namespace Adscol
             for (int i = 0; i < items._size; i++)
             {
                 add(items.array[i]);
+            }
+        }
+
+        public void appendAll(T[] items)
+        {
+            for (int i = 0; i < items.Length; i++)
+            {
+                add(items[i]);
             }
         }
 
@@ -6325,7 +6333,6 @@ namespace Adscol
 
     class IntervalTree<T>
     {
-
         private IntervalNode<T> head;
         private ArrayList<Interval<T>> intervalList;
         private bool inSync;
@@ -6450,6 +6457,10 @@ namespace Adscol
 
     class SegmentTree<T> : AdsClassMin where T : IComparable
     {
+        private int length;
+        private ArrayList<T> tree;
+        private int startLen;
+
         private void buildTree(T[] arr, int node, int begin, int end)
         {
             if (begin == end)
@@ -6510,10 +6521,6 @@ namespace Adscol
 
             return max(t1, t2);
         }
-
-        private int length;
-        private ArrayList<T> tree;
-        private int startLen;
 
         public SegmentTree(int len)
         {
@@ -6614,7 +6621,10 @@ namespace Adscol
                 Do = Expression.Lambda<Func<T, T, T>>(add, par1, par2).Compile();
             }
         }
-        
+
+        private SplayNode<T> root;
+        private string stringx;
+
         private SplayNode<T> leftRotate(SplayNode<T> node)
         {
             SplayNode<T> newT = node.left;
@@ -6749,9 +6759,6 @@ namespace Adscol
             root = node;
         }
 
-        private SplayNode<T> root;
-        private string stringx;
-
         public SplayTree()
         {
             root = null;
@@ -6867,5 +6874,169 @@ namespace Adscol
             return stringx;
         }
 
+    }
+
+    class TernaryNode<T> : IComparable<TernaryNode<T>> where T : IComparable
+    {
+        private T value;
+
+        private TernaryNode<T> smallerChild;
+        private TernaryNode<T> largerChild;
+        private TernaryNode<T> equalChild;
+
+        public TernaryNode(T value)
+        {
+            this.value = value;
+        }
+
+        public TernaryNode<T> getEqualChild()
+        {
+            return equalChild;
+        }
+
+        public void setEqualChild(TernaryNode<T> equalChild)
+        {
+            this.equalChild = equalChild;
+        }
+
+        public TernaryNode<T> getLargerChild()
+        {
+            return largerChild;
+        }
+
+        public void setLargerChild(TernaryNode<T> largerChild)
+        {
+            this.largerChild = largerChild;
+        }
+
+        public TernaryNode<T> getSmallerChild()
+        {
+            return smallerChild;
+        }
+
+        public void setSmallerChild(TernaryNode<T> smallerChild)
+        {
+            this.smallerChild = smallerChild;
+        }
+
+        public T getValue()
+        {
+            return value;
+        }
+        
+        public int CompareTo(TernaryNode<T> o)
+        {
+            return value.CompareTo(o.getValue());
+        }
+    }
+
+    class TernaryTree<T> where T : IComparable
+    {
+        private string sb;
+        private TernaryNode<T> root;
+
+        private string printTreeDepthFirst(TernaryNode<T> parent, TernaryNode<T> node, int depth)
+        {
+            depth++;
+            sb += (depth);
+            for (int i = 0; i < depth + 1; i++)
+            {
+                sb += ("\t");
+            }
+            sb += (String.Format("{0}:{1}\n", node.getValue(), (parent != null) ? parent.getValue().ToString() : ""));
+
+            if (node.getSmallerChild() != null)
+            {
+                printTreeDepthFirst(node, node.getSmallerChild(), depth);
+            }
+            if (node.getEqualChild() != null)
+            {
+                printTreeDepthFirst(node, node.getEqualChild(), depth);
+            }
+            if (node.getLargerChild() != null)
+            {
+                printTreeDepthFirst(node, node.getLargerChild(), depth);
+            }
+            return sb;
+        }
+
+        private void addToTree(TernaryNode<T> curNode, TernaryNode<T> newNode)
+        {
+            int diff = curNode.CompareTo(newNode);
+
+            if (diff < 0)
+            {
+                if (curNode.getLargerChild() != null)
+                {
+                    addToTree(curNode.getLargerChild(), newNode);
+                }
+                else
+                {
+                    curNode.setLargerChild(newNode);
+                }
+            }
+            else if (diff > 0)
+            {
+                if (curNode.getSmallerChild() != null)
+                {
+                    addToTree(curNode.getSmallerChild(), newNode);
+                }
+                else
+                {
+                    curNode.setSmallerChild(newNode);
+                }
+            }
+            else
+            {
+                if (curNode.getEqualChild() != null)
+                {
+                    addToTree(curNode.getEqualChild(), newNode);
+                }
+                else
+                {
+                    curNode.setEqualChild(newNode);
+                }
+            }
+        }
+
+        public TernaryTree()
+        {
+            root = null;
+        }
+        
+        public void addToTree(ArrayList<T> list)
+        {
+            foreach (T t in list)
+            {
+                addToTree(t);
+            }
+        }
+
+        public void addToTree(T obj)
+        {
+            TernaryNode<T> newNode = new TernaryNode<T>(obj);
+
+            if (root == null)
+            {
+                root = newNode;
+            }
+            else
+            {
+                addToTree(root, newNode);
+            }
+        }
+
+        public void print()
+        {
+            Console.WriteLine(this.ToString());
+        }
+
+        public override string ToString()
+        {
+            sb = "";
+            sb += ("Depth\tNode:Parent Values\n");
+            sb += ("-----\t------------------\n");
+            return printTreeDepthFirst(null, root, 0);
+        }
     }
 }

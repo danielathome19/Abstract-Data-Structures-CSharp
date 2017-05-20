@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            SplayTreeTest();
+            TernaryTreeTest();
 
             Console.ReadKey();
         }
@@ -1356,6 +1356,16 @@ namespace CS_Abstract_Data_Structures
             
             Console.WriteLine("Node found or not: " + impl.contains(98));
             Console.WriteLine("After search preorder: " + impl);
+        }
+
+        static void TernaryTreeTest()
+        {
+            TernaryTree<int> testTree = new TernaryTree<int>();
+            ArrayList<int> list = new ArrayList<int>();
+            list.appendAll(new int[]{ 5, 4, 9, 5, 7, 2, 2 });
+            testTree.addToTree(list);
+
+            testTree.print();
         }
         #endregion
     }
