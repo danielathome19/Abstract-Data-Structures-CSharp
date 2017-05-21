@@ -11,7 +11,7 @@ namespace CS_Abstract_Data_Structures
             // LinkedListTest();
             Console.WriteLine("Hello world!");
 
-            TernaryTreeTest();
+            RedBlackTreeTest();
 
             Console.ReadKey();
         }
@@ -1366,6 +1366,20 @@ namespace CS_Abstract_Data_Structures
             testTree.addToTree(list);
 
             testTree.print();
+        }
+
+        static void RedBlackTreeTest()
+        {
+            RedBlackTree<int> tree = new RedBlackTree<int>();
+
+            Random rand = new Random();
+
+            for (int i = 0; i < 25; i++)
+            {
+                tree.add(rand.Next(0, 10));
+            }
+
+            tree.print();
         }
         #endregion
     }

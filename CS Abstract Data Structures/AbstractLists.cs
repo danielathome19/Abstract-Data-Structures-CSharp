@@ -40,6 +40,7 @@
  *  -Segment Tree
  *  -Splay Tree
  *  -Ternary Tree
+ *  -Red Black Tree
  *
  * To do:
  *  -Queap
@@ -50,7 +51,6 @@
  *  -AVL Tree
  *  -B-Tree
  *  -B+Tree
- *  -Red Black Tree
  * 
  **************************************************************************/
 
@@ -7037,6 +7037,316 @@ namespace Adscol
             sb += ("Depth\tNode:Parent Values\n");
             sb += ("-----\t------------------\n");
             return printTreeDepthFirst(null, root, 0);
+        }
+    }
+
+    class RBNode<T> where T : IComparable
+    {
+        public const bool RED = true;
+        public const bool BLACK = false;
+
+        private T data;
+        private bool colour = RED;
+        private RBNode<T> rightChild;
+        private RBNode<T> leftChild;
+        private bool _isDeleted;
+        
+        public RBNode(T data)
+        {
+            this.data = data;
+            _isDeleted = false;
+        }
+        
+        public void setData(T data)
+        {
+            this.data = data;
+        }
+
+        public void setRed()
+        {
+            colour = RED;
+        }
+
+        public void setBlack()
+        {
+            colour = BLACK;
+        }
+        
+        public bool setColour(bool c)
+        {
+            if (c != colour)
+            {
+                colour = c;
+                return true;
+            }
+            return false;
+        }
+
+        public void setLeftChild(RBNode<T> node)
+        {
+            leftChild = node;
+        }
+
+        public void setRightChild(RBNode<T> node)
+        {
+            rightChild = node;
+        }
+        
+        public void delete()
+        {
+            _isDeleted = true;
+        }
+
+        public T getData()
+        {
+            return data;
+        }
+
+        public bool isRed()
+        {
+            return colour == true;
+        }
+
+        public RBNode<T> getLeftChild()
+        {
+            return leftChild;
+        }
+
+        public RBNode<T> getRightChild()
+        {
+            return rightChild;
+        }
+
+        public bool isDeleted()
+        {
+            return _isDeleted;
+        }
+    
+        public void display(int n)
+        {
+            string indent = "- ";
+            
+            for (int i = 1; i <= n; i++)
+            {
+                Console.Write(indent);
+            }
+            Console.WriteLine("Root: " + data + "\tColor: " + colour);
+            
+            for (int i = 1; i <= n; i++)
+            {
+                Console.WriteLine(indent);
+            }
+
+            Console.WriteLine("Left");
+            if (leftChild == null)
+            {
+                for (int i = 1; i <= n + 1; i++)
+                {
+                    Console.Write(indent);
+                }
+            }
+            else
+            {
+                leftChild.display(n + 1);
+            }
+
+            for (int i = 1; i <= n; i++)
+            {
+                Console.Write(indent);
+            }
+
+            Console.WriteLine("Right");
+            if (rightChild == null)
+            {
+                for (int i = 1; i <= n + 1; i++)
+                {
+                    Console.Write(indent);
+                }
+            }
+            else
+            {
+                rightChild.display(n + 1);
+            }
+        }
+    }
+
+    class RedBlackTree<T> where T : IComparable
+    {
+        private RBNode<T> root;
+
+        private RBNode<T> put(RBNode<T> node, T data)
+        {
+            if (node == null)
+            {
+                RBNode<T> newNode = new RBNode<T>(data);
+                return newNode;
+            }
+
+            int cmp = data.CompareTo(node.getData());
+
+            if (cmp < 0)
+            {
+                node.setLeftChild(put(node.getLeftChild(), data));
+            }
+            else if (cmp > 0)
+            {
+                node.setRightChild(put(node.getRightChild(), data));
+            }
+
+            if (isRed(node.getLeftChild()) && isRed(node.getLeftChild().getLeftChild()))
+            {
+                node.setRed();
+                node.getLeftChild().setBlack();
+                node = rightRotation(node);
+            }
+
+            if (isRed(node.getRightChild()) && isRed(node.getRightChild().getRightChild()))
+            {
+                node.setRed();
+                node.getRightChild().setBlack();
+                node = leftRotation(node);
+            }
+
+            if (isRed(node.getLeftChild()) && isRed(node.getLeftChild().getRightChild()))
+            {
+                node.setRed();
+                node.getLeftChild().getRightChild().setBlack();
+                node.setLeftChild(leftRotation(node.getLeftChild()));
+                node = rightRotation(node);
+            }
+
+            if (isRed(node.getRightChild()) && isRed(node.getRightChild().getLeftChild()))
+            {
+                node.setRed();
+                node.getRightChild().getLeftChild().setBlack();
+                node.setRightChild(rightRotation(node.getRightChild()));
+                node = leftRotation(node);
+            }
+
+            colourFlip(node);
+            return node;
+        }
+
+        private void colourFlip(RBNode<T> parent)
+        {
+            if (parent.getRightChild() == null || parent.getLeftChild() == null)
+            {
+                return;
+            }
+
+            if (!isRed(parent) && isRed(parent.getRightChild()) && isRed(parent.getLeftChild()))
+            {
+                if (parent != root)
+                {
+                    parent.setRed();
+                }
+
+                parent.getRightChild().setBlack();
+                parent.getLeftChild().setBlack();
+            }
+        }
+
+        private RBNode<T> rightRotation(RBNode<T> grandparent)
+        {
+            RBNode<T> parent = grandparent.getLeftChild();
+            RBNode<T> rightChildOfParent = parent.getRightChild();
+
+            parent.setRightChild(grandparent);
+            grandparent.setLeftChild(rightChildOfParent);
+            return parent;
+        }
+
+        private RBNode<T> leftRotation(RBNode<T> grandparent)
+        {
+            RBNode<T> parent = grandparent.getRightChild();
+            RBNode<T> leftChildOfParent = parent.getLeftChild();
+
+            parent.setLeftChild(grandparent);
+            grandparent.setRightChild(leftChildOfParent);
+            return parent;
+        }
+
+        private RBNode<T> containsx(T data)
+        {
+            RBNode<T> current = root;
+            while (data.CompareTo(current.getData()) != 0)
+            {
+                if (data.CompareTo(current.getData()) < 0)
+                {
+                    current = current.getLeftChild();
+                }
+                else
+                {
+                    current = current.getRightChild();
+                }
+
+                if (current == null)
+                {
+                    return null;
+                }
+            }
+
+            if (current.isDeleted())
+            {
+                return null;
+            }
+
+            return current;
+        }
+
+        private void displaySubtreeInOrder(RBNode<T> current)
+        {
+            if (current != null)
+            {
+                displaySubtreeInOrder(current.getLeftChild());
+                Console.WriteLine("Data: " + current.getData() + "\tColor: " + (current.isRed() ? "Red" : "Black"));
+                displaySubtreeInOrder(current.getRightChild());
+            }
+        }
+
+        public RedBlackTree()
+        {
+            root = null;
+        }
+
+        public RBNode<T> getRoot()
+        {
+            return root;
+        }
+
+        public void add(T data)
+        {
+            root = put(root, data);
+            root.setBlack();
+        }
+
+        public void remove(T data)
+        {
+            RBNode<T> node = containsx(data);
+
+            if (node != null)
+            {
+                node.delete();
+            }
+        }
+
+        public bool isRed(RBNode<T> node)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+            return node.isRed();
+        }
+
+        public void print()
+        {
+            displaySubtreeInOrder(root);
+        }
+
+        public bool contains(T data)
+        {
+            return (containsx(data) != null);
         }
     }
 }
